@@ -1,0 +1,8 @@
+// Set the source root to the correct location
+SRCROOT = $(PROJECT_DIR)/Leavn
+SOURCE_ROOT = $(PROJECT_DIR)/Leavn
+
+// Include any other build settings you want to override
+// For example:
+// SWIFT_VERSION = 6.0
+// PRODUCT_BUNDLE_IDENTIFIER = com.leavn.app
