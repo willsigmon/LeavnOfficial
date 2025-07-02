@@ -679,6 +679,14 @@ public struct ReadingPlanProgress: Codable, Sendable {
 /// - reflectionQuestions: [String]?
 /// - imageName: String?
 public extension BibleBook {
+    static var oldTestament: [BibleBook] {
+        allCases.filter { $0.testament == .old }
+    }
+    
+    static var newTestament: [BibleBook] {
+        allCases.filter { $0.testament == .new }
+    }
+    
     static let allCases: [BibleBook] = [
         // Old Testament
         BibleBook(id: "gen", name: "Genesis", abbreviation: "Gen", testament: .old, chapterCount: 50, bookNumber: 1),

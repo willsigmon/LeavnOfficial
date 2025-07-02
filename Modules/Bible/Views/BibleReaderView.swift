@@ -16,9 +16,9 @@ public struct BibleReaderView: View {
         _viewModel = StateObject(
             wrappedValue: BibleReaderViewModel(
                 book: book,
-                chapter: chapter,
-                bibleService: DIContainer.shared.requireBibleService(),
-                analyticsService: DIContainer.shared.resolve(AnalyticsServiceProtocol.self)
+                chapter: chapter ?? 1,
+                bibleService: DIContainer.shared.bibleService,
+                analyticsService: DIContainer.shared.analyticsService
             )
         )
     }
@@ -134,7 +134,7 @@ public struct BibleReaderView: View {
         }
         .sheet(isPresented: $showBookmarkSheet) {
             if let verse = viewModel.selectedVerse {
-                AddBookmarkSheet(verse: verse, isPresented: $showBookmarkSheet)
+                AddBookmarkSheet(verse: verse, verseText: verse.text)
             }
         }
     }

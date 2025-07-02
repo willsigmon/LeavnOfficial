@@ -605,11 +605,13 @@ public class WatchComplicationProvider: NSObject, CLKComplicationDataSource {
     // MARK: - Helper Methods
     
     private func getDailyVerse(for date: Date) -> DailyVerse {
-        // Get deterministic daily verse based on date
-        let dayOfYear = Calendar.current.ordinality(of: .day, in: .year, for: date) ?? 1
-        let verses = DailyVerse.sampleVerses
-        let index = (dayOfYear - 1) % verses.count
-        return verses[index]
+        // In a real implementation, this would fetch from the service
+        // For now, return a placeholder that indicates the need to open the app
+        return DailyVerse(
+            reference: "Open App",
+            text: "Open Leavn to read today's verse",
+            translation: ""
+        )
     }
 }
 
@@ -632,23 +634,7 @@ public struct DailyVerse {
         self.translation = translation
     }
     
-    public static let sampleVerses: [DailyVerse] = [
-        DailyVerse(
-            reference: "John 3:16",
-            text: "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.",
-            translation: "NIV"
-        ),
-        DailyVerse(
-            reference: "Psalm 23:1",
-            text: "The Lord is my shepherd, I shall not want.",
-            translation: "KJV"
-        ),
-        DailyVerse(
-            reference: "Proverbs 3:5",
-            text: "Trust in the Lord with all your heart and lean not on your own understanding.",
-            translation: "NIV"
-        )
-    ]
+
 }
 
 public struct LastReadChapter {

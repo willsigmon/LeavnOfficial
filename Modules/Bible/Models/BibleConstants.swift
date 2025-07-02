@@ -50,40 +50,6 @@ public enum BibleConstants {
         public static let fontSizeChanged = "bible_font_size_changed"
     }
     
-    // MARK: - Sample Data
-    public enum SampleData {
-        public static let sampleVerse = BibleVerse(
-            id: "JHN-3-16-ESV",
-            bookName: "John",
-            bookId: "JHN",
-            chapter: 3,
-            verse: 16,
-            text: "For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.",
-            translation: "ESV"
-        )
-        
-        public static let sampleChapter: [BibleVerse] = [
-            BibleVerse(
-                id: "JHN-3-1-ESV",
-                bookName: "John",
-                bookId: "JHN",
-                chapter: 3,
-                verse: 1,
-                text: "Now there was a man of the Pharisees named Nicodemus, a ruler of the Jews.",
-                translation: "ESV"
-            ),
-            BibleVerse(
-                id: "JHN-3-2-ESV",
-                bookName: "John",
-                bookId: "JHN",
-                chapter: 3,
-                verse: 2,
-                text: "This man came to Jesus by night and said to him, 'Rabbi, we know that you are a teacher come from God, for no one can do these signs that you do unless God is with him.'",
-                translation: "ESV"
-            )
-        ]
-    }
-    
     // MARK: - Helper Methods
     
     /// Gets the next book in canonical order

@@ -1,6 +1,7 @@
 import SwiftUI
 import LeavnCore
 import LeavnServices
+import DesignSystem
 
 /// AI-powered verse comparison across multiple translations
 /// Integrates with iOS 26's new Intelligence framework
@@ -31,10 +32,7 @@ public struct VerseComparisonView: View {
                         aiInsightsSection
                     }
                     
-                    // Historical context
-                    if let context = viewModel.historicalContext {
-                        contextCard(context)
-                    }
+                    // Historical context will be part of AI insights
                 }
                 .padding()
             }
@@ -46,7 +44,6 @@ public struct VerseComparisonView: View {
                 }
             }
             .task {
-                viewModel.container = container
                 await viewModel.loadComparisons(for: verse)
             }
         }
@@ -65,7 +62,7 @@ public struct VerseComparisonView: View {
                     .font(.caption)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(AppColors.Default.primaryColor.opacity(0.1))
+                    .background(LeavnTheme.Colors.accent.opacity(0.1))
                     .cornerRadius(6)
             }
             
@@ -74,7 +71,7 @@ public struct VerseComparisonView: View {
                 .lineSpacing(4)
         }
         .padding()
-        .background(AppColors.Default.cardBackground)
+        .background(Color(.systemBackground))
         .cornerRadius(12)
         .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
     }
@@ -107,7 +104,7 @@ public struct VerseComparisonView: View {
                         TextHighlightView(
                             originalText: verse.text,
                             comparisonText: text,
-                            highlightColor: AppColors.Default.secondaryColor.opacity(0.3)
+                            highlightColor: LeavnTheme.Colors.accent.opacity(0.3)
                         )
                     )
             } else if translation.isLoading {
@@ -120,7 +117,7 @@ public struct VerseComparisonView: View {
             }
         }
         .padding()
-        .background(AppColors.Default.cardBackground)
+        .background(Color(.secondarySystemBackground))
         .cornerRadius(12)
         .shadow(color: .black.opacity(0.05), radius: 1, x: 0, y: 1)
     }
@@ -129,7 +126,7 @@ public struct VerseComparisonView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "brain.head.profile")
-                    .foregroundColor(AppColors.Default.primaryColor)
+                    .foregroundColor(LeavnTheme.Colors.accent)
                 Text("AI Insights")
                     .font(.headline)
                     .fontWeight(.semibold)
@@ -154,7 +151,7 @@ public struct VerseComparisonView: View {
         .padding()
         .background(
             LinearGradient(
-                colors: [AppColors.Default.primaryColor.opacity(0.05), .clear],
+                colors: [LeavnTheme.Colors.accent.opacity(0.05), .clear],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -162,7 +159,7 @@ public struct VerseComparisonView: View {
         .cornerRadius(12)
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(AppColors.Default.primaryColor.opacity(0.1), lineWidth: 1)
+                .stroke(LeavnTheme.Colors.accent.opacity(0.1), lineWidth: 1)
         )
     }
     
@@ -184,12 +181,12 @@ public struct VerseComparisonView: View {
             if let timeframe = context.timeframe {
                 Text("Timeframe: \(timeframe)")
                     .font(.caption2)
-                    .foregroundColor(.tertiary)
+                    .foregroundColor(.secondary)
                     .italic()
             }
         }
         .padding()
-        .background(AppColors.Default.secondaryBackground)
+        .background(Color(.systemGray6))
         .cornerRadius(8)
     }
 }

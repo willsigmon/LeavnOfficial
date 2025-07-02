@@ -124,3 +124,13 @@ public protocol AnalyticsServiceProtocol: ServiceProtocol, Sendable {
     func flush() async
 }
 
+// MARK: - Life Situations Engine
+
+public protocol LifeSituationsEngineProtocol: ServiceProtocol, Sendable {
+    func analyzeSituation(_ text: String) async -> LifeSituation
+    func getEmotionalJourney() async -> [LifeSituation]
+    func getMostCommonEmotions(days: Int) async -> [(EmotionalState, Int)]
+    func getVersesForMood(_ mood: EmotionalState) async -> [VerseRecommendation]
+    func getVersesForCategory(_ category: LifeCategory, mood: EmotionalState) async -> [VerseRecommendation]
+}
+

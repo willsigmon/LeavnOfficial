@@ -22,6 +22,7 @@ public final class DIContainer: ObservableObject {
     @Published public private(set) var networkService: NetworkServiceProtocol?
     @Published public private(set) var analyticsService: AnalyticsServiceProtocol?
     @Published public private(set) var notificationService: NotificationService?
+    @Published public private(set) var lifeSituationsEngine: LifeSituationsEngineProtocol?
 
     // MARK: - Coordinators
     @Published public private(set) var navigationCoordinator: NavigationCoordinator?
@@ -88,7 +89,8 @@ public final class DIContainer: ObservableObject {
             ("Library", libraryService),
             ("Sync", syncService),
             ("AI", aiService),
-            ("Analytics", analyticsService)
+            ("Analytics", analyticsService),
+            ("LifeSituations", lifeSituationsEngine)
         ]
         
         let totalServices = Double(services.count)
@@ -215,6 +217,13 @@ public final class DIContainer: ObservableObject {
             analyticsService = DevelopmentAnalyticsService()
             logger.info("✅ Development Analytics Service registered.")
         }
+        
+        // Register Life Situations Engine
+        lifeSituationsEngine = LifeSituationsEngine(
+            bibleService: bibleService,
+            cacheService: cacheService
+        )
+        logger.info("✅ Life Situations Engine registered.")
     }
     
     private func registerCoordinators() async {

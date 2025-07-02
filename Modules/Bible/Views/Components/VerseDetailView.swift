@@ -1,5 +1,6 @@
 import SwiftUI
 import LeavnCore
+import DesignSystem
 
 struct VerseDetailView: View {
     let verse: BibleVerse
@@ -77,7 +78,7 @@ struct VerseDetailView: View {
                 }
             }
             .sheet(isPresented: $showShareSheet) {
-                ShareSheet(activityItems: ["\"\(verse.text)\" - \(verse.bookName) \(verse.chapter):\(verse.verse)"])
+                ShareSheet(items: ["\"\(verse.text)\" - \(verse.bookName) \(verse.chapter):\(verse.verse)"])
             }
         }
     }

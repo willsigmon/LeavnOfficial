@@ -29,9 +29,9 @@ public final class VerseComparisonViewModel: ObservableObject {
         analyticsService: AnalyticsServiceProtocol? = nil
     ) {
         let container = DIContainer.shared
-        self.bibleService = bibleService ?? container.requireBibleService()
-        self.cacheService = cacheService ?? container.requireCacheService()
-        self.analyticsService = analyticsService ?? container.resolve(AnalyticsServiceProtocol.self)
+        self.bibleService = bibleService ?? container.bibleService!
+        self.cacheService = cacheService ?? container.cacheService!
+        self.analyticsService = analyticsService ?? container.analyticsService
     }
     
     // MARK: - Public Methods
@@ -127,27 +127,28 @@ public final class VerseComparisonViewModel: ObservableObject {
     }
     
     private func loadAIInsights(for verse: BibleVerse) async {
-        guard let aiService = container?.aiService else { return }
+        guard let aiService = DIContainer.shared.aiService else { return }
         
         do {
-            let insights = try await aiService.generateInsights(for: verse)
+            let insights = try await aiService.getInsights(for: verse)
             await MainActor.run {
                 self.aiInsights = insights
-            }
-        } catch {
-            // Fallback to sample insights if AI service fails
-            await MainActor.run {
-                self.aiInsights = mockInsights
             }
             
             // Track insight generation
             await analyticsService?.track(event: AnalyticsEvent(
                 name: "ai_insights_generated",
-                parameters: ["verse_id": verse.id, "insight_count": mockInsights.count]
+                parameters: [
+                    "verse_id": verse.id,
+                    "insight_count": "\(insights.count)"
+                ]
             ))
         } catch {
             print("Failed to load AI insights: \(error)")
-            // Don't show error to user for non-critical features
+            // Fallback to sample insights if AI service fails
+            await MainActor.run {
+                self.aiInsights = generateSampleInsights(for: verse)
+            }
         }
     }
     
@@ -170,7 +171,7 @@ public final class VerseComparisonViewModel: ObservableObject {
     }
     
     private func translationName(for abbreviation: String) -> String {
-        BibleTranslation.all.first { $0.abbreviation == abbreviation }?.name ?? abbreviation
+        BibleTranslation.defaultTranslations.first { $0.abbreviation == abbreviation }?.name ?? abbreviation
     }
     
     private func generateSampleInsights(for verse: BibleVerse) -> [AIInsight] {

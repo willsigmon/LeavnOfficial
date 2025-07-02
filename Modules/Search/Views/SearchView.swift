@@ -23,7 +23,9 @@ public struct SearchView: View {
             }
         }
         .sheet(item: $selectedVerse) { verse in
-            BibleVerseDetailView(book: verse.book, chapter: verse.chapter, verse: verse.verse)
+            NavigationView {
+                BibleReaderView(book: BibleBook(from: verse.bookName), chapter: verse.chapter)
+            }
         }
     }
 
@@ -126,7 +128,9 @@ private extension SearchView {
             PlayfulEmptyState(
                 icon: "magnifyingglass.circle",
                 title: "Start Your Search",
-                message: "Search for verses, words, or phrases across the entire Bible"
+                message: "Search for verses, words, or phrases across the entire Bible",
+                buttonTitle: "Search Now",
+                action: { isSearchFocused = true }
             )
             
             // Suggested Searches
@@ -166,7 +170,9 @@ private extension SearchView {
                                 .foregroundColor(.secondary)
                             Spacer()
                             Button("Clear") {
-                                viewModel.clearRecentSearches()
+                                Task {
+                                    await viewModel.clearRecentSearches()
+                                }
                             }
                             .font(LeavnTheme.Typography.caption)
                             .foregroundColor(LeavnTheme.Colors.accent)
@@ -192,7 +198,14 @@ private extension SearchView {
                             searchText: searchText,
                             delay: LeavnTheme.Motion.staggerDelay(index: index)
                         ) {
-                            selectedVerse = result.verse
+                            selectedVerse = BibleVerse(
+                                bookName: result.bookName,
+                                bookId: result.bookId,
+                                chapter: result.chapter,
+                                verse: result.verse,
+                                text: result.text,
+                                translation: result.translation
+                            )
                         }
                         .padding(.horizontal, 20)
                         .padding(.vertical, 6)
@@ -226,7 +239,7 @@ struct FilterChip: View {
     var body: some View {
         Button(action: action) {
             Text(title)
-                .font(LeavnTheme.Typography.subheadline)
+                .font(LeavnTheme.Typography.caption)
                 .fontWeight(.semibold)
                 .foregroundColor(isSelected ? .white : .primary)
                 .padding(.horizontal, 20)
@@ -331,7 +344,7 @@ struct SearchResultCard: View {
                         .font(LeavnTheme.Typography.caption)
                         .foregroundColor(.secondary)
                     Spacer()
-                    Text("v.\(result.verse.number)")
+                    Text("v.\(result.verse)")
                         .font(LeavnTheme.Typography.caption)
                         .fontWeight(.bold)
                         .foregroundColor(.white)

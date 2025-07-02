@@ -35,8 +35,13 @@ struct BookPickerView: View {
         NavigationView {
             VStack(spacing: 0) {
                 // Search bar
-                SearchBar(text: $searchText, placeholder: "Search books...")
-                    .padding()
+                HStack {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundColor(.secondary)
+                    TextField("Search books...", text: $searchText)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                }
+                .padding()
                 
                 // Testament selector
                 Picker("Testament", selection: $selectedTab) {

@@ -9,6 +9,14 @@ import LeavnCommunity
 import AuthenticationModule
 import Combine
 
+#if os(macOS)
+import AppKit
+#elseif os(watchOS)
+import WatchKit
+#elseif os(visionOS)
+import RealityKit
+#endif
+
 @main
 struct LeavnApp: App {
     @StateObject private var appState = AppState()
@@ -344,8 +352,7 @@ struct MacMainView: View {
     @EnvironmentObject var appState: AppState
     
     var body: some View {
-        Text("Mac Bible View")
-            // TODO: Replace with MacBibleView()
+        MacBibleView()
     }
 }
 #endif
@@ -355,8 +362,7 @@ struct VisionMainView: View {
     @EnvironmentObject var appState: AppState
     
     var body: some View {
-        Text("Vision Bible Study View")
-            // TODO: Replace with VisionBibleStudyView()
+        VisionBibleStudyView()
     }
 }
 #endif
@@ -366,8 +372,7 @@ struct WatchMainView: View {
     @EnvironmentObject var appState: AppState
     
     var body: some View {
-        Text("Watch Bible View")
-            // TODO: Replace with WatchBibleView()
+        WatchBibleView()
     }
 }
 

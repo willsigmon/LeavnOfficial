@@ -16,6 +16,7 @@ public final class BibleReaderViewModel: ObservableObject {
     @Published public var fontSize: CGFloat = 18.0
     @Published public private(set) var highlightedVerses: Set<String> = []
     @Published public var scrollToVerse: String?
+    @Published public var selectedVerse: BibleVerse?
     
     // MARK: - Dependencies
     private let bibleService: BibleServiceProtocol
@@ -33,6 +34,25 @@ public final class BibleReaderViewModel: ObservableObject {
     
     var chapterButtonTitle: String {
         "Chapter \(currentChapter)"
+    }
+    
+    public var book: BibleBook {
+        currentBook
+    }
+    
+    public var chapter: Int {
+        currentChapter
+    }
+    
+    public var canGoToPreviousChapter: Bool {
+        currentChapter > 1 || BibleBook.allCases.firstIndex(of: currentBook) ?? 0 > 0
+    }
+    
+    public var canGoToNextChapter: Bool {
+        if let currentIndex = BibleBook.allCases.firstIndex(of: currentBook) {
+            return currentChapter < currentBook.chapterCount || currentIndex < BibleBook.allCases.count - 1
+        }
+        return false
     }
     
     // MARK: - Initialization
@@ -93,8 +113,8 @@ public final class BibleReaderViewModel: ObservableObject {
             await MainActor.run {
                 self.error = error
                 self.isLoading = false
-                // Load sample verses as fallback
-                self.verses = BibleConstants.SampleData.sampleChapter
+                // Clear verses on error
+                self.verses = []
             }
         }
     }
@@ -127,31 +147,27 @@ public final class BibleReaderViewModel: ObservableObject {
     }
     
     public func loadComparisons(for verse: BibleVerse) async {
-        "\(currentBook.name) \(currentChapter)"
+        // TODO: Implement verse comparison loading
     }
     
-    public func nextChapter() {
-        if currentChapter < (currentBook.chapterCount ?? 0) {
+    public func nextChapter() async {
+        if currentChapter < currentBook.chapterCount {
             currentChapter += 1
         } else if let nextBook = BibleConstants.nextBook(after: currentBook) {
             currentBook = nextBook
             currentChapter = 1
         }
-        Task {
-            await loadChapter()
-        }
+        await loadChapter()
     }
     
-    public func previousChapter() {
+    public func previousChapter() async {
         if currentChapter > 1 {
             currentChapter -= 1
         } else if let previousBook = BibleConstants.previousBook(before: currentBook) {
             currentBook = previousBook
-            currentChapter = previousBook.chapterCount ?? 1
+            currentChapter = previousBook.chapterCount
         }
-        Task {
-            await loadChapter()
-        }
+        await loadChapter()
     }
     
     func toggleVerseHighlight(_ verse: BibleVerse) {
@@ -164,6 +180,7 @@ public final class BibleReaderViewModel: ObservableObject {
     
     func selectVerse(_ verse: BibleVerse) {
         // Used for long press actions
+        selectedVerse = verse
     }
     
     func increaseFontSize() {
@@ -178,6 +195,22 @@ public final class BibleReaderViewModel: ObservableObject {
     
     func scrollToVerse(id: String) {
         scrollToVerse = id
+    }
+    
+    public func updateBook(_ book: BibleBook, chapter: Int) {
+        currentBook = book
+        currentChapter = chapter
+        Task {
+            await loadChapter()
+        }
+    }
+    
+    public func updateTranslation(_ translation: BibleTranslation) {
+        currentTranslation = translation
+        saveUserPreferences()
+        Task {
+            await loadChapter()
+        }
     }
     
     // MARK: - Private Methods
