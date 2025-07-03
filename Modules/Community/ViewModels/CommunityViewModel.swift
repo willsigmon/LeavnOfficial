@@ -129,7 +129,7 @@ public final class CommunityViewModel: ObservableObject {
         }
         
         // Track analytics
-        let event = AnalyticsEvent(name: "post_liked", parameters: ["post_id": postId])
+        let event = AnalyticsEvent(name: "post_liked", parameters: ["post_id": String(postId)])
         await analyticsService.track(event: event)
     }
     
@@ -149,7 +149,7 @@ public final class CommunityViewModel: ObservableObject {
         posts[index].comments.append(comment)
         
         // Track analytics
-        let event = AnalyticsEvent(name: "comment_added", parameters: ["post_id": postId])
+        let event = AnalyticsEvent(name: "comment_added", parameters: ["post_id": String(postId)])
         await analyticsService.track(event: event)
     }
     
@@ -162,7 +162,7 @@ public final class CommunityViewModel: ObservableObject {
         groups[index].isJoined = true
         
         // Track analytics
-        let event = AnalyticsEvent(name: "group_joined", parameters: ["group_id": groupId])
+        let event = AnalyticsEvent(name: "group_joined", parameters: ["group_id": String(groupId)])
         await analyticsService.track(event: event)
     }
     
@@ -175,25 +175,86 @@ public final class CommunityViewModel: ObservableObject {
         challenges[index].isJoined = true
         
         // Track analytics
-        let event = AnalyticsEvent(name: "challenge_joined", parameters: ["challenge_id": challengeId])
+        let event = AnalyticsEvent(name: "challenge_joined", parameters: ["challenge_id": String(challengeId)])
         await analyticsService.track(event: event)
     }
     
     // MARK: - Private Methods
     
     private func loadPosts() async throws -> [CommunityPost] {
-        // Real implementation using the community service
-        return try await DIContainer.shared.communityService?.getPosts(limit: 20, offset: 0) ?? []
+        let service = await MainActor.run { DIContainer.shared.communityService }
+        if let posts = try await service?.getPosts(limit: 20, offset: 0) {
+            return posts.map { servicePost in
+                CommunityPost(
+                    id: servicePost.id,
+                    userId: servicePost.userId,
+                    userName: servicePost.userName,
+                    userAvatar: servicePost.userAvatar,
+                    text: servicePost.text,
+                    verseReference: servicePost.verseReference,
+                    groupId: servicePost.groupId,
+                    timestamp: servicePost.timestamp,
+                    likes: servicePost.likes,
+                    comments: servicePost.comments.map { comment in
+                        Comment(
+                            id: comment.id,
+                            userId: comment.userId,
+                            userName: comment.userName,
+                            text: comment.text,
+                            timestamp: comment.timestamp
+                        )
+                    },
+                    isLikedByUser: servicePost.isLikedByUser
+                )
+            }
+        } else {
+            return []
+        }
     }
     
     private func loadGroups() async throws -> [StudyGroup] {
-        // Real implementation using the community service
-        return try await DIContainer.shared.communityService?.getGroups() ?? []
+        let service = await MainActor.run { DIContainer.shared.communityService }
+        if let groups = try await service?.getGroups() {
+            return groups.map { serviceGroup in
+                StudyGroup(
+                    id: serviceGroup.id,
+                    name: serviceGroup.name,
+                    description: serviceGroup.description,
+                    memberCount: serviceGroup.memberCount,
+                    memberIds: serviceGroup.memberIds,
+                    isJoined: serviceGroup.isJoined,
+                    lastActivity: serviceGroup.lastActivity,
+                    icon: serviceGroup.icon,
+                    color: Color(serviceGroup.color)
+                )
+            }
+        } else {
+            return []
+        }
     }
     
     private func loadChallenges() async throws -> [Challenge] {
-        // Real implementation using the community service
-        return try await DIContainer.shared.communityService?.getChallenges() ?? []
+        let service = await MainActor.run { DIContainer.shared.communityService }
+        if let challenges = try await service?.getChallenges() {
+            return challenges.map { serviceChallenge in
+                Challenge(
+                    id: serviceChallenge.id,
+                    title: serviceChallenge.title,
+                    description: serviceChallenge.description,
+                    duration: serviceChallenge.duration,
+                    participantCount: serviceChallenge.participantCount,
+                    participantIds: serviceChallenge.participantIds,
+                    progress: serviceChallenge.progress,
+                    isJoined: serviceChallenge.isJoined,
+                    startDate: serviceChallenge.startDate,
+                    endDate: serviceChallenge.endDate,
+                    icon: serviceChallenge.icon,
+                    color: Color(serviceChallenge.color)
+                )
+            }
+        } else {
+            return []
+        }
     }
     
     private func getUnreadNotificationCount() async -> Int {

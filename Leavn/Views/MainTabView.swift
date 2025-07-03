@@ -1,40 +1,51 @@
 import SwiftUI
 import LeavnCore
-import LeavnServices
 import LeavnBible
 import LeavnSearch
 import LeavnLibrary
 import LeavnCommunity
 import LeavnSettings
 import DesignSystem
+// import LeavnCommunity (removed unnecessary import)
+// import LeavnSettings (removed unnecessary import)
+// import DesignSystem (removed unnecessary import)
+
+private enum MainTab: Int, CaseIterable {
+    case bible = 0, search, library, community, settings
+}
 
 struct MainTabView: View {
     @EnvironmentObject var appState: AppState
-    @State private var selectedTab = 0
-    @State private var previousTab = 0
+    @State private var selectedTab: MainTab = .bible
+    @State private var previousTab: MainTab = .bible
     
     var body: some View {
         ZStack(alignment: .bottom) {
             // Content
             TabView(selection: $selectedTab) {
                 BibleView()
-                    .tag(0)
+                    .tag(MainTab.bible)
                 
                 SearchView()
-                    .tag(1)
+                    .tag(MainTab.search)
                 
                 LibraryView()
-                    .tag(2)
+                    .tag(MainTab.library)
                 
                 CommunityView()
-                    .tag(3)
+                    .tag(MainTab.community)
                 
                 SettingsView()
-                    .tag(4)
+                    .tag(MainTab.settings)
             }
+            .ignoresSafeArea(.container, edges: .bottom)
+            .toolbar(.hidden, for: .tabBar)
             
             // Custom tab bar
-            customTabBar
+            VStack(spacing: 0) {
+                Spacer(minLength: 0)
+                customTabBar
+            }
         }
         .onChange(of: selectedTab) { oldValue, newValue in
             previousTab = oldValue
@@ -43,63 +54,45 @@ struct MainTabView: View {
     
     private var customTabBar: some View {
         HStack(spacing: 0) {
-            AnimatedTabItem(
-                icon: "book",
-                title: "Bible",
-                isSelected: selectedTab == 0
-            ) {
-                selectedTab = 0
-            }
-            
-            AnimatedTabItem(
-                icon: "magnifyingglass",
-                title: "Search",
-                isSelected: selectedTab == 1
-            ) {
-                selectedTab = 1
-            }
-            
-            AnimatedTabItem(
-                icon: "books.vertical",
-                title: "Library",
-                isSelected: selectedTab == 2
-            ) {
-                selectedTab = 2
-            }
-            
-            AnimatedTabItem(
-                icon: "person.3",
-                title: "Community",
-                isSelected: selectedTab == 3
-            ) {
-                selectedTab = 3
-            }
-            
-            AnimatedTabItem(
-                icon: "gearshape",
-                title: "Settings",
-                isSelected: selectedTab == 4
-            ) {
-                selectedTab = 4
+            ForEach(MainTab.allCases, id: \.self) { tab in
+                AnimatedTabItem(
+                    icon: icon(for: tab),
+                    title: title(for: tab),
+                    isSelected: selectedTab == tab
+                ) {
+                    selectedTab = tab
+                }
             }
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 25)
-                .fill(.ultraThinMaterial)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 25)
-                        .stroke(LeavnTheme.Colors.glassBorder, lineWidth: 1)
-                )
-        )
-        .shadow(
-            color: LeavnTheme.Shadows.elevation.color,
-            radius: LeavnTheme.Shadows.elevation.radius,
-            x: 0,
-            y: LeavnTheme.Shadows.elevation.y
-        )
-        .padding(.horizontal, 20)
-        .padding(.bottom, 20)
+        .padding(.horizontal)
+        .frame(height: 50)
+        .background(.ultraThinMaterial)
+        .clipShape(Capsule())
+        .padding(.horizontal)
+        .padding(.bottom, safeAreaInset > 0 ? 0 : 12)
+    }
+    
+    private func icon(for tab: MainTab) -> String {
+        switch tab {
+        case .bible: "book"
+        case .search: "magnifyingglass"
+        case .library: "books.vertical"
+        case .community: "person.3"
+        case .settings: "gearshape"
+        }
+    }
+    
+    private func title(for tab: MainTab) -> String {
+        switch tab {
+        case .bible: "Bible"
+        case .search: "Search"
+        case .library: "Library"
+        case .community: "Community"
+        case .settings: "Settings"
+        }
+    }
+    
+    private var safeAreaInset: CGFloat {
+        UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0
     }
 }

@@ -107,7 +107,7 @@ public struct Challenge: Identifiable, Sendable {
 }
 
 /// Real Firebase-based community service
-public actor FirebaseCommunityService: CommunityServiceProtocol {
+public actor FirebaseCommunityService: CommunityServiceProtocol, @unchecked Sendable {
     
     // MARK: - Properties
     
@@ -336,20 +336,6 @@ public actor FirebaseCommunityService: CommunityServiceProtocol {
         }
         #endif
     }
-}
-
-// MARK: - Community Service Protocol
-
-public protocol CommunityServiceProtocol: ServiceProtocol {
-    func getPosts(limit: Int, offset: Int) async throws -> [CommunityPost]
-    func createPost(_ post: CommunityPost) async throws
-    func likePost(_ postId: String, userId: String) async throws
-    func addComment(to postId: String, comment: Comment) async throws
-    func getGroups() async throws -> [StudyGroup]
-    func createGroup(_ group: StudyGroup) async throws
-    func joinGroup(_ groupId: String, userId: String) async throws
-    func getChallenges() async throws -> [Challenge]
-    func joinChallenge(_ challengeId: String, userId: String) async throws
 }
 
 // MARK: - Firestore Extensions

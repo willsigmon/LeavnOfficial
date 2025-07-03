@@ -176,76 +176,75 @@ public extension BibleBook {
 }
 
 public struct BibleTranslation: Identifiable, Codable, Hashable, Sendable {
-    public let id: String
-    public let name: String
+    public var id: String { abbreviation }
     public let abbreviation: String
+    public let name: String
     public let language: String
     public let languageCode: String
     
     public init(
-        id: String,
-        name: String,
         abbreviation: String,
+        name: String,
         language: String,
         languageCode: String
     ) {
-        self.id = id
-        self.name = name
         self.abbreviation = abbreviation
+        self.name = name
         self.language = language
         self.languageCode = languageCode
     }
 
-        public static var kjv: BibleTranslation {
+    public static var kjv: BibleTranslation {
         return BibleTranslation(
-            id: "kjv",
-            name: "King James Version",
             abbreviation: "KJV",
+            name: "King James Version",
             language: "English",
             languageCode: "en"
         )
     }
 
-    public static let defaultTranslations: [BibleTranslation] = [
-        BibleTranslation(
-            id: "kjv",
-            name: "King James Version",
-            abbreviation: "KJV",
-            language: "English",
-            languageCode: "en"
-        ),
-        BibleTranslation(
-            id: "asv",
-            name: "American Standard Version",
+    public static var asv: BibleTranslation {
+        return BibleTranslation(
             abbreviation: "ASV",
-            language: "English",
-            languageCode: "en"
-        ),
-        BibleTranslation(
-            id: "bbe",
-            name: "Bible in Basic English",
-            abbreviation: "BBE",
-            language: "English",
-            languageCode: "en"
-        ),
-        BibleTranslation(
-            id: "web",
-            name: "World English Bible",
-            abbreviation: "WEB",
-            language: "English",
-            languageCode: "en"
-        ),
-        BibleTranslation(
-            id: "ylt",
-            name: "Young's Literal Translation",
-            abbreviation: "YLT",
+            name: "American Standard Version",
             language: "English",
             languageCode: "en"
         )
+    }
+    
+    public static var bbe: BibleTranslation {
+        return BibleTranslation(
+            abbreviation: "BBE",
+            name: "Bible in Basic English",
+            language: "English",
+            languageCode: "en"
+        )
+    }
+
+    public static var web: BibleTranslation {
+        return BibleTranslation(
+            abbreviation: "WEB",
+            name: "World English Bible",
+            language: "English",
+            languageCode: "en"
+        )
+    }
+
+    public static var ylt: BibleTranslation {
+        return BibleTranslation(
+            abbreviation: "YLT",
+            name: "Young's Literal Translation",
+            language: "English",
+            languageCode: "en"
+        )
+    }
+    
+    public static let defaultTranslations: [BibleTranslation] = [
+        .kjv, .asv, .bbe, .web, .ylt
     ]
     
     public var getBibleCode: String {
-        return id
+        return abbreviation.lowercased()
     }
 }
 

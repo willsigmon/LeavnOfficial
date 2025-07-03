@@ -23,6 +23,7 @@ public final class DIContainer: ObservableObject {
     @Published public private(set) var analyticsService: AnalyticsServiceProtocol?
     @Published public private(set) var notificationService: NotificationService?
     @Published public private(set) var lifeSituationsEngine: LifeSituationsEngineProtocol?
+    @Published public private(set) var communityService: CommunityServiceProtocol?
 
     // MARK: - Coordinators
     @Published public private(set) var navigationCoordinator: NavigationCoordinator?
@@ -133,12 +134,7 @@ public final class DIContainer: ObservableObject {
         _ = await self.notificationService?.requestPermission()
 
         // Analytics Service
-        if isProduction {
-            analyticsService = ProductionAnalyticsService()  // Using production service
-        } else {
-            // Create a simple mock for development
-            analyticsService = DevelopmentAnalyticsService()
-        }
+        analyticsService = ProductionAnalyticsService()
     }
     
     private func registerDataServices() async {
@@ -147,7 +143,7 @@ public final class DIContainer: ObservableObject {
             logger.error("Cache service not available for Bible service")
             return
         }
-        bibleService = GetBibleService(cacheManager: cacheService)
+        bibleService = ProductionBibleService(cacheService: cacheService)
         
         // User service
         userService = SimpleUserService(cacheService: cacheService)
@@ -189,12 +185,12 @@ public final class DIContainer: ObservableObject {
                 )
                 logger.info("✅ Production AI Service registered.")
             } else {
-                logger.warning("⚠️ No valid API key configured. Using MockAIService.")
-                aiService = MockAIService()
+                logger.warning("⚠️ No valid API key configured. AI Service will be disabled.")
+                aiService = nil
             }
         } else {
-            logger.info("🤖 AI Service is disabled. Using MockAIService.")
-            aiService = MockAIService()
+            logger.info("🤖 AI Service is disabled by configuration. AI Service will be disabled.")
+            aiService = nil
         }
 
         // Register Sync Service
@@ -224,6 +220,10 @@ public final class DIContainer: ObservableObject {
             cacheService: cacheService
         )
         logger.info("✅ Life Situations Engine registered.")
+        
+        // Register Community Service
+        communityService = FirebaseCommunityService()
+        logger.info("✅ Community Service registered.")
     }
     
     private func registerCoordinators() async {
@@ -318,6 +318,18 @@ public final class DIContainer: ObservableObject {
         ]
     }
     #endif
+    
+    // MARK: - Initialization Waiting
+    
+    public func waitForInitialization() async {
+        while !isInitialized {
+            if let error = initializationError {
+                print("❌ DIContainer initialization failed: \(error)")
+                break
+            }
+            try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+        }
+    }
 }
 
 // MARK: - AI Configuration

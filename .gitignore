@@ -147,3 +147,27 @@ Previews/
 
 # Playgrounds
 timeline.xctimeline
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# User-specific
+*.xcuserdatad
+*.xcschemes
+*.moved-aside
+
+# Generated
+DerivedData
+build/
+Build/
+*.xcodeproj
+*.xcworkspace
+
+# Secrets
+Leavn/Configuration/Secrets.swift
+
+# SwiftPM
+.build/
+.swiftpm/

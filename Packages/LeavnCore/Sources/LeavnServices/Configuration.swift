@@ -2,6 +2,55 @@ import Foundation
 import LeavnCore
 import CloudKit
 
+// MARK: - Secret Manager
+
+/// A centralized manager for handling API keys and other secrets.
+public enum SecretManager {
+    
+    /// An enumeration of the secret keys used throughout the application.
+    public enum Key: String {
+        case openAI = "OPENAI_API_KEY"
+        case anthropic = "ANTHROPIC_API_KEY"
+    }
+    
+    /// Retrieves a secret value from the process environment variables.
+    ///
+    /// This is the recommended approach for providing secrets during development.
+    /// To set an environment variable, run the following command in your terminal
+    /// before launching Xcode:
+    ///
+    /// `export OPENAI_API_KEY="your_api_key_here"`
+    ///
+    /// - Parameter key: The secret key to retrieve.
+    /// - Returns: The secret value, or `nil` if not found.
+    public static func get(_ key: Key) -> String? {
+        // First try environment variable (for development)
+        if let envKey = ProcessInfo.processInfo.environment[key.rawValue], !envKey.isEmpty {
+            return envKey
+        }
+        
+        // Then try keychain (for production)
+        if let keychainKey = KeychainHelper.getAPIKey(for: key.rawValue.lowercased()) {
+            return keychainKey
+        }
+        
+        // Finally try UserDefaults (for testing - not secure)
+        if let userDefaultsKey = UserDefaults.standard.string(forKey: "\(key.rawValue.lowercased())_api_key"), !userDefaultsKey.isEmpty {
+            return userDefaultsKey
+        }
+        
+        return nil
+    }
+
+    /// Sets a secret value securely in the Keychain.
+    /// - Parameters:
+    ///   - key: The secret key to set.
+    ///   - value: The secret value to store.
+    public static func set(_ key: Key, value: String) {
+        KeychainHelper.setAPIKey(value, for: key.rawValue.lowercased())
+    }
+}
+
 // MARK: - App Configuration
 
 public struct AppConfiguration {
@@ -12,47 +61,20 @@ public struct AppConfiguration {
         
         // AI Service Keys - Load from environment or keychain for security
         public static var openAIKey: String {
-            // First try environment variable (for development)
-            if let envKey = ProcessInfo.processInfo.environment["OPENAI_API_KEY"], !envKey.isEmpty {
-                return envKey
-            }
-            
-            // Then try keychain (for production)
-            if let keychainKey = KeychainHelper.getAPIKey(for: "openai") {
-                return keychainKey
-            }
-            
-            // Finally try UserDefaults (for testing - not secure)
-            if let userDefaultsKey = UserDefaults.standard.string(forKey: "openai_api_key"), !userDefaultsKey.isEmpty {
-                return userDefaultsKey
-            }
-            
-            return ""
+            SecretManager.get(.openAI) ?? ""
         }
         
         public static var anthropicKey: String {
-            if let envKey = ProcessInfo.processInfo.environment["ANTHROPIC_API_KEY"], !envKey.isEmpty {
-                return envKey
-            }
-            
-            if let keychainKey = KeychainHelper.getAPIKey(for: "anthropic") {
-                return keychainKey
-            }
-            
-            if let userDefaultsKey = UserDefaults.standard.string(forKey: "anthropic_api_key"), !userDefaultsKey.isEmpty {
-                return userDefaultsKey
-            }
-            
-            return ""
+            SecretManager.get(.anthropic) ?? ""
         }
         
         // Helper method to set API keys securely
         public static func setOpenAIKey(_ key: String) {
-            KeychainHelper.setAPIKey(key, for: "openai")
+            SecretManager.set(.openAI, value: key)
         }
         
         public static func setAnthropicKey(_ key: String) {
-            KeychainHelper.setAPIKey(key, for: "anthropic")
+            SecretManager.set(.anthropic, value: key)
         }
     }
     
@@ -76,9 +98,8 @@ public struct AppConfiguration {
     // MARK: - App Settings
     public struct Settings {
         public static let defaultTranslation = BibleTranslation(
-            id: "esv",
-            name: "English Standard Version",
             abbreviation: "ESV",
+            name: "English Standard Version",
             language: "English",
             languageCode: "en"
         )

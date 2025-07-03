@@ -183,7 +183,7 @@ public actor ProductionLibraryService: LibraryServiceProtocol {
             throw ServiceError.notFound
         }
         
-        var plan = readingPlansCache[planIndex]
+        let plan = readingPlansCache[planIndex]
         
         guard let dayIndex = plan.days.firstIndex(where: { $0.dayNumber == dayNumber }) else {
             throw ServiceError.notFound
@@ -383,29 +383,26 @@ public actor ProductionLibraryService: LibraryServiceProtocol {
     private func createChronologicalReadingPlan() -> ReadingPlan {
         var days: [ReadingPlanDay] = []
         
-        // Sample chronological reading plan (365 days)
+        // Simplified chronological reading plan (365 days)
         let bibleBooks = BibleBook.allCases
         let totalDays = 365
-        let booksPerDay = max(1, bibleBooks.count / totalDays)
         
+        // Distribute books across days more evenly
         for dayNumber in 1...totalDays {
-            let startIndex = (dayNumber - 1) * booksPerDay
-            let endIndex = min(startIndex + booksPerDay, bibleBooks.count)
+            let bookIndex = (dayNumber - 1) % bibleBooks.count
+            let book = bibleBooks[bookIndex]
             
-            let readings = (startIndex..<endIndex).map { index in
-                let book = bibleBooks[index]
-                return BibleReading(
-                    bookId: book.id,
-                    startChapter: 1,
-                    startVerse: nil,
-                    endChapter: min(3, book.chapterCount),
-                    endVerse: nil
-                )
-            }
+            let reading = BibleReading(
+                bookId: book.id,
+                startChapter: 1,
+                startVerse: nil,
+                endChapter: min(3, book.chapterCount),
+                endVerse: nil
+            )
             
             days.append(ReadingPlanDay(
                 dayNumber: dayNumber,
-                readings: readings
+                readings: [reading]
             ))
         }
         

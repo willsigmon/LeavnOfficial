@@ -31,6 +31,7 @@ struct ChapterPickerView: View {
                                 .contentShape(Rectangle())
                         }
                         .buttonStyle(PlainButtonStyle())
+                        .id(String(chapter))
                     }
                 }
                 .padding()

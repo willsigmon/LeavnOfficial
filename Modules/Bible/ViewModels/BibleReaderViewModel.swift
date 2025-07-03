@@ -102,9 +102,9 @@ public final class BibleReaderViewModel: ObservableObject {
                     await self.analyticsService?.track(event: AnalyticsEvent(
                         name: "chapter_viewed",
                         parameters: [
-                            "book": self.currentBook.name,
-                            "chapter": "\(self.currentChapter)",
-                            "translation": self.currentTranslation.abbreviation
+                            "book": String(describing: self.currentBook.name),
+                            "chapter": String(self.currentChapter),
+                            "translation": String(describing: self.currentTranslation.abbreviation)
                         ]
                     ))
                 }

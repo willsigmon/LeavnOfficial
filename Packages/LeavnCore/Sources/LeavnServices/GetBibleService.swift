@@ -7,7 +7,7 @@ public actor GetBibleService: BibleServiceProtocol {
     
     // MARK: - Properties
     
-    private let baseURL = "https://getbible.net/v2"
+    private let baseURL = "https://bible-api.com"
     private let session: URLSession
     private let cacheManager: any CacheServiceProtocol
     private var isInitialized = false
@@ -115,12 +115,12 @@ public actor GetBibleService: BibleServiceProtocol {
     public func getTranslations() async throws -> [BibleTranslation] {
         guard isInitialized else { throw ServiceError.notInitialized }
         return [
-            BibleTranslation(id: "kjv", name: "King James Version", abbreviation: "KJV", language: "English", languageCode: "en"),
-            BibleTranslation(id: "asv", name: "American Standard Version", abbreviation: "ASV", language: "English", languageCode: "en"),
-            BibleTranslation(id: "bbe", name: "Bible in Basic English", abbreviation: "BBE", language: "English", languageCode: "en"),
-            BibleTranslation(id: "darby", name: "Darby", abbreviation: "DARBY", language: "English", languageCode: "en"),
-            BibleTranslation(id: "web", name: "World English Bible", abbreviation: "WEB", language: "English", languageCode: "en"),
-            BibleTranslation(id: "ylt", name: "Young's Literal Translation", abbreviation: "YLT", language: "English", languageCode: "en")
+            BibleTranslation(abbreviation: "KJV", name: "King James Version", language: "English", languageCode: "en"),
+            BibleTranslation(abbreviation: "ASV", name: "American Standard Version", language: "English", languageCode: "en"),
+            BibleTranslation(abbreviation: "BBE", name: "Bible in Basic English", language: "English", languageCode: "en"),
+            BibleTranslation(abbreviation: "DARBY", name: "Darby", language: "English", languageCode: "en"),
+            BibleTranslation(abbreviation: "WEB", name: "World English Bible", language: "English", languageCode: "en"),
+            BibleTranslation(abbreviation: "YLT", name: "Young's Literal Translation", language: "English", languageCode: "en")
         ]
     }
     
@@ -158,7 +158,7 @@ public actor GetBibleService: BibleServiceProtocol {
                 results.append(contentsOf: matchingVerses)
                 
                 if results.count >= 20 { break }
-            } catch {
+            } catch _ {
                 continue
             }
         }
@@ -193,7 +193,7 @@ public actor GetBibleService: BibleServiceProtocol {
             return decoded
             
         } catch let error as ServiceError { throw error
-        } catch let error as DecodingError { throw ServiceError.dataCorrupted
+        } catch _ as DecodingError { throw ServiceError.dataCorrupted
         } catch {
             if retryCount < maxRetries {
                 try await Task.sleep(nanoseconds: UInt64(retryDelay * Double(retryCount + 1) * 1_000_000_000))

@@ -70,11 +70,11 @@ public final class VerseComparisonViewModel: ObservableObject {
         await analyticsService?.track(event: AnalyticsEvent(
             name: "verse_comparison_viewed",
             parameters: [
-                "verse_id": verse.id,
-                "book": verse.bookName,
-                "chapter": "\(verse.chapter)",
-                "verse": "\(verse.verse)",
-                "translation": verse.translation
+                "verse_id": String(verse.id),
+                "book": String(verse.bookName),
+                "chapter": String(verse.chapter),
+                "verse": String(verse.verse),
+                "translation": String(verse.translation)
             ]
         ))
         
@@ -139,8 +139,8 @@ public final class VerseComparisonViewModel: ObservableObject {
             await analyticsService?.track(event: AnalyticsEvent(
                 name: "ai_insights_generated",
                 parameters: [
-                    "verse_id": verse.id,
-                    "insight_count": "\(insights.count)"
+                    "verse_id": String(verse.id),
+                    "insight_count": String(insights.count)
                 ]
             ))
         } catch {

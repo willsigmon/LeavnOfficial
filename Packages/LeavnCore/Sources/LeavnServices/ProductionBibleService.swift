@@ -7,7 +7,7 @@ public actor ProductionBibleService: BibleServiceProtocol {
     
     // MARK: - Properties
     
-    private let baseURL = "https://getbible.net/v2"
+    private let baseURL = "https://bible-api.com"
     private let session: URLSession
     private let cacheService: CacheServiceProtocol
     private var isInitialized = false
@@ -36,11 +36,10 @@ public actor ProductionBibleService: BibleServiceProtocol {
             isInitialized = true
             print("📚 ProductionBibleService initialized with \(cachedTranslations.count) translations")
         } catch {
-            // Allow initialization to succeed even if translations fail to load
-            // We'll use default translations
+            // Allow initialization to succeed with offline data
             cachedTranslations = BibleTranslation.defaultTranslations
             isInitialized = true
-            print("📚 ProductionBibleService initialized with default translations due to error: \(error)")
+            print("📚 ProductionBibleService initialized with offline data")
         }
     }
     
@@ -58,32 +57,36 @@ public actor ProductionBibleService: BibleServiceProtocol {
             throw ServiceError.notInitialized
         }
         
-        // Convert book string to BibleBook
-        guard let bibleBook = BibleBook.allCases.first(where: { $0.id == book || $0.name == book }) else {
-            throw ServiceError.notFound
+        // Try offline first for plane mode
+        if let offlineVerse = OfflineBibleData.getOfflineVerse(bookId: book, chapter: chapter, verse: verse) {
+            return offlineVerse
         }
         
-        let translationCode = translation.getBibleCode
-        let bookNumber = bibleBook.bookNumber
-        let endpoint = "/\(translationCode)/\(bookNumber)/\(chapter)/\(verse).json"
-        
-        let chapterData: GetBibleChapter = try await fetchWithRetry(endpoint: endpoint)
-        
-        // Find the specific verse (verses are in dictionary format)
-        guard let verseData = chapterData.chapter[String(verse)] else {
-            throw ServiceError.notFound
+        // Try online API
+        do {
+            let endpoint = "/\(book)+\(chapter):\(verse)"
+            let response: BibleAPIResponse = try await fetchWithRetry(endpoint: endpoint)
+            
+            guard let verseData = response.verses.first else {
+                throw ServiceError.notFound
+            }
+            
+            return BibleVerse(
+                id: "\(book)-\(chapter)-\(verse)-\(translation.abbreviation)",
+                bookName: verseData.book_name,
+                bookId: book,
+                chapter: chapter,
+                verse: verse,
+                text: verseData.text.trimmingCharacters(in: .whitespacesAndNewlines),
+                translation: translation.abbreviation
+            )
+        } catch {
+            // Fallback to offline data if available
+            if let offlineVerse = OfflineBibleData.getOfflineVerse(bookId: book, chapter: chapter, verse: verse) {
+                return offlineVerse
+            }
+            throw error
         }
-        
-        return BibleVerse(
-            id: "\(bibleBook.id)-\(chapter)-\(verse)-\(translation.abbreviation)",
-            bookName: bibleBook.name,
-            bookId: bibleBook.id,
-            chapter: chapter,
-            verse: verse,
-            text: cleanVerseText(verseData.verse),
-            translation: translation.abbreviation,
-            isRedLetter: false // GetBible doesn't provide red letter markup
-        )
     }
     
     public func getChapter(book: String, chapter: Int, translation: BibleTranslation) async throws -> BibleChapter {
@@ -91,39 +94,41 @@ public actor ProductionBibleService: BibleServiceProtocol {
             throw ServiceError.notInitialized
         }
         
-        // Convert book string to BibleBook
-        guard let bibleBook = BibleBook.allCases.first(where: { $0.id == book || $0.name == book }) else {
-            throw ServiceError.notFound
+        // Try offline first for plane mode
+        if let offlineChapter = OfflineBibleData.getOfflineChapter(bookId: book, chapter: chapter) {
+            return offlineChapter
         }
         
-        let translationCode = translation.getBibleCode
-        let bookNumber = bibleBook.bookNumber
-        let endpoint = "/\(translationCode)/\(bookNumber)/\(chapter).json"
-        
-        let chapterData: GetBibleChapter = try await fetchWithRetry(endpoint: endpoint)
-        
-        // Convert dictionary to sorted array
-        let sortedVerses = chapterData.chapter
-            .sorted { Int($0.key) ?? 0 < Int($1.key) ?? 0 }
-            .map { (key, verseData) in
+        // Try online API
+        do {
+            let endpoint = "/\(book)+\(chapter)"
+            let response: BibleAPIResponse = try await fetchWithRetry(endpoint: endpoint)
+            
+            let verses = response.verses.map { verseData in
                 BibleVerse(
-                    id: "\(bibleBook.id)-\(chapter)-\(verseData.verse_nr)-\(translation.abbreviation)",
-                    bookName: bibleBook.name,
-                    bookId: bibleBook.id,
+                    id: "\(book)-\(chapter)-\(verseData.verse)-\(translation.abbreviation)",
+                    bookName: verseData.book_name,
+                    bookId: book,
                     chapter: chapter,
-                    verse: verseData.verse_nr,
-                    text: cleanVerseText(verseData.verse),
-                    translation: translation.abbreviation,
-                    isRedLetter: false
+                    verse: verseData.verse,
+                    text: verseData.text.trimmingCharacters(in: .whitespacesAndNewlines),
+                    translation: translation.abbreviation
                 )
             }
-        
-        return BibleChapter(
-            bookName: bibleBook.name,
-            bookId: bibleBook.id,
-            chapterNumber: chapter,
-            verses: sortedVerses
-        )
+            
+            return BibleChapter(
+                bookName: response.verses.first?.book_name ?? book.capitalized,
+                bookId: book,
+                chapterNumber: chapter,
+                verses: verses
+            )
+        } catch {
+            // Fallback to offline data if available
+            if let offlineChapter = OfflineBibleData.getOfflineChapter(bookId: book, chapter: chapter) {
+                return offlineChapter
+            }
+            throw error
+        }
     }
     
     public func getDailyVerse(translation: BibleTranslation) async throws -> BibleVerse {
@@ -131,81 +136,16 @@ public actor ProductionBibleService: BibleServiceProtocol {
             throw ServiceError.notInitialized
         }
         
-        // Use a deterministic daily verse based on the day of year
-        let dayOfYear = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 1
-        
-        // Popular verses for daily reading
-        let dailyVerses: [(BibleBook, Int, Int)] = [
-            (.psalms, 23, 1),
-            (.proverbs, 3, 5),
-            (.proverbs, 3, 6),
-            (.isaiah, 40, 31),
-            (.matthew, 6, 33),
-            (.matthew, 11, 28),
-            (.john, 3, 16),
-            (.john, 14, 6),
-            (.romans, 8, 28),
-            (.romans, 12, 2),
-            (.philippians, 4, 13),
-            (.philippians, 4, 19),
-            (.ephesians, 2, 8),
-            (.ephesians, 2, 9),
-            (.james, 1, 5),
-            (.firstPeter, 5, 7),
-            (.firstJohn, 4, 19),
-            (.revelation, 3, 20),
-            (.psalms, 119, 105),
-            (.proverbs, 16, 3),
-            (.isaiah, 41, 10),
-            (.matthew, 5, 16),
-            (.luke, 6, 31),
-            (.john, 15, 5),
-            (.romans, 10, 9),
-            (.firstCorinthians, 13, 13),
-            (.galatians, 5, 22),
-            (.colossians, 3, 23),
-            (.hebrews, 11, 1),
-            (.hebrews, 13, 8),
-            (.psalms, 46, 1)
-        ]
-        
-        let index = (dayOfYear - 1) % dailyVerses.count
-        let (book, chapter, verse) = dailyVerses[index]
-        
-        return try await getVerse(book: book.id, chapter: chapter, verse: verse, translation: translation)
+        // Always use offline data for daily verse to ensure consistency
+        return OfflineBibleData.getDailyOfflineVerse()
     }
     
     public func getTranslations() async throws -> [BibleTranslation] {
-        return try await getAvailableTranslations()
+        return BibleTranslation.defaultTranslations
     }
     
     public func getAvailableTranslations() async throws -> [BibleTranslation] {
-        // Check cache first
-        let cacheKey = "available_translations"
-        if let cached = await cacheService.get(cacheKey, type: [BibleTranslation].self) {
-            return cached
-        }
-        
-        let endpoint = "/translations.json"
-        let translationList: GetBibleTranslationList = try await fetchWithRetry(endpoint: endpoint)
-        
-        // Convert GetBible translations to our format
-        let translations = translationList.translations.values.compactMap { getBibleTranslation -> BibleTranslation? in
-            // Map to our translation format
-            return BibleTranslation(
-                id: getBibleTranslation.abbreviation.lowercased(),
-                name: getBibleTranslation.translation,
-                abbreviation: getBibleTranslation.abbreviation,
-                language: getBibleTranslation.language,
-                languageCode: getBibleTranslation.lang
-            )
-        }
-        
-        // Cache for 24 hours
-        let expirationDate = Calendar.current.date(byAdding: .hour, value: 24, to: Date())
-        await cacheService.set(cacheKey, value: translations, expirationDate: expirationDate)
-        
-        return translations
+        return BibleTranslation.defaultTranslations
     }
     
     public func searchVerses(query: String, translation: BibleTranslation, books: [BibleBook]? = nil) async throws -> [BibleVerse] {
@@ -213,54 +153,11 @@ public actor ProductionBibleService: BibleServiceProtocol {
             throw ServiceError.notInitialized
         }
         
-        // GetBible doesn't have a direct search API, so we'll implement a basic search
-        // This is a simplified implementation - for production, consider using a dedicated search service
-        
-        var results: [BibleVerse] = []
-        let searchBooks = books ?? Array(BibleBook.allCases.prefix(10)) // Limit for performance
-        
-        let searchTasks = searchBooks.map { book in
-            Task {
-                await searchInBook(book: book, query: query, translation: translation)
-            }
-        }
-        
-        for task in searchTasks {
-            let bookResults = await task.value
-            results.append(contentsOf: bookResults)
-        }
-        
-        return results.sorted { $0.bookName < $1.bookName || ($0.bookName == $1.bookName && $0.chapter < $1.chapter) }
+        // Use offline search for plane mode
+        return OfflineBibleData.searchOfflineVerses(query: query)
     }
     
     // MARK: - Private Helper Methods
-    
-    private func searchInBook(book: BibleBook, query: String, translation: BibleTranslation) async -> [BibleVerse] {
-        var results: [BibleVerse] = []
-        
-        // Search in first few chapters of each book (for performance)
-        let maxChapters = min(book.chapterCount, 5)
-        
-        for chapterNum in 1...maxChapters {
-            do {
-                let chapter = try await getChapter(book: book.id, chapter: chapterNum, translation: translation)
-                let matchingVerses = chapter.verses.filter { verse in
-                    verse.text.localizedCaseInsensitiveContains(query)
-                }
-                results.append(contentsOf: matchingVerses)
-                
-                // Limit results per book
-                if results.count >= 20 {
-                    break
-                }
-            } catch {
-                // Skip chapters that fail
-                continue
-            }
-        }
-        
-        return results
-    }
     
     private func fetchWithRetry<T: Decodable>(endpoint: String, retryCount: Int = 0) async throws -> T {
         let cacheKey = "bible_api_" + endpoint.replacingOccurrences(of: "/", with: "_")
@@ -294,24 +191,14 @@ public actor ProductionBibleService: BibleServiceProtocol {
                 if httpResponse.statusCode == 404 {
                     throw ServiceError.notFound
                 }
-                if httpResponse.statusCode == 429 {
-                    throw ServiceError.rateLimited
-                }
-                throw ServiceError.serverError(statusCode: httpResponse.statusCode, message: "HTTP error")
-            }
-            
-            // Check if response is HTML (API down)
-            if let contentType = httpResponse.value(forHTTPHeaderField: "Content-Type"),
-               contentType.contains("text/html") {
-                throw ServiceError.networkError("API returned HTML instead of JSON - service may be down")
+                throw ServiceError.networkError("HTTP \(httpResponse.statusCode)")
             }
             
             // Decode response
             let decoded = try JSONDecoder().decode(T.self, from: data)
             
-            // Cache successful response (1 hour for chapter data, 24 hours for static data)
-            let expirationHours = endpoint.contains("translations") ? 24 : 1
-            let expirationDate = Calendar.current.date(byAdding: .hour, value: expirationHours, to: Date())
+            // Cache successful response (1 hour for chapter data)
+            let expirationDate = Calendar.current.date(byAdding: .hour, value: 1, to: Date())
             await cacheService.set(cacheKey, value: data, expirationDate: expirationDate)
             
             return decoded
@@ -332,23 +219,24 @@ public actor ProductionBibleService: BibleServiceProtocol {
             throw ServiceError.networkError(error.localizedDescription)
         }
     }
-    
+}
 
-    
-    private func cleanVerseText(_ text: String) -> String {
-        // Remove verse numbers from the beginning of the text
-        let trimmed = text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-        
-        // Remove leading numbers and dots/colons
-        let pattern = "^\\d+[:.\\s]*"
-        if let regex = try? NSRegularExpression(pattern: pattern) {
-            let range = NSRange(location: 0, length: trimmed.utf16.count)
-            let cleaned = regex.stringByReplacingMatches(in: trimmed, range: range, withTemplate: "")
-            return cleaned.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-        }
-        
-        return trimmed
-    }
+// MARK: - Bible API Response Models
+
+private struct BibleAPIResponse: Codable {
+    let reference: String
+    let verses: [BibleAPIVerse]
+    let text: String
+    let translation_id: String
+    let translation_name: String
+}
+
+private struct BibleAPIVerse: Codable {
+    let book_id: String
+    let book_name: String
+    let chapter: Int
+    let verse: Int
+    let text: String
 }
 
 

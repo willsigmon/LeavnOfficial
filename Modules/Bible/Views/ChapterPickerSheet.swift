@@ -29,7 +29,7 @@ struct ChapterPickerSheet: View {
                                     isPresented = false
                                 }
                             )
-                            .id(chapter)
+                            .id(String(chapter))
                         }
                     }
                     .padding()

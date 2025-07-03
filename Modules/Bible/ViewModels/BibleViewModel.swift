@@ -54,6 +54,17 @@ public final class BibleViewModel: ObservableObject, Sendable {
             currentBook = .genesis
         }
         guard let book = currentBook else { return }
+        
+        // Load offline content immediately if available
+        if let offlineChapter = OfflineBibleData.getOfflineChapter(bookId: book.id, chapter: currentChapter) {
+            await MainActor.run {
+                self.verses = offlineChapter.verses
+                self.currentBook = book
+                self.currentChapter = currentChapter
+            }
+        }
+        
+        // Then try to load from cache/API in background
         await loadChapter(book: book, chapter: currentChapter)
     }
     

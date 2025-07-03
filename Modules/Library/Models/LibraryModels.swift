@@ -1,13 +1,10 @@
 import Foundation
 import LeavnCore
 
-public enum LibraryCategory: CaseIterable {
-    case bookmarks
-    case notes
-    case highlights
-    case readingPlans
-    case favorites
-    case collections
+public enum LibraryCategory: String, CaseIterable, Identifiable {
+    case bookmarks, notes, highlights, readingPlans, favorites, collections
+
+    public var id: String { rawValue }
     
     public var title: String {
         switch self {
@@ -22,7 +19,7 @@ public enum LibraryCategory: CaseIterable {
 }
 
 public struct LibraryVerse: Identifiable {
-    public let id = UUID()
+    public let id: String = UUID().uuidString
     public let number: Int
     public let text: String
     public let reference: String
@@ -35,7 +32,7 @@ public struct LibraryVerse: Identifiable {
 }
 
 public struct LibraryItem: Identifiable {
-    public let id = UUID()
+    public let id: String
     public let sourceId: String
     public let title: String
     public let icon: String
@@ -45,7 +42,18 @@ public struct LibraryItem: Identifiable {
     public let colorIndex: Int
     public let verses: [LibraryVerse]
     
-    public init(sourceId: String, title: String, icon: String, category: LibraryCategory, date: Date, itemCount: Int, colorIndex: Int = 0, verses: [LibraryVerse] = []) {
+    public init(
+        id: String = UUID().uuidString,
+        sourceId: String,
+        title: String,
+        icon: String,
+        category: LibraryCategory,
+        date: Date,
+        itemCount: Int,
+        colorIndex: Int = 0,
+        verses: [LibraryVerse] = []
+    ) {
+        self.id = id
         self.sourceId = sourceId
         self.title = title
         self.icon = icon

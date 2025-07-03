@@ -53,7 +53,7 @@ struct BookPickerView: View {
                 
                 // Book list
                 List {
-                    ForEach(filteredBooks, id: \.self) { book in
+                    ForEach(filteredBooks) { book in
                         Button(action: {
                             tempSelectedBook = book
                             tempSelectedChapter = 1

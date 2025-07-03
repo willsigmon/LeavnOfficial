@@ -1,36 +1,41 @@
 import SwiftUI
 import LeavnCore
+import LeavnBible
+import LeavnSearch
+import LeavnLibrary
+import LeavnCommunity
+import LeavnSettings
 
 struct ContentView: View {
     @EnvironmentObject var appState: AppState
     
     var body: some View {
         TabView(selection: $appState.selectedTab) {
-            Text("Bible")
+            BibleView()
                 .tabItem {
                     Label("Bible", systemImage: "book")
                 }
                 .tag(TabItem.bible)
             
-            Text("Search")
+            SearchView()
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
                 }
                 .tag(TabItem.search)
             
-            Text("Library")
+            LibraryView()
                 .tabItem {
                     Label("Library", systemImage: "books.vertical")
                 }
                 .tag(TabItem.library)
             
-            Text("Community")
+            CommunityView()
                 .tabItem {
                     Label("Community", systemImage: "person.3")
                 }
                 .tag(TabItem.community)
             
-            Text("Settings")
+            SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gear")
                 }

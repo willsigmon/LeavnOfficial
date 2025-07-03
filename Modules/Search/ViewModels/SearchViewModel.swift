@@ -25,6 +25,33 @@ internal protocol DIContainerProtocol: AnyObject {
 
 extension DIContainer: DIContainerProtocol {}
 
+// MARK: - Dummy Services for Safe Initialization
+
+private final class DummySearchService: SearchServiceProtocol, Sendable {
+    func initialize() async throws {}
+    func search(query: String, options: SearchOptions) async throws -> [APISearchResult] {
+        throw SearchViewModel.SearchError.serviceUnavailable
+    }
+    func getRecentSearches() async -> [String] { [] }
+    func clearRecentSearches() async {}
+}
+
+private final class DummyBibleService: BibleServiceProtocol, Sendable {
+    func initialize() async throws {}
+    func getBooks() async throws -> [BibleBook] { [] }
+    func getChapter(book: String, chapter: Int, translation: BibleTranslation) async throws -> BibleChapter {
+        throw SearchViewModel.SearchError.serviceUnavailable
+    }
+    func getVerse(book: String, chapter: Int, verse: Int, translation: BibleTranslation) async throws -> BibleVerse {
+        throw SearchViewModel.SearchError.serviceUnavailable
+    }
+    func getTranslations() async throws -> [BibleTranslation] { [] }
+    func getDailyVerse(translation: BibleTranslation) async throws -> BibleVerse {
+        throw SearchViewModel.SearchError.serviceUnavailable
+    }
+    func searchVerses(query: String, translation: BibleTranslation, books: [BibleBook]?) async throws -> [BibleVerse] { [] }
+}
+
 // MARK: - Search View Model
 
 @MainActor
@@ -74,7 +101,12 @@ public final class SearchViewModel: ObservableObject {
     ) {
         guard let searchService = container.searchService,
               let bibleService = container.bibleService else {
-            fatalError("SearchService and BibleService are required.")
+            self.searchService = DummySearchService()
+            self.bibleService = DummyBibleService()
+            self.analyticsService = analytics
+            self.error = SearchError.serviceUnavailable
+            Logger.search.error("SearchService and BibleService are required, initialization failed.")
+            return
         }
 
         self.searchService = searchService
@@ -114,7 +146,7 @@ public final class SearchViewModel: ObservableObject {
                     name: "search_performed",
                     parameters: [
                         "query": trimmedQuery,
-                        "filter": filter.rawValue,
+                        "filter": String(filter.rawValue),
                         "result_count": String(mappedResults.count)
                     ]
                 )

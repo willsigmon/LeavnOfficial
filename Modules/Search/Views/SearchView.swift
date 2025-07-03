@@ -2,11 +2,13 @@ import SwiftUI
 import LeavnCore
 import DesignSystem
 import LeavnBible
+import LeavnServices
 
 // MARK: - Main View
 
 public struct SearchView: View {
-    @StateObject private var viewModel = SearchViewModel()
+    @EnvironmentObject private var container: DIContainer
+    @State private var viewModel: SearchViewModel?
     @State private var searchText = ""
     @State private var selectedFilter: SearchFilter = .all
     @State private var selectedVerse: BibleVerse?
@@ -17,9 +19,17 @@ public struct SearchView: View {
     public var body: some View {
         ZStack {
             AnimatedGradientBackground()
-            VStack(spacing: 0) {
-                searchHeader
-                contentBody
+            if let viewModel = viewModel {
+                VStack(spacing: 0) {
+                    searchHeader(viewModel: viewModel)
+                    contentBody(viewModel: viewModel)
+                }
+            } else {
+                VStack {
+                    Spacer()
+                    VibrantLoadingView(message: "Loading Search...")
+                    Spacer()
+                }
             }
         }
         .sheet(item: $selectedVerse) { verse in
@@ -27,18 +37,28 @@ public struct SearchView: View {
                 BibleReaderView(book: BibleBook(from: verse.bookName), chapter: verse.chapter)
             }
         }
+        .onAppear {
+            if container.isInitialized, viewModel == nil {
+                viewModel = SearchViewModel(container: container)
+            }
+        }
+        .onChange(of: container.isInitialized) { _, isInitialized in
+            if isInitialized, viewModel == nil {
+                viewModel = SearchViewModel(container: container)
+            }
+        }
     }
 
-    private var contentBody: some View {
+    private func contentBody(viewModel: SearchViewModel) -> some View {
         Group {
             if searchText.isEmpty && viewModel.recentSearches.isEmpty && viewModel.searchResults.isEmpty {
-                emptyState
+                emptyState(viewModel: viewModel)
             } else if viewModel.isSearching {
                 Spacer()
                 VibrantLoadingView(message: "Searching...")
                 Spacer()
             } else {
-                searchResultsList
+                searchResultsList(viewModel: viewModel)
             }
         }
     }
@@ -47,7 +67,7 @@ public struct SearchView: View {
 // MARK: - View Components
 
 private extension SearchView {
-    var searchHeader: some View {
+    func searchHeader(viewModel: SearchViewModel) -> some View {
         VStack(spacing: 16) {
             // Title
             HStack {
@@ -122,7 +142,7 @@ private extension SearchView {
         .background(.ultraThinMaterial)
     }
 
-    var emptyState: some View {
+    func emptyState(viewModel: SearchViewModel) -> some View {
         VStack(spacing: 40) {
             Spacer()
             PlayfulEmptyState(
@@ -158,7 +178,7 @@ private extension SearchView {
         }
     }
 
-    var searchResultsList: some View {
+    func searchResultsList(viewModel: SearchViewModel) -> some View {
         ScrollView {
             LazyVStack(spacing: 0) {
                 // Recent Searches
@@ -223,7 +243,7 @@ private extension SearchView {
     func performSearch() {
         guard !searchText.isEmpty else { return }
         Task {
-            await viewModel.search(query: searchText, filter: selectedFilter)
+            viewModel?.search(query: searchText, filter: selectedFilter)
         }
         isSearchFocused = false
     }

@@ -61,6 +61,7 @@ class ProfileEditViewModel: ObservableObject {
             defaults.set(favoriteVerse, forKey: "userFavoriteVerse")
 
             await analyticsService.track(event: AnalyticsEvent(name: "profile_edited", parameters: [
+                "user_id": String(currentUser.id),
                 "has_photo": String(photoURLString != nil),
                 "has_bio": String(!bio.isEmpty),
                 "has_favorite_verse": String(!favoriteVerse.isEmpty)
@@ -164,7 +165,12 @@ public struct ProfileEditView: View {
                 }
             }
             .navigationTitle("Edit Profile")
-            .navigationBarItems(leading: Button("Cancel") { dismiss() })
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") { dismiss() }
+                }
+            }
             .sheet(isPresented: $showImagePicker) {
                 // Replace with a proper image picker implementation
                 // For now, we just dismiss it.

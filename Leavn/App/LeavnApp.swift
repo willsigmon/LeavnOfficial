@@ -86,7 +86,7 @@ struct LeavnApp: App {
     #if os(iOS)
     private var iOSScene: some Scene {
         WindowGroup {
-            ContentView()
+            MainTabView()
                 .environmentObject(appState)
                 .environmentObject(DIContainer.shared)
             .onAppear {
@@ -401,6 +401,10 @@ enum TabItem {
 struct AppConfiguration {
     struct Analytics {
         static let enabled = false
+    }
+    
+    struct APIKeys {
+        // API keys will be extended via Secrets.swift
     }
     
     #if os(macOS)

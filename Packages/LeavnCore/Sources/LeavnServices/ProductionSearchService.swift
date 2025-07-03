@@ -245,11 +245,10 @@ public actor ProductionSearchService: SearchServiceProtocol {
         
         // Create a BibleTranslation with required parameters
         let translation = BibleTranslation(
-            id: translationId.lowercased(),
-            name: translationId,  // Using ID as name for simplicity
             abbreviation: String(translationId.prefix(3)).uppercased(),
-            language: "English",  // Default language
-            languageCode: "en"    // Default language code
+            name: translationId,  // Using ID as name for simplicity
+            language: "en",  // Assuming English for now
+            languageCode: "en"
         )
         
         do {
@@ -334,12 +333,11 @@ public actor ProductionSearchService: SearchServiceProtocol {
         let translation = options.translation ?? "NIV" // Default to NIV if none specified
         
         // Create a BibleTranslation with required parameters
-        let translationObject = BibleTranslation(
-            id: translation.lowercased(),
-            name: translation,  // Using ID as name for simplicity
+        let bibleTranslation = BibleTranslation(
             abbreviation: String(translation.prefix(3)).uppercased(),
-            language: "English",  // Default language
-            languageCode: "en"    // Default language code
+            name: translation.lowercased(),
+            language: "en",
+            languageCode: "en"
         )
         
         // Search chapter by chapter
@@ -348,7 +346,7 @@ public actor ProductionSearchService: SearchServiceProtocol {
                 let chapterContent = try await bibleService.getChapter(
                     book: book.id,
                     chapter: chapter,
-                    translation: translationObject
+                    translation: bibleTranslation
                 )
                 
                 // Search in verses
