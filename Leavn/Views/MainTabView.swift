@@ -1,10 +1,12 @@
 import SwiftUI
 import LeavnCore
 import LeavnServices
+import LeavnBible
 import LeavnSearch
 import LeavnLibrary
 import LeavnCommunity
 import LeavnSettings
+import DesignSystem
 
 struct MainTabView: View {
     @EnvironmentObject var appState: AppState

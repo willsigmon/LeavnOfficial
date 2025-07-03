@@ -16,7 +16,7 @@ struct ChapterPickerView: View {
         NavigationView {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 12) {
-                    ForEach(1...book.chapters, id: \.self) { chapter in
+                    ForEach(1...book.chapterCount, id: \.self) { chapter in
                         Button(action: {
                             selectedChapter = chapter
                             onSelection(chapter)

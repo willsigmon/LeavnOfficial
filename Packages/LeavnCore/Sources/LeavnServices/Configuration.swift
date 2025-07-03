@@ -10,18 +10,49 @@ public struct AppConfiguration {
         // GetBible API doesn't require authentication
         public static let getBibleBaseURL = "https://bible-api.com"
         
-        // AI Service Keys (Add your actual keys here)
+        // AI Service Keys - Load from environment or keychain for security
         public static var openAIKey: String {
-            // In production, load from secure storage or environment
-            // API keys should be provided through environment variables or secure configuration
-            // In production, use a secure configuration service or keychain
-            ""
+            // First try environment variable (for development)
+            if let envKey = ProcessInfo.processInfo.environment["OPENAI_API_KEY"], !envKey.isEmpty {
+                return envKey
+            }
+            
+            // Then try keychain (for production)
+            if let keychainKey = KeychainHelper.getAPIKey(for: "openai") {
+                return keychainKey
+            }
+            
+            // Finally try UserDefaults (for testing - not secure)
+            if let userDefaultsKey = UserDefaults.standard.string(forKey: "openai_api_key"), !userDefaultsKey.isEmpty {
+                return userDefaultsKey
+            }
+            
+            return ""
         }
         
         public static var anthropicKey: String {
-            // API keys should be provided through environment variables or secure configuration
-            // In production, use a secure configuration service or keychain
-            ""
+            if let envKey = ProcessInfo.processInfo.environment["ANTHROPIC_API_KEY"], !envKey.isEmpty {
+                return envKey
+            }
+            
+            if let keychainKey = KeychainHelper.getAPIKey(for: "anthropic") {
+                return keychainKey
+            }
+            
+            if let userDefaultsKey = UserDefaults.standard.string(forKey: "anthropic_api_key"), !userDefaultsKey.isEmpty {
+                return userDefaultsKey
+            }
+            
+            return ""
+        }
+        
+        // Helper method to set API keys securely
+        public static func setOpenAIKey(_ key: String) {
+            KeychainHelper.setAPIKey(key, for: "openai")
+        }
+        
+        public static func setAnthropicKey(_ key: String) {
+            KeychainHelper.setAPIKey(key, for: "anthropic")
         }
     }
     

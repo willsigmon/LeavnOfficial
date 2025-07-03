@@ -39,7 +39,7 @@ clean:
 build:
 	@echo "🔨 Building Leavn..."
 	@xcodebuild build \
-		-workspace Leavn.xcworkspace \
+		-project Leavn.xcodeproj \
 		-scheme Leavn \
 		-destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
 		-quiet \
@@ -50,7 +50,7 @@ build:
 test:
 	@echo "🧪 Running tests..."
 	@xcodebuild test \
-		-workspace Leavn.xcworkspace \
+		-project Leavn.xcodeproj \
 		-scheme Leavn \
 		-destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
 		| xcpretty
@@ -77,7 +77,7 @@ generate:
 # Open in Xcode
 open:
 	@echo "🚀 Opening in Xcode..."
-	@open Leavn.xcworkspace
+	@open Leavn.xcodeproj
 
 # Quick build for development
 dev: generate open
@@ -86,7 +86,7 @@ dev: generate open
 release:
 	@echo "📦 Building release..."
 	@xcodebuild archive \
-		-workspace Leavn.xcworkspace \
+		-project Leavn.xcodeproj \
 		-scheme Leavn \
 		-archivePath ./build/Leavn.xcarchive
 	@echo "✅ Release build complete!"

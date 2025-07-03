@@ -10,54 +10,62 @@ struct TranslationPickerSheet: View {
     
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(TranslationCategory.allCases, id: \.self) { category in
-                    Section(category.rawValue) {
-                        ForEach(translations.filter { $0.category == category }, id: \.self) { translation in
-                            HStack {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(translation.displayName)
-                                        .font(.headline)
-                                    Text(translation.fullName)
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                                
-                                Spacer()
-                                
-                                if selectedTranslation == translation {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundColor(.accentColor)
-                                }
-                            }
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                selectedTranslation = translation
-                                dismiss()
-                            }
-                            .accessibilityLabel("Select \(translation.displayName)")
+            translationsList
+                .accessibilityLabel("Translation Format Picker")
+                .navigationTitle("Bible Translation")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Done") {
+                            dismiss()
                         }
+                        .accessibilityLabel("Dismiss Translation Picker")
                     }
                 }
-            }
-            .accessibilityLabel("Translation Format Picker")
-            .navigationTitle("Bible Translation")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
-                        dismiss()
-                    }
-                    .accessibilityLabel("Dismiss Translation Picker")
-                }
-            }
         }
         .accessibilityLabel("Translation Picker Sheet")
     }
+    
+    private var translationsList: some View {
+        List {
+            Section("English Translations") {
+                ForEach(translations, id: \.self) { translation in
+                    translationRow(for: translation)
+                }
+            }
+        }
+    }
+    
+    private func translationRow(for translation: BibleTranslation) -> some View {
+        HStack {
+            translationInfo(for: translation)
+            Spacer()
+            if selectedTranslation == translation {
+                checkmarkIcon
+            }
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            selectedTranslation = translation
+            dismiss()
+        }
+        .accessibilityLabel("Select \(translation.abbreviation)")
+    }
+    
+    private func translationInfo(for translation: BibleTranslation) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(translation.abbreviation)
+                .font(.headline)
+            Text(translation.name)
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+    }
+    
+    private var checkmarkIcon: some View {
+        Image(systemName: "checkmark.circle.fill")
+            .foregroundColor(.accentColor)
+    }
 }
 
-enum TranslationCategory: String, CaseIterable {
-    case literal = "Word-for-Word"
-    case dynamic = "Thought-for-Thought"
-    case paraphrase = "Paraphrase"
-}
+

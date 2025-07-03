@@ -181,22 +181,19 @@ public final class CommunityViewModel: ObservableObject {
     
     // MARK: - Private Methods
     
-    private func loadPosts() async -> [CommunityPost] {
-        // TODO: Implement CommunityServiceProtocol and fetch from server
-        // For now, return empty array instead of mock data
-        return []
+    private func loadPosts() async throws -> [CommunityPost] {
+        // Real implementation using the community service
+        return try await DIContainer.shared.communityService?.getPosts(limit: 20, offset: 0) ?? []
     }
     
-    private func loadGroups() async -> [StudyGroup] {
-        // TODO: Implement CommunityServiceProtocol and fetch from server
-        // For now, return empty array instead of mock data
-        return []
+    private func loadGroups() async throws -> [StudyGroup] {
+        // Real implementation using the community service
+        return try await DIContainer.shared.communityService?.getGroups() ?? []
     }
     
-    private func loadChallenges() async -> [Challenge] {
-        // TODO: Implement CommunityServiceProtocol and fetch from server
-        // For now, return empty array instead of mock data
-        return []
+    private func loadChallenges() async throws -> [Challenge] {
+        // Real implementation using the community service
+        return try await DIContainer.shared.communityService?.getChallenges() ?? []
     }
     
     private func getUnreadNotificationCount() async -> Int {

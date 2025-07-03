@@ -1,14 +1,14 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 import PackageDescription
 
 let package = Package(
     name: "LeavnModules",
     platforms: [
-        .iOS(.v17),
+        .iOS(.v18),
         .macOS(.v14),
         .watchOS(.v10),
         .visionOS(.v1),
-        .tvOS(.v17)
+        .tvOS(.v18)
     ],
     products: [
         .library(name: "LeavnBible", targets: ["LeavnBible"]),

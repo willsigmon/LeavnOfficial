@@ -1,7 +1,7 @@
 import Foundation
 
 /// Global configuration for Leavn sync services
-public struct SyncConfiguration {
+public struct SyncConfiguration: Sendable {
     /// Shared instance
     public static let shared = SyncConfiguration()
     

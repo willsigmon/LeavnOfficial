@@ -132,7 +132,7 @@ struct DevotionReaderView: View {
             }
         }
         .sheet(isPresented: $showShareSheet) {
-            ShareSheet(items: [devotion.shareText ?? ""])
+            ShareSheet(items: ["\(devotion.title)\n\n\(devotion.content)\n\n\(devotion.prayer)\n\n- \(devotion.verse.reference)"])
         }
     }
 }

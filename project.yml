@@ -23,10 +23,10 @@ targets:
     sources:
       - path: Leavn
         excludes:
-          - "Leavn/Platform/macOS/**"
-          - "Leavn/Platform/visionOS/**"
-          - "Leavn/Platform/watchOS/**"
-          - "Leavn/Platform/tvOS/**"
+          - "Platform/macOS/**"
+          - "Platform/visionOS/**"
+          - "Platform/watchOS/**"
+          - "Platform/tvOS/**"
     settings:
       base:
         # Explicit iOS settings

@@ -390,10 +390,10 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate, @u
 
 // MARK: - Notification Names
 extension Notification.Name {
-    static let navigateToBible = Notification.Name("navigateToBible")
-    static let saveVerse = Notification.Name("saveVerse")
-    static let navigateToPost = Notification.Name("navigateToPost")
-    static let replyToPost = Notification.Name("replyToPost")
-    static let navigateToProfile = Notification.Name("navigateToProfile")
-    static let navigateToGroups = Notification.Name("navigateToGroups")
+    public static let navigateToBible = Notification.Name("navigateToBible")
+    public static let saveVerse = Notification.Name("saveVerse")
+    public static let navigateToPost = Notification.Name("navigateToPost")
+    public static let replyToPost = Notification.Name("replyToPost")
+    public static let navigateToProfile = Notification.Name("navigateToProfile")
+    public static let navigateToGroups = Notification.Name("navigateToGroups")
 }

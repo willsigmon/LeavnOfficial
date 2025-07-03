@@ -76,7 +76,9 @@ public struct NotificationCenterView: View {
         PlayfulEmptyState(
             icon: "bell.slash",
             title: "No Notifications",
-            message: "When you receive notifications, they'll appear here"
+            message: "When you receive notifications, they'll appear here",
+            buttonTitle: "Got it",
+            action: { dismiss() }
         )
     }
     
@@ -158,13 +160,13 @@ struct NotificationRow: View {
                         .foregroundColor(.primary)
                     
                     Text(notification.body)
-                        .font(LeavnTheme.Typography.bodyMedium)
+                        .font(LeavnTheme.Typography.body)
                         .foregroundColor(.secondary)
                         .lineLimit(2)
                     
                     Text(notification.timestamp, style: .relative)
-                        .font(LeavnTheme.Typography.captionMedium)
-                        .foregroundColor(.tertiary)
+                        .font(LeavnTheme.Typography.caption)
+                        .foregroundColor(.secondary)
                 }
                 
                 Spacer()
@@ -203,8 +205,4 @@ struct NotificationRow: View {
     }
 }
 
-// MARK: - More Notification Names
-extension Notification.Name {
-    static let navigateToProfile = Notification.Name("navigateToProfile")
-    static let navigateToGroups = Notification.Name("navigateToGroups")
-}
+

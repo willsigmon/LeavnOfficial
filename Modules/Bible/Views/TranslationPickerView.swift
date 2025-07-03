@@ -9,45 +9,57 @@ struct TranslationPickerView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(TranslationCategory.allCases, id: \.self) { category in
-                    Section(category.displayName) {
-                        ForEach(BibleTranslation.defaultTranslations.filter { $0.category == category }, id: \.self) { translation in
-                            HStack {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(translation.displayName)
-                                        .font(.headline)
-                                    Text(translation.fullName)
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                                
-                                Spacer()
-                                
-                                if selectedTranslation == translation {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundColor(.accentColor)
-                                }
-                            }
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                onSelection(translation)
-                                dismiss()
-                            }
+            translationsList
+                .navigationTitle("Bible Translation")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") {
+                            dismiss()
                         }
                     }
                 }
-            }
-            .navigationTitle("Bible Translation")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
+        }
+    }
+    
+    private var translationsList: some View {
+        List {
+            Section("English Translations") {
+                ForEach(BibleTranslation.defaultTranslations, id: \.self) { translation in
+                    translationRow(for: translation)
                 }
             }
         }
+    }
+    
+    private func translationRow(for translation: BibleTranslation) -> some View {
+        HStack {
+            translationInfo(for: translation)
+            Spacer()
+            if selectedTranslation == translation {
+                checkmarkIcon
+            }
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            onSelection(translation)
+            dismiss()
+        }
+    }
+    
+    private func translationInfo(for translation: BibleTranslation) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(translation.abbreviation)
+                .font(.headline)
+            Text(translation.name)
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+    }
+    
+    private var checkmarkIcon: some View {
+        Image(systemName: "checkmark.circle.fill")
+            .foregroundColor(.accentColor)
     }
 }
 

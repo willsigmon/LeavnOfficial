@@ -1,6 +1,10 @@
 import Foundation
 import Combine
 
+#if os(macOS)
+import AppKit
+#endif
+
 #if canImport(UIKit)
 import UIKit
 #elseif canImport(AppKit)
@@ -20,14 +24,21 @@ public enum GlobalRules {
     }
     
     /// Current sync behavior
-    public static var syncBehavior: SyncBehavior = .automatic
+    nonisolated(unsafe) public static var syncBehavior: SyncBehavior = .automatic
     
     /// Minimum time between automatic syncs (in seconds)
-    public static var minimumSyncInterval: TimeInterval = 120
+    nonisolated(unsafe) public static var minimumSyncInterval: TimeInterval = 120
     
     /// Last sync timestamp
-    @UserDefault(key: "lastGlobalSyncTimestamp", defaultValue: 0)
-    public static var lastSyncTimestamp: TimeInterval
+    nonisolated(unsafe) public static var lastSyncTimestamp: TimeInterval {
+        get {
+            UserDefaults.standard.double(forKey: "lastGlobalSyncTimestamp")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "lastGlobalSyncTimestamp")
+            NotificationCenter.default.post(name: .syncSettingsChanged, object: nil)
+        }
+    }
     
     /// Check if enough time has passed since last sync
     public static var shouldSync: Bool {
@@ -49,12 +60,14 @@ public enum GlobalRules {
         NotificationCenter.default.post(name: .syncWillStart, object: nil)
         
         DispatchQueue.global(qos: .utility).async {
-            // Run sync script
-            let task = Process()
+            #if os(macOS)
+            // Run sync script on macOS only
+            let task = Foundation.Process()
             task.launchPath = "/bin/bash"
             task.arguments = ["-c", "~/Desktop/.leavn3_conversation_sync/sync_conversations.sh"]
             task.launch()
             task.waitUntilExit()
+            #endif
             
             // Update timestamp and notify completion on main thread
             DispatchQueue.main.async {
@@ -111,7 +124,7 @@ public protocol Syncable {
 }
 
 /// Global sync manager that coordinates sync operations
-public final class SyncManager {
+public final class SyncManager: @unchecked Sendable {
     public static let shared = SyncManager()
     private var cancellables = Set<AnyCancellable>()
     

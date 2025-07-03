@@ -5,6 +5,9 @@ import Combine
 import AVFoundation
 
 #if os(watchOS)
+import WatchKit
+import ClockKit
+import UserNotifications
 
 // MARK: - Watch Bible View Model
 
@@ -383,8 +386,6 @@ public final class WatchSettingsViewModel: ObservableObject {
         // This would integrate with ClockKit to update complications
         
         #if os(watchOS)
-        import ClockKit
-        
         let server = CLKComplicationServer.sharedInstance()
         for complication in server.activeComplications ?? [] {
             server.reloadTimeline(for: complication)

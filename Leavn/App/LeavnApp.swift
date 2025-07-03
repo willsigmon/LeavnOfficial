@@ -267,7 +267,7 @@ final class AppState: ObservableObject {
     
     func loadSavedState() {
         // Load last reading position
-        if let bookId = UserDefaults.standard.string(forKey: "selectedBook") {
+        if UserDefaults.standard.string(forKey: "selectedBook") != nil {
             // Load book from service when initialized
         }
         currentChapter = UserDefaults.standard.integer(forKey: "selectedChapter")
@@ -290,6 +290,7 @@ enum NavigationDirection {
 
 // MARK: - Platform Specific Setup
 #if os(iOS)
+@MainActor
 private func setupiOSAppearance() {
     // Configure navigation bar appearance
     let appearance = UINavigationBarAppearance()
@@ -334,7 +335,7 @@ private func registerForNotifications() {
 }
 
 // MARK: - Network Monitor
-final class NetworkMonitor: ObservableObject {
+final class NetworkMonitor: ObservableObject, @unchecked Sendable {
     static let shared = NetworkMonitor()
     @Published var isConnected = true
     
