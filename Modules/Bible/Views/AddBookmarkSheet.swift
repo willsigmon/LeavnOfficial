@@ -1,5 +1,6 @@
 import SwiftUI
 import LeavnCore
+import LeavnServices
 
 struct AddBookmarkSheet: View {
     let verse: BibleVerse
@@ -7,7 +8,9 @@ struct AddBookmarkSheet: View {
     @State private var bookmarkTitle = ""
     @State private var bookmarkNote = ""
     @State private var selectedColor = Color.blue
+    @State private var isSaving = false
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var diContainer: DIContainer
     
     let colors: [Color] = [.blue, .green, .orange, .red, .purple, .pink, .yellow]
     
@@ -64,14 +67,64 @@ struct AddBookmarkSheet: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
-                        // TODO: Save bookmark
-                        dismiss()
+                        Task {
+                            await saveBookmark()
+                        }
                     }
                     .fontWeight(.semibold)
+                    .disabled(isSaving)
                     .accessibilityLabel("Save Bookmark")
                     .accessibilityHint("Save this bookmark for the verse.")
                 }
             }
+        }
+    }
+    
+    // MARK: - Private Methods
+    
+    @MainActor
+    private func saveBookmark() async {
+        guard !isSaving else { return }
+        isSaving = true
+        defer { isSaving = false }
+        
+        do {
+            guard let libraryService = diContainer.libraryService else {
+                print("⚠️ LibraryService not available")
+                return
+            }
+            
+            // Convert SwiftUI Color to string representation
+            let colorString = colorToString(selectedColor)
+            
+            // Create bookmark with optional title and note
+            let bookmark = Bookmark(
+                verse: verse,
+                note: bookmarkNote.isEmpty ? nil : bookmarkNote,
+                tags: bookmarkTitle.isEmpty ? [] : [bookmarkTitle],
+                color: colorString
+            )
+            
+            try await libraryService.addBookmark(bookmark)
+            print("✅ Bookmark saved successfully")
+            dismiss()
+            
+        } catch {
+            print("❌ Failed to save bookmark: \(error)")
+            // TODO: Show error alert to user
+        }
+    }
+    
+    private func colorToString(_ color: Color) -> String {
+        switch color {
+        case .blue: return "blue"
+        case .green: return "green"
+        case .orange: return "orange"
+        case .red: return "red"
+        case .purple: return "purple"
+        case .pink: return "pink"
+        case .yellow: return "yellow"
+        default: return "blue"
         }
     }
 }

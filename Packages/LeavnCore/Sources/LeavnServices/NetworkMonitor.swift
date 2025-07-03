@@ -1,28 +1,24 @@
 import Foundation
 import LeavnCore
 
+/// User data manager with integrated caching using the production cache service
 actor UserDataManager {
-    // Removed persistenceService property and initializer parameter
-
     private var users: [String: User] = [:]
+    private let cacheService: CacheServiceProtocol?
+    private let usersKey = "cached_users"
 
-    init() {
-        // Removed persistenceService initialization
-
-        // TODO: Persistence logic should be re-evaluated and replaced with an existing cache or persistence mechanism (such as CacheManager)
-        /*
-        if let savedUsers = try? persistenceService.loadUsers() {
-            users = savedUsers
+    init(cacheService: CacheServiceProtocol? = nil) {
+        self.cacheService = cacheService
+        
+        // Load users from cache on initialization
+        Task {
+            await loadUsersFromCache()
         }
-        */
     }
 
     func addUser(_ user: User) async {
         users[user.id] = user
-        // TODO: Persistence logic should be re-evaluated and replaced with an existing cache or persistence mechanism (such as CacheManager)
-        /*
-        try? await persistenceService.saveUsers(users)
-        */
+        await persistUsers()
     }
 
     func getUser(byID id: String) async -> User? {
@@ -31,10 +27,27 @@ actor UserDataManager {
 
     func removeUser(byID id: String) async {
         users.removeValue(forKey: id)
-        // TODO: Persistence logic should be re-evaluated and replaced with an existing cache or persistence mechanism (such as CacheManager)
-        /*
-        try? await persistenceService.saveUsers(users)
-        */
+        await persistUsers()
+    }
+    
+    func getAllUsers() async -> [User] {
+        return Array(users.values)
+    }
+    
+    // MARK: - Private Cache Integration
+    
+    private func loadUsersFromCache() async {
+        guard let cacheService = cacheService else { return }
+        
+        if let cachedUsers = await cacheService.get(usersKey, type: [String: User].self) {
+            users = cachedUsers
+        }
+    }
+    
+    private func persistUsers() async {
+        guard let cacheService = cacheService else { return }
+        
+        await cacheService.set(usersKey, value: users, expirationDate: nil)
     }
 }
 

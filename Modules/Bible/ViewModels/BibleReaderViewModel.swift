@@ -17,11 +17,14 @@ public final class BibleReaderViewModel: ObservableObject {
     @Published public private(set) var highlightedVerses: Set<String> = []
     @Published public var scrollToVerse: String?
     @Published public var selectedVerse: BibleVerse?
+    @Published public private(set) var verseComparisons: [String: [VerseTranslation]] = [:]
+    @Published public private(set) var isLoadingComparisons = false
     
     // MARK: - Dependencies
     private let bibleService: BibleServiceProtocol
     private let cacheService: CacheServiceProtocol
     private let analyticsService: AnalyticsServiceProtocol?
+    private let comparisonViewModel: VerseComparisonViewModel
     
     // MARK: - Private Properties
     private var cancellables = Set<AnyCancellable>()
@@ -68,6 +71,11 @@ public final class BibleReaderViewModel: ObservableObject {
         self.bibleService = bibleService ?? container.requireBibleService()
         self.cacheService = cacheService ?? container.requireCacheService()
         self.analyticsService = analyticsService ?? container.analyticsService
+        self.comparisonViewModel = VerseComparisonViewModel(
+            bibleService: self.bibleService,
+            cacheService: self.cacheService,
+            analyticsService: self.analyticsService
+        )
         
         // Set initial state
         self.currentBook = book ?? BibleBook.genesis
@@ -147,7 +155,38 @@ public final class BibleReaderViewModel: ObservableObject {
     }
     
     public func loadComparisons(for verse: BibleVerse) async {
-        // TODO: Implement verse comparison loading
+        isLoadingComparisons = true
+        
+        do {
+            // Use the comparison view model to load translations
+            await comparisonViewModel.loadComparisons(for: verse)
+            
+            // Extract the translations from the comparison view model
+            let translations = comparisonViewModel.translations
+            
+            await MainActor.run {
+                self.verseComparisons[verse.id] = translations
+                self.isLoadingComparisons = false
+            }
+            
+            // Track comparison usage
+            await analyticsService?.track(event: AnalyticsEvent(
+                name: "verse_comparison_loaded",
+                parameters: [
+                    "verse_id": verse.id,
+                    "book": verse.bookName,
+                    "chapter": String(verse.chapter),
+                    "verse": String(verse.verse),
+                    "translation_count": String(translations.count)
+                ]
+            ))
+            
+        } catch {
+            await MainActor.run {
+                self.error = error
+                self.isLoadingComparisons = false
+            }
+        }
     }
     
     public func nextChapter() async {
