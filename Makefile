@@ -5,17 +5,17 @@
 # Default target
 all: clean build
 
-# Variables for simulator destination
-# Default to iPhone 15 Pro, but allow overriding, e.g., make build DEVICE_NAME="iPhone SE (3rd generation)"
-SIMULATOR_PLATFORM ?= "iOS Simulator"
-SIMULATOR_OS_VERSION ?= "18.0" # Should match project's deployment target or newer
-DEFAULT_DEVICE_NAME := "iPhone 15 Pro"
+# Variables for simulator destination  
+# Default to iPhone 16 Pro, but allow overriding, e.g., make build DEVICE_NAME="iPhone 16 Plus"
+SIMULATOR_PLATFORM ?= iOS Simulator
+SIMULATOR_OS_VERSION ?= 26.0 # Should match available simulator versions
+DEFAULT_DEVICE_NAME := iPhone 16 Pro
 DEVICE_NAME ?= $(DEFAULT_DEVICE_NAME)
 # Construct the destination string. If a specific DEVICE_ID is provided, use that.
 ifeq ($(DEVICE_ID),)
-  DESTINATION := "platform=$(SIMULATOR_PLATFORM),name=$(DEVICE_NAME),OS=$(SIMULATOR_OS_VERSION)"
+  DESTINATION := platform=$(SIMULATOR_PLATFORM),name=$(DEVICE_NAME),OS=$(SIMULATOR_OS_VERSION)
 else
-  DESTINATION := "platform=$(SIMULATOR_PLATFORM),id=$(DEVICE_ID)"
+  DESTINATION := platform=$(SIMULATOR_PLATFORM),id=$(DEVICE_ID)
 endif
 
 # Help command
