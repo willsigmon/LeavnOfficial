@@ -21,7 +21,6 @@ import RealityKit
 struct LeavnApp: App {
     @StateObject private var appState = AppState()
     @Environment(\.scenePhase) private var scenePhase
-    private let syncManager = SyncManager.shared
     
     init() {
         setupApplication()
@@ -42,7 +41,7 @@ struct LeavnApp: App {
         // Sync when coming back to foreground
         NotificationCenter.default.publisher(for: NSApplication.willBecomeActiveNotification)
             .sink { _ in
-                GlobalRules.triggerSyncIfNeeded()
+                // Sync will be handled when sync service is available
             }
             .sink { _ in }
     }
@@ -51,9 +50,7 @@ struct LeavnApp: App {
     @MainActor
     private func handleAppBecameActive() {
         // Initial sync check
-        if GlobalRules.shouldSync {
-            GlobalRules.syncNow()
-        }
+        // TODO: Implement sync when sync service is available
         
         // Schedule periodic syncs
         Task { await schedulePeriodicSync() }
@@ -63,9 +60,7 @@ struct LeavnApp: App {
     private func schedulePeriodicSync() async {
         // Schedule sync every 15 minutes while app is active
         while !Task.isCancelled {
-            if GlobalRules.shouldSync {
-                GlobalRules.syncNow()
-            }
+            // TODO: Implement sync when sync service is available
             try? await Task.sleep(for: .seconds(15 * 60))
         }
     }
@@ -205,15 +200,15 @@ struct LeavnApp: App {
         switch phase {
         case .active:
             // App became active - trigger sync if needed
-            if GlobalRules.shouldSync {
-                GlobalRules.syncNow()
-            }
+            // TODO: Implement sync when sync service is available
+            break
         case .inactive:
             // App is about to become inactive - perform any cleanup
             break
         case .background:
             // App moved to background - force a final sync
-            GlobalRules.syncNow()
+            // TODO: Implement sync when sync service is available
+            break
         @unknown default:
             break
         }
@@ -239,7 +234,7 @@ final class AppState: ObservableObject {
     @Published var isInitialized = false
     
     // State
-    @Published var selectedTab: TabItem = .bible
+    @Published var selectedTabId: String = "bible"
     @Published var showGoToVerse = false
     @Published var currentBook: BibleBook?
     @Published var currentChapter: Int = 1
@@ -391,11 +386,6 @@ struct DailyVerseNotificationView: View {
     }
 }
 #endif
-
-// MARK: - Tab Item
-enum TabItem {
-    case bible, search, library, community, settings
-}
 
 // MARK: - Temporary App Configuration
 struct AppConfiguration {
