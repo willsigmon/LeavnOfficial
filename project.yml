@@ -51,20 +51,19 @@ targets:
         CODE_SIGN_STYLE: Automatic
         ENABLE_HARDENED_RUNTIME: YES
         ENABLE_APP_SANDBOX: YES
-        # iPhone 16 Pro Max Optimizations
-        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: YES
+        # Generic Optimizations (previously iPhone 16 Pro Max Optimizations)
+        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: YES # Good practice for all devices
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         ASSETCATALOG_COMPILER_OPTIMIZATION: space
-        # Advanced Display Support
-        ENABLE_USER_SCRIPT_SANDBOXING: YES
-        SWIFT_EMIT_LOC_STRINGS: YES
-        # Performance Optimizations
-        LLVM_LTO: YES_THIN
+        # Advanced Display Support & Compilation Settings
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
+        SWIFT_OPTIMIZATION_LEVEL: -Onone
+        GCC_OPTIMIZATION_LEVEL: "0"
         SWIFT_COMPILATION_MODE: wholemodule
         DEAD_CODE_STRIPPING: YES
         # Metal Performance Shaders for GPU acceleration
-        MTL_ENABLE_DEBUG_INFO: NO
-        MTL_FAST_MATH: YES
+        MTL_ENABLE_DEBUG_INFO: NO # Keep NO for release, can be YES for debug if needed
+        MTL_FAST_MATH: YES # Generally good, monitor for precision issues if any
     info:
       path: Leavn/Info.plist
       properties:
@@ -73,8 +72,8 @@ targets:
         CFBundleShortVersionString: 1.0.0
         CFBundleVersion: 1
         LSRequiresIPhoneOS: true
-        UIRequiredDeviceCapabilities: ["armv7", "metal"]
-        UISupportedInterfaceOrientations: 
+        UIRequiredDeviceCapabilities: ["arm64", "metal"] # Updated armv7 to arm64
+        UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
@@ -84,7 +83,7 @@ targets:
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
         UILaunchStoryboardName: LaunchScreen
-        # iPhone 16 Pro Max Specific Features
+        # General UI Features (previously iPhone 16 Pro Max Specific Features)
         UIStatusBarStyle: UIStatusBarStyleDefault
         UIViewControllerBasedStatusBarAppearance: true
         UIUserInterfaceStyle: Automatic
