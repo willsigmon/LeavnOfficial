@@ -35,6 +35,14 @@ public struct AppColors {
     /// A tertiary color for even less prominent text elements.
     public static let tertiaryText = Color("TertiaryTextColor", bundle: .main)
     
+    // MARK: - Aliases for consistency
+    
+    /// Alias for text
+    public static let primaryText = text
+    
+    /// Alias for background
+    public static let primaryBackground = background
+    
     // MARK: - Status Colors
     
     /// Color representing success status.
@@ -53,6 +61,12 @@ public struct AppColors {
     
     /// A red color with high opacity for red letter styling.
     public static let redLetter = Color.red.opacity(0.9)
+    
+    /// Jesus words special color (alias for redLetter)
+    public static let jesusWords = redLetter
+    
+    /// Royal purple accent color for the app theme
+    public static let royalPurple = Color(red: 0.4, green: 0.2, blue: 0.6)
     
     /// A yellow highlight color with reduced opacity.
     public static let highlightYellow = Color.yellow.opacity(0.3)

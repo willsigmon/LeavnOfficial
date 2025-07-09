@@ -98,10 +98,10 @@ public struct VerseCard: View {
             )
             .scaleEffect(isPressed ? 0.95 : 1)
             .shadow(
-                color: LeavnTheme.Shadows.soft.color,
-                radius: isPressed ? 2 : LeavnTheme.Shadows.soft.radius,
+                color: LeavnTheme.Shadows.soft.value.color,
+                radius: isPressed ? 2 : LeavnTheme.Shadows.soft.value.radius,
                 x: 0,
-                y: isPressed ? 1 : LeavnTheme.Shadows.soft.y
+                y: isPressed ? 1 : LeavnTheme.Shadows.soft.value.yOffset
             )
             .opacity(appear ? 1 : 0)
             .offset(y: appear ? 0 : 20)
@@ -242,6 +242,7 @@ public struct AnimatedTabItem: View {
                     .font(LeavnTheme.Typography.micro)
                     .foregroundColor(isSelected ? LeavnTheme.Colors.accent : .secondary)
             }
+            .contentShape(Rectangle())
             .frame(maxWidth: .infinity)
         }
         .buttonStyle(PlainButtonStyle())

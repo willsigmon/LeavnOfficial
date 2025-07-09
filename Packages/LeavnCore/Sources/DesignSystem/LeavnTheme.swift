@@ -15,19 +15,19 @@ public struct LeavnTheme {
             endPoint: .bottomTrailing
         )
         
-        // Accent colors for excitement
-        public static let accent = Color(red: 0.64, green: 0.48, blue: 0.92) // Main purple
-        public static let accentLight = Color(red: 0.78, green: 0.71, blue: 0.97)
+        // Royal purple accent colors
+        public static let accent = AppColors.royalPurple
+        public static let accentLight = AppColors.royalPurple.opacity(0.8)
         public static let accentDark = Color(red: 0.51, green: 0.36, blue: 0.82)
         
         // Jesus words special color
-        public static let jesusWords = Color(red: 1.0, green: 0.42, blue: 0.42) // Warm red
+        public static let jesusWords = AppColors.jesusWords
         
         // Playful semantic colors
-        public static let success = Color(red: 0.35, green: 0.84, blue: 0.64) // Mint green
-        public static let warning = Color(red: 1.0, green: 0.76, blue: 0.29) // Golden yellow
-        public static let error = Color(red: 0.96, green: 0.42, blue: 0.47) // Soft red
-        public static let info = Color(red: 0.40, green: 0.69, blue: 0.95) // Sky blue
+        public static let success = AppColors.success
+        public static let warning = AppColors.warning
+        public static let error = AppColors.error
+        public static let info = AppColors.info
         
         // Rich backgrounds
         public static let darkBackground = Color(red: 0.05, green: 0.05, blue: 0.1)
@@ -48,6 +48,14 @@ public struct LeavnTheme {
             Color(red: 0.44, green: 0.89, blue: 0.81), // Teal
             Color(red: 0.95, green: 0.61, blue: 0.36)  // Orange
         ]
+        
+        public static let primaryText = AppColors.text
+        public static let secondaryText = AppColors.secondaryText
+        public static let tertiaryText = AppColors.tertiaryText
+        
+        public static let primaryBackground = AppColors.background
+        public static let secondaryBackground = AppColors.secondaryBackground
+        public static let tertiaryBackground = AppColors.tertiaryBackground
     }
     
     // MARK: - Motion & Animation
@@ -64,34 +72,24 @@ public struct LeavnTheme {
     }
     
     // MARK: - Shadows & Depth
-    public struct Shadows {
-        public struct Shadow: Sendable {
-            public let color: Color
-            public let radius: CGFloat
-            public let x: CGFloat
-            public let y: CGFloat
+    public enum Shadows {
+        case soft
+        case medium
+        case hard
+        case glow
+        
+        public var value: LeavnShadow {
+            switch self {
+            case .soft:
+                return LeavnShadow(color: Color.black.opacity(0.1), radius: 8, xOffset: 0, yOffset: 4)
+            case .medium:
+                return LeavnShadow(color: Color.black.opacity(0.2), radius: 12, xOffset: 0, yOffset: 6)
+            case .hard:
+                return LeavnShadow(color: Color.black.opacity(0.3), radius: 16, xOffset: 0, yOffset: 8)
+            case .glow:
+                return LeavnShadow(color: Colors.accent.opacity(0.3), radius: 20, xOffset: 0, yOffset: 0)
+            }
         }
-        
-        public static let soft = Shadow(
-            color: Color.black.opacity(0.15),
-            radius: 8,
-            x: 0,
-            y: 4
-        )
-        
-        public static let glow = Shadow(
-            color: Colors.accent.opacity(0.3),
-            radius: 20,
-            x: 0,
-            y: 0
-        )
-        
-        public static let elevation = Shadow(
-            color: Color.black.opacity(0.2),
-            radius: 15,
-            x: 0,
-            y: 8
-        )
     }
     
     // MARK: - Typography with Character
@@ -141,10 +139,10 @@ public struct GlassCard<Content: View>: View {
                     )
             )
             .shadow(
-                color: glowColor ?? LeavnTheme.Shadows.soft.color,
-                radius: glowColor != nil ? LeavnTheme.Shadows.glow.radius : LeavnTheme.Shadows.soft.radius,
-                x: LeavnTheme.Shadows.soft.x,
-                y: LeavnTheme.Shadows.soft.y
+                color: glowColor ?? LeavnTheme.Shadows.soft.value.color,
+                radius: glowColor != nil ? LeavnTheme.Shadows.glow.value.radius : LeavnTheme.Shadows.soft.value.radius,
+                x: LeavnTheme.Shadows.soft.value.xOffset,
+                y: LeavnTheme.Shadows.soft.value.yOffset
             )
     }
 }
@@ -200,24 +198,38 @@ public extension Color {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var int: UInt64 = 0
         Scanner(string: hex).scanHexInt64(&int)
-        let a, r, g, b: UInt64
+        let alpha, red, green, blue: UInt64
         switch hex.count {
         case 3: // RGB (12-bit)
-            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+            (alpha, red, green, blue) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
         case 6: // RGB (24-bit)
-            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+            (alpha, red, green, blue) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
         case 8: // ARGB (32-bit)
-            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+            (alpha, red, green, blue) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
         default:
-            (a, r, g, b) = (1, 1, 1, 0)
+            (alpha, red, green, blue) = (1, 1, 1, 0)
         }
 
         self.init(
             .sRGB,
-            red: Double(r) / 255,
-            green: Double(g) / 255,
-            blue:  Double(b) / 255,
-            opacity: Double(a) / 255
+            red: Double(red) / 255,
+            green: Double(green) / 255,
+            blue:  Double(blue) / 255,
+            opacity: Double(alpha) / 255
         )
+    }
+}
+
+public struct LeavnShadow {
+    public let color: Color
+    public let radius: CGFloat
+    public let xOffset: CGFloat
+    public let yOffset: CGFloat
+    
+    public init(color: Color, radius: CGFloat, xOffset: CGFloat, yOffset: CGFloat) {
+        self.color = color
+        self.radius = radius
+        self.xOffset = xOffset
+        self.yOffset = yOffset
     }
 }
