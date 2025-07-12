@@ -1,5 +1,7 @@
 import ProjectDescription
 
+// MARK: - Project
+
 let project = Project(
     name: "Leavn",
     organizationName: "LeavnOfficial",
@@ -8,6 +10,13 @@ let project = Project(
         .local(path: "local/LeavnModules"),
         .local(path: "Features/LifeSituations")
     ],
+    settings: .settings(
+        base: ["DEVELOPMENT_TEAM": "YOUR_TEAM_ID"], // Replace with your actual team ID
+        configurations: [
+            .debug(name: "Debug", xcconfig: "Configurations/Debug.xcconfig"),
+            .release(name: "Release", xcconfig: "Configurations/Release.xcconfig")
+        ]
+    ),
     targets: [
         .target(
             name: "Leavn",
@@ -22,7 +31,7 @@ let project = Project(
                 "Leavn/Platform/**",
                 "Leavn/Configuration/**"
             ],
-            resources: ["Leavn/Assets.xcassets/**"],
+            resources: ["Leavn/Assets.xcassets/**", "Leavn/LaunchScreen.storyboard"],
             entitlements: .file(path: "Leavn/Leavn.entitlements"),
             dependencies: [
                 .package(product: "LeavnCore"),
@@ -85,20 +94,26 @@ let project = Project(
         .scheme(
             name: "Leavn",
             buildAction: .buildAction(targets: ["Leavn"]),
-            testAction: .testAction(
-                targets: ["LeavnTests", "LeavnIntegrationTests", "LeavnUITests"],
-                configuration: .debug,
-                options: .options(coverage: true, codeCoverageTargets: ["Leavn"])
-            ),
-            runAction: .runAction(
-                configuration: .debug,
-                executable: "Leavn"
-            ),
-            archiveAction: .archiveAction(configuration: .release)
+            runAction: .runAction(executable: "Leavn"),
+            archiveAction: .archiveAction(configuration: "Release"),
+            profileAction: .profileAction(configuration: "Release"),
+            analyzeAction: .analyzeAction(configuration: "Debug")
         ),
         .scheme(
             name: "Leavn-Widgets",
             buildAction: .buildAction(targets: ["LeavnWidgets"])
+        ),
+        .scheme(
+            name: "Leavn-Tests",
+            buildAction: .buildAction(targets: ["Leavn"]),
+            testAction: .testAction(
+                targets: [
+                    .testableTarget(target: "LeavnTests"),
+                    .testableTarget(target: "LeavnIntegrationTests"),
+                    .testableTarget(target: "LeavnUITests")
+                ],
+                options: .options(coverage: true, codeCoverageTargets: ["Leavn"])
+            )
         )
     ]
 ) 
