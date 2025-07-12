@@ -16,6 +16,8 @@ packages:
     path: local/LeavnCore
   LeavnModules:
     path: local/LeavnModules
+  LeavnLifeSituations:
+    path: Features/LifeSituations
 
 targets:
   # iOS App - Optimized for iPhone 16 Pro Max
@@ -130,6 +132,8 @@ targets:
         product: LeavnCommunity
       - package: LeavnModules
         product: AuthenticationModule
+      - package: LeavnLifeSituations
+        product: LeavnLifeSituations
   DailyVerseWidget:
     type: app-extension
     platform: iOS
