@@ -1,0 +1,21 @@
+Command line invocation:
+    /Applications/Xcode-beta.app/Contents/Developer/usr/bin/xcodebuild clean -project Leavn.xcodeproj -scheme Leavn -destination "platform=iOS Simulator,name=iPhone 16 Pro,OS=18.5"
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  LeavnCore: /Users/wsig/GitHub Builds/LeavnOfficial/local/LeavnCore
+  LeavnModules: /Users/wsig/GitHub Builds/LeavnOfficial/local/LeavnModules
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:iOS Simulator, arch:arm64, id:98807FFC-737F-4BB9-8541-9AB2C4D80E2A, OS:18.5, name:iPhone 16 Pro }
+{ platform:iOS Simulator, arch:x86_64, id:98807FFC-737F-4BB9-8541-9AB2C4D80E2A, OS:18.5, name:iPhone 16 Pro }
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+** CLEAN SUCCEEDED **
+

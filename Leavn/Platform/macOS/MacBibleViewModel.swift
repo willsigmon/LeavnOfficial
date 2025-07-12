@@ -197,11 +197,41 @@ final class MacBibleViewModel {
 
 // MARK: - Supporting Types
 enum SidebarItem: String, CaseIterable {
+    // Study Group
     case bible = "Bible"
     case search = "Search"
-    case library = "Library"
-    case notes = "Notes"
+    case crossReferences = "Cross References"
+    
+    // Library Group
+    case bookmarks = "Bookmarks"
+    case readingPlans = "Reading Plans"
+    case history = "History"
+    
+    // Community Group
+    case commentaries = "Commentaries"
+    
+    // Settings
     case settings = "Settings"
+    
+    // Categorized groups for sidebar
+    static let studyItems: [SidebarItem] = [.bible, .search, .crossReferences]
+    static let libraryItems: [SidebarItem] = [.bookmarks, .readingPlans, .history]
+    static let communityItems: [SidebarItem] = [.commentaries]
+    
+    var title: String { rawValue }
+    
+    var systemImage: String {
+        switch self {
+        case .bible: return "book.closed"
+        case .search: return "magnifyingglass"
+        case .crossReferences: return "link"
+        case .bookmarks: return "bookmark"
+        case .readingPlans: return "list.clipboard"
+        case .history: return "clock"
+        case .commentaries: return "bubble.left.and.bubble.right"
+        case .settings: return "gear"
+        }
+    }
 }
 
 struct RecentItem: Codable, Identifiable {

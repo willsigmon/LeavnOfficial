@@ -20,33 +20,14 @@ import RealityKit
 @main
 struct LeavnApp: App {
     @StateObject private var appState = AppState()
+    @StateObject private var navigationCoordinator = NavigationCoordinator()
+    // TODO: Integrate new DependencyContainer when modules are properly set up
+    // @StateObject private var dependencyContainer = DependencyContainer()
     @Environment(\.scenePhase) private var scenePhase
-    private let syncManager = SyncManager.shared
     
     init() {
         setupApplication()
-        #if os(macOS)
-        setupSyncObservers()
-        #endif
     }
-    
-    #if os(macOS)
-    private func setupSyncObservers() {
-        // Sync when app becomes active
-        NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)
-            .sink { _ in
-                Task { await self.handleAppBecameActive() }
-            }
-            .sink { _ in }
-        
-        // Sync when coming back to foreground
-        NotificationCenter.default.publisher(for: NSApplication.willBecomeActiveNotification)
-            .sink { _ in
-                GlobalRules.triggerSyncIfNeeded()
-            }
-            .sink { _ in }
-    }
-    #endif
     
     @MainActor
     private func handleAppBecameActive() {
@@ -88,6 +69,7 @@ struct LeavnApp: App {
         WindowGroup {
             MainTabView()
                 .environmentObject(appState)
+                .environmentObject(navigationCoordinator)
                 .environmentObject(DIContainer.shared)
             .onAppear {
                 setupiOSAppearance()
@@ -177,6 +159,9 @@ struct LeavnApp: App {
     
     // MARK: - Setup Methods
     private func setupApplication() {
+        // Configure API keys temporarily via UserDefaults (for testing)
+        UserDefaults.standard.set("sk_89057b7ff004c5d93399c145ed73a2c030e475cea355e3cc", forKey: "elevenlabs_api_key")
+        
         // Initialize dependency injection with PRODUCTION services
         Task {
             await DIContainer.shared.initialize()
@@ -198,6 +183,9 @@ struct LeavnApp: App {
         
         // Register for notifications
         registerForNotifications()
+        
+        // Apply saved theme preference
+        applyThemeOnStartup()
     }
     
     private func handleScenePhaseChange(_ phase: ScenePhase) {
@@ -239,7 +227,7 @@ final class AppState: ObservableObject {
     @Published var isInitialized = false
     
     // State
-    @Published var selectedTab: TabItem = .bible
+    @Published var selectedTab: TabItem = .home
     @Published var showGoToVerse = false
     @Published var currentBook: BibleBook?
     @Published var currentChapter: Int = 1
@@ -334,6 +322,29 @@ private func registerForNotifications() {
     #endif
 }
 
+// MARK: - Theme Application
+private func applyThemeOnStartup() {
+    #if os(iOS)
+    let savedTheme = UserDefaults.standard.string(forKey: "selectedTheme") ?? "System"
+    
+    DispatchQueue.main.async {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first else { return }
+        
+        switch savedTheme {
+        case "Light":
+            window.overrideUserInterfaceStyle = .light
+        case "Dark":
+            window.overrideUserInterfaceStyle = .dark
+        case "System", "Vibrant":
+            window.overrideUserInterfaceStyle = .unspecified
+        default:
+            window.overrideUserInterfaceStyle = .unspecified
+        }
+    }
+    #endif
+}
+
 // MARK: - Network Monitor
 final class NetworkMonitor: ObservableObject, @unchecked Sendable {
     static let shared = NetworkMonitor()
@@ -393,8 +404,8 @@ struct DailyVerseNotificationView: View {
 #endif
 
 // MARK: - Tab Item
-enum TabItem {
-    case bible, search, library, community, settings
+enum TabItem: String, CaseIterable {
+    case home, bible, search, library, community, settings
 }
 
 // MARK: - Temporary App Configuration

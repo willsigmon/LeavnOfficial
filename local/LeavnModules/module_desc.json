@@ -1,0 +1,267 @@
+{
+  "dependencies" : [
+    {
+      "identity" : "leavncore",
+      "path" : "/Users/wsig/GitHub Builds/LeavnOfficial/local/LeavnCore",
+      "type" : "fileSystem"
+    }
+  ],
+  "manifest_display_name" : "LeavnModules",
+  "name" : "LeavnModules",
+  "path" : "/Users/wsig/GitHub Builds/LeavnOfficial/local/LeavnModules",
+  "platforms" : [
+    {
+      "name" : "ios",
+      "version" : "17.0"
+    },
+    {
+      "name" : "macos",
+      "version" : "14.0"
+    },
+    {
+      "name" : "watchos",
+      "version" : "10.0"
+    },
+    {
+      "name" : "visionos",
+      "version" : "1.0"
+    },
+    {
+      "name" : "tvos",
+      "version" : "17.0"
+    }
+  ],
+  "products" : [
+    {
+      "name" : "LeavnBible",
+      "targets" : [
+        "LeavnBible"
+      ],
+      "type" : {
+        "library" : [
+          "automatic"
+        ]
+      }
+    },
+    {
+      "name" : "LeavnSearch",
+      "targets" : [
+        "LeavnSearch"
+      ],
+      "type" : {
+        "library" : [
+          "automatic"
+        ]
+      }
+    },
+    {
+      "name" : "LeavnLibrary",
+      "targets" : [
+        "LeavnLibrary"
+      ],
+      "type" : {
+        "library" : [
+          "automatic"
+        ]
+      }
+    },
+    {
+      "name" : "LeavnSettings",
+      "targets" : [
+        "LeavnSettings"
+      ],
+      "type" : {
+        "library" : [
+          "automatic"
+        ]
+      }
+    },
+    {
+      "name" : "LeavnCommunity",
+      "targets" : [
+        "LeavnCommunity"
+      ],
+      "type" : {
+        "library" : [
+          "automatic"
+        ]
+      }
+    },
+    {
+      "name" : "AuthenticationModule",
+      "targets" : [
+        "AuthenticationModule"
+      ],
+      "type" : {
+        "library" : [
+          "automatic"
+        ]
+      }
+    }
+  ],
+  "targets" : [
+    {
+      "c99name" : "LibraryModels",
+      "module_type" : "SwiftTarget",
+      "name" : "LibraryModels",
+      "path" : "Library/Models",
+      "product_dependencies" : [
+        "LeavnCore"
+      ],
+      "product_memberships" : [
+        "LeavnLibrary"
+      ],
+      "sources" : [
+        "LibraryModels.swift"
+      ],
+      "type" : "library"
+    },
+    {
+      "c99name" : "LeavnSettings",
+      "module_type" : "SwiftTarget",
+      "name" : "LeavnSettings",
+      "path" : "Settings",
+      "product_dependencies" : [
+        "LeavnCore",
+        "LeavnServices",
+        "DesignSystem"
+      ],
+      "product_memberships" : [
+        "LeavnSettings"
+      ],
+      "sources" : [
+        "ViewModels/SettingsViewModel.swift",
+        "Views/ProfileEditView.swift",
+        "Views/SettingsView.swift"
+      ],
+      "type" : "library"
+    },
+    {
+      "c99name" : "LeavnSearch",
+      "module_type" : "SwiftTarget",
+      "name" : "LeavnSearch",
+      "path" : "Search",
+      "product_dependencies" : [
+        "LeavnCore",
+        "LeavnServices",
+        "DesignSystem"
+      ],
+      "product_memberships" : [
+        "LeavnSearch"
+      ],
+      "sources" : [
+        "ViewModels/SearchViewModel.swift",
+        "Views/SearchView.swift"
+      ],
+      "target_dependencies" : [
+        "LeavnBible"
+      ],
+      "type" : "library"
+    },
+    {
+      "c99name" : "LeavnLibrary",
+      "module_type" : "SwiftTarget",
+      "name" : "LeavnLibrary",
+      "path" : "Library",
+      "product_dependencies" : [
+        "LeavnCore",
+        "LeavnServices",
+        "DesignSystem"
+      ],
+      "product_memberships" : [
+        "LeavnLibrary"
+      ],
+      "sources" : [
+        "ViewModels/LibraryViewModel.swift",
+        "Views/LibraryView.swift"
+      ],
+      "target_dependencies" : [
+        "LibraryModels"
+      ],
+      "type" : "library"
+    },
+    {
+      "c99name" : "LeavnCommunity",
+      "module_type" : "SwiftTarget",
+      "name" : "LeavnCommunity",
+      "path" : "Community",
+      "product_dependencies" : [
+        "LeavnCore",
+        "LeavnServices",
+        "DesignSystem"
+      ],
+      "product_memberships" : [
+        "LeavnCommunity"
+      ],
+      "sources" : [
+        "ViewModels/CommunityViewModel.swift",
+        "Views/CommunityView.swift",
+        "Views/NotificationCenterView.swift"
+      ],
+      "type" : "library"
+    },
+    {
+      "c99name" : "LeavnBible",
+      "module_type" : "SwiftTarget",
+      "name" : "LeavnBible",
+      "path" : "Bible",
+      "product_dependencies" : [
+        "LeavnCore",
+        "LeavnServices",
+        "DesignSystem"
+      ],
+      "product_memberships" : [
+        "LeavnBible",
+        "LeavnSearch"
+      ],
+      "sources" : [
+        "Models/BibleConstants.swift",
+        "ViewModels/BibleReaderViewModel.swift",
+        "ViewModels/BibleViewModel.swift",
+        "ViewModels/VerseComparisonViewModel.swift",
+        "Views/AddBookmarkSheet.swift",
+        "Views/BibleReaderView.swift",
+        "Views/BibleVerseDetailView.swift",
+        "Views/BibleView.swift",
+        "Views/ChapterPickerSheet.swift",
+        "Views/Components/BookPickerView.swift",
+        "Views/Components/ChapterPickerView.swift",
+        "Views/Components/ShareSheet.swift",
+        "Views/Components/VerseDetailView.swift",
+        "Views/DevotionReaderView.swift",
+        "Views/HomeView.swift",
+        "Views/NoteEditorSheet.swift",
+        "Views/OnboardingView.swift",
+        "Views/ReaderSettingsView.swift",
+        "Views/ReadingModeView.swift",
+        "Views/SettingsSheet.swift",
+        "Views/ShareVerseSheet.swift",
+        "Views/TranslationPickerSheet.swift",
+        "Views/TranslationPickerView.swift",
+        "Views/VerseComparisonView.swift",
+        "Views/VerseOptionsSheet.swift",
+        "Views/VerseView.swift"
+      ],
+      "type" : "library"
+    },
+    {
+      "c99name" : "AuthenticationModule",
+      "module_type" : "SwiftTarget",
+      "name" : "AuthenticationModule",
+      "path" : "Authentication",
+      "product_dependencies" : [
+        "LeavnCore",
+        "LeavnServices",
+        "DesignSystem"
+      ],
+      "product_memberships" : [
+        "AuthenticationModule"
+      ],
+      "sources" : [
+        "SignInView.swift"
+      ],
+      "type" : "library"
+    }
+  ],
+  "tools_version" : "6.0"
+}

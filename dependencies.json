@@ -1,0 +1,109 @@
+{
+  "name": "Leavn",
+  "targets": {
+    "Leavn": {
+      "type": "app",
+      "platform": "iOS",
+      "dependencies": [
+        "LeavnCore",
+        "LeavnServices",
+        "DesignSystem",
+        "LeavnBible",
+        "LeavnSearch",
+        "LeavnLibrary",
+        "LeavnSettings",
+        "LeavnCommunity",
+        "AuthenticationModule"
+      ]
+    },
+    "LeavnWidgets": {
+      "type": "appExtension",
+      "platform": "iOS",
+      "dependencies": [
+        "LeavnCore",
+        "DesignSystem"
+      ]
+    },
+    "LeavnTests": {
+      "type": "unitTests",
+      "platform": "iOS",
+      "dependencies": [
+        "Leavn"
+      ]
+    },
+    "LeavnIntegrationTests": {
+      "type": "unitTests",
+      "platform": "iOS",
+      "dependencies": [
+        "Leavn",
+        "LeavnServices"
+      ]
+    },
+    "LeavnUITests": {
+      "type": "uiTests",
+      "platform": "iOS",
+      "dependencies": [
+        "Leavn"
+      ]
+    }
+  },
+  "packages": {
+    "LeavnCore": {
+      "path": "local/LeavnCore",
+      "products": ["LeavnCore", "LeavnServices", "DesignSystem"]
+    },
+    "LeavnModules": {
+      "path": "local/LeavnModules",
+      "products": [
+        "LeavnBible",
+        "LeavnSearch",
+        "LeavnLibrary",
+        "LeavnSettings",
+        "LeavnCommunity",
+        "AuthenticationModule"
+      ],
+      "dependencies": ["LeavnCore"]
+    }
+  },
+  "graph": {
+    "nodes": [
+      "Leavn",
+      "LeavnWidgets",
+      "LeavnTests",
+      "LeavnIntegrationTests",
+      "LeavnUITests",
+      "LeavnCore",
+      "LeavnServices",
+      "DesignSystem",
+      "LeavnBible",
+      "LeavnSearch",
+      "LeavnLibrary",
+      "LeavnSettings",
+      "LeavnCommunity",
+      "AuthenticationModule"
+    ],
+    "edges": [
+      ["Leavn", "LeavnCore"],
+      ["Leavn", "LeavnServices"],
+      ["Leavn", "DesignSystem"],
+      ["Leavn", "LeavnBible"],
+      ["Leavn", "LeavnSearch"],
+      ["Leavn", "LeavnLibrary"],
+      ["Leavn", "LeavnSettings"],
+      ["Leavn", "LeavnCommunity"],
+      ["Leavn", "AuthenticationModule"],
+      ["LeavnWidgets", "LeavnCore"],
+      ["LeavnWidgets", "DesignSystem"],
+      ["LeavnTests", "Leavn"],
+      ["LeavnIntegrationTests", "Leavn"],
+      ["LeavnIntegrationTests", "LeavnServices"],
+      ["LeavnUITests", "Leavn"],
+      ["LeavnBible", "LeavnCore"],
+      ["LeavnSearch", "LeavnCore"],
+      ["LeavnLibrary", "LeavnCore"],
+      ["LeavnSettings", "LeavnCore"],
+      ["LeavnCommunity", "LeavnCore"],
+      ["AuthenticationModule", "LeavnCore"]
+    ]
+  }
+}

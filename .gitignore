@@ -167,6 +167,7 @@ Build/
 
 # Secrets
 Leavn/Configuration/Secrets.swift
+Leavn/App/TempAPIConfig.swift
 
 # SwiftPM
 .build/

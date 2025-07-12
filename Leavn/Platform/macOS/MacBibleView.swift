@@ -1,5 +1,9 @@
 import SwiftUI
 import AppKit
+import LeavnCore
+import LeavnServices
+import LeavnBible
+import DesignSystem
 
 #if os(macOS)
 
@@ -104,11 +108,16 @@ struct MacSidebarView: View {
                 }
             }
             
-            Section("Tools") {
-                ForEach(SidebarItem.toolItems, id: \.self) { item in
+            Section("Community") {
+                ForEach(SidebarItem.communityItems, id: \.self) { item in
                     Label(item.title, systemImage: item.systemImage)
                         .tag(item)
                 }
+            }
+            
+            Section {
+                Label(SidebarItem.settings.title, systemImage: SidebarItem.settings.systemImage)
+                    .tag(SidebarItem.settings)
             }
             
             if !viewModel.recentBooks.isEmpty {
@@ -231,8 +240,8 @@ struct MacDetailView: View {
         .navigationTitle("Details")
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
-                if viewModel.selectedVerse != nil {
-                    MacDetailToolbarView(verse: viewModel.selectedVerse!)
+                if let verse = viewModel.selectedVerse {
+                    MacDetailToolbarView(verse: verse)
                 }
             }
         }

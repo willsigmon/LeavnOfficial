@@ -8,7 +8,7 @@ all: clean build
 # Variables for simulator destination  
 # Default to iPhone 16 Pro, but allow overriding, e.g., make build DEVICE_NAME="iPhone 16 Plus"
 SIMULATOR_PLATFORM ?= iOS Simulator
-SIMULATOR_OS_VERSION ?= 26.0 # Should match available simulator versions
+SIMULATOR_OS_VERSION ?= 18.5 # Should match available simulator versions
 DEFAULT_DEVICE_NAME := iPhone 16 Pro
 DEVICE_NAME ?= $(DEFAULT_DEVICE_NAME)
 # Construct the destination string. If a specific DEVICE_ID is provided, use that.
@@ -62,6 +62,7 @@ build:
 	@xcodebuild build \
 		-project Leavn.xcodeproj \
 		-scheme "Leavn" \
+		-derivedDataPath ~/DerivedData/Leavn \
 		-destination '$(DESTINATION)' \
 		-quiet \
 		ONLY_ACTIVE_ARCH=YES \

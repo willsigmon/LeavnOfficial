@@ -1,0 +1,33 @@
+== Devices ==
+-- iOS 18.5 --
+    iPhone 16 Pro (98807FFC-737F-4BB9-8541-9AB2C4D80E2A) (Shutdown) 
+    iPhone 16 Pro Max (85012656-75B3-49AA-B2E2-D75D347AA74E) (Shutdown) 
+    iPhone 16e (9FCB2A4D-6D73-4982-90A7-4B85FF0B8A15) (Shutdown) 
+    iPhone 16 (C21CAD94-C9DF-4C21-8ED2-6045F5A93C23) (Shutdown) 
+    iPhone 16 Plus (1D4CCA82-13F3-435B-8BDD-40921D7E14E4) (Shutdown) 
+    iPad Pro 11-inch (M4) (3F4CC328-3727-4FEB-8384-0586C4099A21) (Shutdown) 
+    iPad Pro 13-inch (M4) (42BEE868-C266-4492-95B9-078081A8A4DA) (Shutdown) 
+    iPad mini (A17 Pro) (C65AFEE5-9228-42BB-AABB-1752A0B396D9) (Shutdown) 
+    iPad (A16) (31EF653A-8003-4F77-8AD2-6099CBF85B21) (Shutdown) 
+    iPad Air 13-inch (M3) (B479CFC0-F484-473E-B73D-465DCE59CD65) (Shutdown) 
+    iPad Air 11-inch (M3) (6F77F4D3-3775-4AA8-BABE-4055159F4768) (Shutdown) 
+-- iOS 26.0 --
+    iPhone 16 Pro (4D00F985-FF71-4CF8-A298-0E33A03FB2ED) (Shutdown) 
+    iPhone 16 Pro Max (A0E0248A-305B-4F91-96CF-29D0B10850CF) (Shutdown) 
+    iPhone 16e (E8A7C91A-9745-4A4B-94C2-7DC1B7E96FBF) (Shutdown) 
+    iPhone 16 (0794F21F-40FB-43DB-88D1-C6A458C31596) (Shutdown) 
+    iPhone 16 Plus (DEBDC4ED-12A9-49EE-AE4C-F9BC13490537) (Shutdown) 
+    iPad Pro 11-inch (M4) (5EE19EBB-DC4E-41E5-9D15-649A83791B90) (Shutdown) 
+    iPad Pro 13-inch (M4) (8710C4F4-34B9-4407-B9B3-F22D2B52D227) (Shutdown) 
+    iPad mini (A17 Pro) (AE845A70-5F8B-41F2-BC17-A5B3205139C7) (Shutdown) 
+    iPad (A16) (0EBDD718-BFE6-4B0E-AF9F-8A62BFB997E1) (Shutdown) 
+    iPad Air 13-inch (M3) (B4379359-84B5-4AB0-A34E-6E5D052EDAFE) (Shutdown) 
+    iPad Air 11-inch (M3) (BC97B250-86F3-4C0D-B9F3-A7B950D8AB84) (Shutdown) 
+-- watchOS 26.0 --
+    Apple Watch Series 10 (46mm) (EF28A314-DB01-4C54-BB41-6026DF87F70E) (Shutdown) 
+    Apple Watch Series 10 (42mm) (A523DAC2-9D0B-4A71-88BC-F197657E1394) (Shutdown) 
+    Apple Watch Ultra 2 (49mm) (1B61E67A-4D69-4F76-999B-48DAA4D7694B) (Shutdown) 
+    Apple Watch SE (44mm) (2nd generation) (6E8E5114-D6CD-4077-B53F-1F9DB4052F4F) (Shutdown) 
+    Apple Watch SE (40mm) (2nd generation) (F70C5275-4C01-4173-ACE3-177DFF6B0ACE) (Shutdown) 
+-- visionOS 26.0 --
+    Apple Vision Pro 4K (535C897A-CF20-4137-88BE-2DD98B601215) (Shutdown) 
