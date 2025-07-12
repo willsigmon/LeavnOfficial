@@ -1,5 +1,6 @@
 import SwiftUI
 import LeavnCore
+import LeavnBible
 
 struct LifeSituationsWidget: View {
     @ObservedObject var viewModel: LifeSituationsViewModel
@@ -137,41 +138,43 @@ struct LifeSituationsWidget: View {
                                 .foregroundColor(.secondary)
                             
                             ForEach(viewModel.suggestedVerses.prefix(3)) { recommendation in
-                                NavigationLink(destination: BibleReaderView(
-                                    book: BibleBook(from: recommendation.verse.bookId),
-                                    chapter: recommendation.verse.chapter
-                                )) {
-                                    HStack {
-                                        VStack(alignment: .leading, spacing: 4) {
-                                            Text(recommendation.verse.reference)
-                                                .font(.caption2)
-                                                .fontWeight(.medium)
-                                                .foregroundColor(.accentColor)
+                                if let book = BibleBook(from: recommendation.verse.bookId) {
+                                    NavigationLink(destination: BibleReaderView(
+                                        book: book,
+                                        chapter: recommendation.verse.chapter
+                                    )) {
+                                        HStack {
+                                            VStack(alignment: .leading, spacing: 4) {
+                                                Text(recommendation.verse.reference)
+                                                    .font(.caption2)
+                                                    .fontWeight(.medium)
+                                                    .foregroundColor(.accentColor)
+                                                
+                                                Text(recommendation.verse.text)
+                                                    .font(.caption)
+                                                    .foregroundColor(.primary)
+                                                    .lineLimit(2)
+                                                    .multilineTextAlignment(.leading)
+                                            }
                                             
-                                            Text(recommendation.verse.text)
+                                            Spacer()
+                                            
+                                            Image(systemName: "chevron.right")
                                                 .font(.caption)
-                                                .foregroundColor(.primary)
-                                                .lineLimit(2)
-                                                .multilineTextAlignment(.leading)
+                                                .foregroundColor(.secondary)
                                         }
-                                        
-                                        Spacer()
-                                        
-                                        Image(systemName: "chevron.right")
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
+                                        .padding(8)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .fill(.ultraThinMaterial)
+                                                .overlay(
+                                                    RoundedRectangle(cornerRadius: 12)
+                                                        .stroke(Color.white.opacity(0.1), lineWidth: 0.5)
+                                                )
+                                        )
                                     }
-                                    .padding(8)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .fill(.ultraThinMaterial)
-                                            .overlay(
-                                                RoundedRectangle(cornerRadius: 12)
-                                                    .stroke(Color.white.opacity(0.1), lineWidth: 0.5)
-                                            )
-                                    )
+                                    .buttonStyle(PlainButtonStyle())
                                 }
-                                .buttonStyle(PlainButtonStyle())
                             }
                         }
                     }

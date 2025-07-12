@@ -14,7 +14,8 @@ let package = Package(
         .library(name: "LeavnLifeSituations", targets: ["LeavnLifeSituations"]),
     ],
     dependencies: [
-        .package(path: "../../local/LeavnCore")
+        .package(path: "../../local/LeavnCore"),
+        .package(path: "../../local/LeavnModules")
     ],
     targets: [
         .target(
@@ -22,7 +23,8 @@ let package = Package(
             dependencies: [
                 .product(name: "LeavnCore", package: "LeavnCore"),
                 .product(name: "LeavnServices", package: "LeavnCore"),
-                .product(name: "DesignSystem", package: "LeavnCore")
+                .product(name: "DesignSystem", package: "LeavnCore"),
+                .product(name: "LeavnBible", package: "LeavnModules")
             ],
             path: "Presentation"
         )

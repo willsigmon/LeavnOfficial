@@ -1,6 +1,8 @@
 import SwiftUI
-import RealityKit
+#if canImport(RealityKitContent)
 import RealityKitContent
+#endif
+import RealityKit
 
 #if os(visionOS)
 

@@ -1,8 +1,11 @@
 import SwiftUI
+#if os(macOS)
 import AppKit
+#endif
 import LeavnCore
 import LeavnServices
 
+#if os(macOS)
 @MainActor
 @Observable
 final class MacBibleViewModel {
@@ -22,7 +25,7 @@ final class MacBibleViewModel {
     // macOS specific
     var sidebarSelection: SidebarItem? = .bible
     var isFullScreen = false
-    var selectedTranslation: Translation = .kjv
+    var selectedTranslation: BibleTranslation = .kjv
     var recentlyViewed: [RecentItem] = []
     var studyNotes: [StudyNote] = []
     var splitViewGeometry: SplitViewGeometry = .init()
@@ -32,10 +35,10 @@ final class MacBibleViewModel {
     
     // MARK: - Initialization
     init(
-        bibleService: BibleServiceProtocol = DIContainer.shared.resolve(BibleServiceProtocol.self)!,
-        cacheService: CacheServiceProtocol = DIContainer.shared.resolve(CacheServiceProtocol.self)!,
-        libraryService: LibraryServiceProtocol = DIContainer.shared.resolve(LibraryServiceProtocol.self)!,
-        searchService: SearchServiceProtocol = DIContainer.shared.resolve(SearchServiceProtocol.self)!
+        bibleService: BibleServiceProtocol = DependencyContainer.shared.resolve(BibleServiceProtocol.self) ?? fatalError("Missing BibleServiceProtocol"),
+        cacheService: CacheServiceProtocol = DependencyContainer.shared.resolve(CacheServiceProtocol.self) ?? fatalError("Missing CacheServiceProtocol"),
+        libraryService: LibraryServiceProtocol = DependencyContainer.shared.resolve(LibraryServiceProtocol.self) ?? fatalError("Missing LibraryServiceProtocol"),
+        searchService: SearchServiceProtocol = DependencyContainer.shared.resolve(SearchServiceProtocol.self) ?? fatalError("Missing SearchServiceProtocol")
     ) {
         self.bibleService = bibleService
         self.cacheService = cacheService
@@ -85,7 +88,7 @@ final class MacBibleViewModel {
         }
     }
     
-    func openInNewWindow(verse: Verse) {
+    func openInNewWindow(verse: BibleVerse) {
         let window = SecondaryWindow(
             id: UUID(),
             type: .verseDetail(verse),
@@ -94,7 +97,7 @@ final class MacBibleViewModel {
         secondaryWindows.append(window)
     }
     
-    func exportToPDF(verses: [Verse]) async throws -> URL {
+    func exportToPDF(verses: [BibleVerse]) async throws -> URL {
         let renderer = PDFRenderer()
         return try await renderer.render(verses: verses, translation: selectedTranslation)
     }
@@ -136,7 +139,7 @@ final class MacBibleViewModel {
         }
     }
     
-    private func addToRecentItems(book: Book, chapter: Int) {
+    private func addToRecentItems(book: BibleBook, chapter: Int) {
         let item = RecentItem(
             id: UUID(),
             book: book,
@@ -194,6 +197,7 @@ final class MacBibleViewModel {
         }
     }
 }
+#endif
 
 // MARK: - Supporting Types
 enum SidebarItem: String, CaseIterable {
@@ -236,7 +240,7 @@ enum SidebarItem: String, CaseIterable {
 
 struct RecentItem: Codable, Identifiable {
     let id: UUID
-    let book: Book
+    let book: BibleBook
     let chapter: Int
     let timestamp: Date
 }
@@ -262,14 +266,14 @@ struct SecondaryWindow: Identifiable {
 }
 
 enum WindowType {
-    case verseDetail(Verse)
-    case comparison([Verse])
+    case verseDetail(BibleVerse)
+    case comparison([BibleVerse])
     case studyNote(StudyNote)
 }
 
 // PDF Renderer
 struct PDFRenderer {
-    func render(verses: [Verse], translation: Translation) async throws -> URL {
+    func render(verses: [BibleVerse], translation: BibleTranslation) async throws -> URL {
         // Implementation would use PDFKit to create formatted PDF
         let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("export.pdf")
         // Actual PDF creation logic here
