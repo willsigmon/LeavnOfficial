@@ -114,18 +114,19 @@ public struct BookInfoView: View {
                 .foregroundColor(.secondary)
             
             // Map View
-            Map(coordinateRegion: .constant(mapRegion(for: book)),
-                annotationItems: locations(for: book)) { location in
-                MapAnnotation(coordinate: location.coordinate) {
-                    VStack {
-                        Image(systemName: "mappin.circle.fill")
-                            .font(.title)
-                            .foregroundColor(.accentColor)
-                        Text(location.name)
-                            .font(.caption)
-                            .padding(4)
-                            .background(Color.white)
-                            .cornerRadius(4)
+            Map(initialPosition: .region(mapRegion(for: book))) {
+                ForEach(locations(for: book)) { location in
+                    Annotation(location.name, coordinate: location.coordinate) {
+                        VStack {
+                            Image(systemName: "mappin.circle.fill")
+                                .font(.title)
+                                .foregroundColor(.accentColor)
+                            Text(location.name)
+                                .font(.caption)
+                                .padding(4)
+                                .background(Color.white)
+                                .cornerRadius(4)
+                        }
                     }
                 }
             }
@@ -362,13 +363,17 @@ public struct BookInfoView: View {
     private func historicalContext(for book: BibleBook) -> String {
         switch book.id {
         case "genesis":
-            return "Genesis was written to provide the Israelites with an account of their origins and God's covenant relationship with their ancestors. It establishes foundational truths about God, humanity, sin, and redemption."
+            return "Genesis was written to provide the Israelites with an account of their origins and God's covenant relationship with their ancestors. " +
+                   "It establishes foundational truths about God, humanity, sin, and redemption."
         case "exodus":
-            return "Written to record Israel's deliverance from Egypt and establishment as God's covenant nation. The events occurred during the New Kingdom period of Egypt (likely under Ramesses II)."
+            return "Written to record Israel's deliverance from Egypt and establishment as God's covenant nation. " +
+                   "The events occurred during the New Kingdom period of Egypt (likely under Ramesses II)."
         case "matthew":
-            return "Written to Jewish Christians to demonstrate that Jesus is the promised Messiah. Written during a time of growing tension between the church and synagogue."
+            return "Written to Jewish Christians to demonstrate that Jesus is the promised Messiah. " +
+                   "Written during a time of growing tension between the church and synagogue."
         case "romans":
-            return "Written to the church in Rome before Paul's visit there. Addresses the relationship between Jewish and Gentile believers and presents a systematic exposition of the gospel."
+            return "Written to the church in Rome before Paul's visit there. " +
+                   "Addresses the relationship between Jewish and Gentile believers and presents a systematic exposition of the gospel."
         default:
             return "This book was written in a specific historical context that shaped its message and themes."
         }
@@ -377,13 +382,20 @@ public struct BookInfoView: View {
     private func archaeologicalFindings(for book: BibleBook) -> String {
         switch book.id {
         case "genesis":
-            return "Tablets from Nuzi and Mari provide cultural parallels to patriarchal customs. The Epic of Gilgamesh offers flood narrative parallels. Archaeological evidence supports the existence of cities mentioned in Genesis."
+            return "Tablets from Nuzi and Mari provide cultural parallels to patriarchal customs. " +
+                   "The Epic of Gilgamesh offers flood narrative parallels. " +
+                   "Archaeological evidence supports the existence of cities mentioned in Genesis."
         case "exodus":
-            return "The Merneptah Stele (c. 1208 BC) contains the earliest extra-biblical reference to Israel. Excavations at Pi-Ramesses and Pithom support the biblical account of Hebrew slavery in Egypt."
+            return "The Merneptah Stele (c. 1208 BC) contains the earliest extra-biblical reference to Israel. " +
+                   "Excavations at Pi-Ramesses and Pithom support the biblical account of Hebrew slavery in Egypt."
         case "matthew", "mark", "luke", "john":
-            return "The Pilate Stone confirms Pontius Pilate as prefect. The Pool of Bethesda and Pool of Siloam have been excavated. First-century synagogues in Galilee match Gospel descriptions."
+            return "The Pilate Stone confirms Pontius Pilate as prefect. " +
+                   "The Pool of Bethesda and Pool of Siloam have been excavated. " +
+                   "First-century synagogues in Galilee match Gospel descriptions."
         case "acts":
-            return "Inscriptions confirm the accuracy of Luke's use of local titles. The Gallio inscription dates Paul's time in Corinth. Archaeological findings support Luke's detailed knowledge of first-century geography."
+            return "Inscriptions confirm the accuracy of Luke's use of local titles. " +
+                   "The Gallio inscription dates Paul's time in Corinth. " +
+                   "Archaeological findings support Luke's detailed knowledge of first-century geography."
         default:
             return "Archaeological discoveries continue to illuminate the historical and cultural background of this biblical book."
         }

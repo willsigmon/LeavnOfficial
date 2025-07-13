@@ -11,11 +11,19 @@ let project = Project(
     targets: [
         .target(
             name: "Leavn",
-            destinations: [.iPhone],
+            destinations: .iOS,
             product: .app,
-            bundleId: "com.leavnofficial.Leavn",
+            bundleId: "dev.leavn.app",
             deploymentTargets: .iOS("17.0"),
-            infoPlist: .file(path: "Leavn/Info.plist"),
+            infoPlist: .extendingDefault(with: [
+                "UILaunchStoryboardName": "LaunchScreen",
+                "UIRequiredDeviceCapabilities": [
+                    "arm64",
+                ],
+                "UISupportedInterfaceOrientations": [
+                    "UIInterfaceOrientationPortrait",
+                ],
+            ]),
             sources: [
                 "Leavn/App/**",
                 "Leavn/Views/**",

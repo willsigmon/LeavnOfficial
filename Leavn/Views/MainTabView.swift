@@ -5,7 +5,7 @@ import LeavnSearch
 import LeavnLibrary
 import LeavnCommunity
 import LeavnSettings
-import LeavnLifeSituations // I'll create this module soon
+import LeavnLifeSituations
 import DesignSystem
 
 private enum MainTab: Int, CaseIterable {
