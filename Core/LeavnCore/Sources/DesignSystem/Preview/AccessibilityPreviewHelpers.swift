@@ -74,6 +74,9 @@ public struct AccessibilityPreviewContainer<Content: View>: View {
 
 // MARK: - Component Gallery
 public struct AccessibilityComponentGallery: View {
+    @Environment(\.colorScheme) private var colorScheme
+    @ObservedObject private var themeManager = AccessibilityThemeManager.shared
+    
     public init() {}
     
     public var body: some View {
@@ -182,34 +185,34 @@ public struct AccessibilityComponentGallery: View {
             
             HStack(spacing: 16) {
                 ColorSwatch(
-                    color: Color.LeavnColors.primary.current,
-                    name: "Primary"
+                    color: Color.LeavnColors.primary.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled),
+                    label: "Primary"
                 )
                 ColorSwatch(
-                    color: Color.LeavnColors.secondary.current,
+                    color: Color.LeavnColors.secondary.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled),
                     label: "Secondary"
                 )
                 ColorSwatch(
-                    color: Color.LeavnColors.accent.current,
+                    color: Color.LeavnColors.accent.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled),
                     label: "Accent"
                 )
             }
             
             HStack(spacing: 16) {
                 ColorSwatch(
-                    color: Color.LeavnColors.success.current,
+                    color: Color.LeavnColors.success.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled),
                     label: "Success"
                 )
                 ColorSwatch(
-                    color: Color.LeavnColors.warning.current,
+                    color: Color.LeavnColors.warning.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled),
                     label: "Warning"
                 )
                 ColorSwatch(
-                    color: Color.LeavnColors.error.current,
+                    color: Color.LeavnColors.error.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled),
                     label: "Error"
                 )
                 ColorSwatch(
-                    color: Color.LeavnColors.info.current,
+                    color: Color.LeavnColors.info.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled),
                     label: "Info"
                 )
             }
@@ -226,7 +229,7 @@ public struct AccessibilityComponentGallery: View {
                 HStack {
                     Image(systemName: "person.circle.fill")
                         .font(.title2)
-                        .foregroundColor(Color.LeavnColors.primary.current)
+                        .foregroundColor(Color.LeavnColors.primary.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled))
                     
                     VStack(alignment: .leading, spacing: 4) {
                         AccessibleText("Profile Settings", style: .headline)
@@ -255,6 +258,8 @@ public struct AccessibilityComponentGallery: View {
 private struct ColorSwatch: View {
     let color: Color
     let label: String
+    @Environment(\.colorScheme) private var colorScheme
+    @ObservedObject private var themeManager = AccessibilityThemeManager.shared
     
     var body: some View {
         VStack(spacing: 8) {
@@ -263,7 +268,7 @@ private struct ColorSwatch: View {
                 .frame(width: 80, height: 80)
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.LeavnBorderColors.border.current, lineWidth: 1)
+                        .stroke(Color.LeavnBorderColors.border.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled), lineWidth: 1)
                 )
             
             AccessibleText(label, style: .caption)

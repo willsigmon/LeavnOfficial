@@ -19,35 +19,68 @@ public struct DesignSystem {
 }
 
 // MARK: - Colors
+@MainActor
 public struct Colors {
+    private let themeManager = AccessibilityThemeManager.shared
+    
     // Use WCAG compliant color sets
-    public var primary: Color { Color.LeavnColors.primary.current }
+    public var primary: Color {
+        Color.LeavnColors.primary.current(for: themeManager.colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+    }
     public var primaryLight: Color { Color.LeavnColors.primary.light }
     public var primaryDark: Color { Color.LeavnColors.primary.dark }
     
     // Secondary Colors
-    public var secondary: Color { Color.LeavnColors.secondary.current }
+    public var secondary: Color {
+        Color.LeavnColors.secondary.current(for: themeManager.colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+    }
     public var secondaryLight: Color { Color.LeavnColors.secondary.light }
     public var secondaryDark: Color { Color.LeavnColors.secondary.dark }
     
     // Semantic Colors with WCAG compliance
-    public var success: Color { Color.LeavnColors.success.current }
-    public var warning: Color { Color.LeavnColors.warning.current }
-    public var error: Color { Color.LeavnColors.error.current }
-    public var info: Color { Color.LeavnColors.info.current }
+    public var success: Color {
+        Color.LeavnColors.success.current(for: themeManager.colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+    }
+    public var warning: Color {
+        Color.LeavnColors.warning.current(for: themeManager.colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+    }
+    public var error: Color {
+        Color.LeavnColors.error.current(for: themeManager.colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+    }
+    public var info: Color {
+        Color.LeavnColors.info.current(for: themeManager.colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+    }
     
     // Neutral Colors with proper contrast
-    public var background: Color { Color.LeavnBackgroundColors.primary.current }
-    public var secondaryBackground: Color { Color.LeavnBackgroundColors.secondary.current }
-    public var tertiaryBackground: Color { Color.LeavnBackgroundColors.tertiary.current }
+    public var background: Color {
+        Color.LeavnBackgroundColors.primary.current(for: themeManager.colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+    }
+    public var secondaryBackground: Color {
+        Color.LeavnBackgroundColors.secondary.current(for: themeManager.colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+    }
+    public var tertiaryBackground: Color {
+        Color.LeavnBackgroundColors.tertiary.current(for: themeManager.colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+    }
     
-    public var label: Color { Color.LeavnTextColors.primary.current }
-    public var secondaryLabel: Color { Color.LeavnTextColors.secondary.current }
-    public var tertiaryLabel: Color { Color.LeavnTextColors.tertiary.current }
-    public var quaternaryLabel: Color { Color.LeavnTextColors.tertiary.current }
+    public var label: Color {
+        Color.LeavnTextColors.primary.current(for: themeManager.colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+    }
+    public var secondaryLabel: Color {
+        Color.LeavnTextColors.secondary.current(for: themeManager.colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+    }
+    public var tertiaryLabel: Color {
+        Color.LeavnTextColors.tertiary.current(for: themeManager.colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+    }
+    public var quaternaryLabel: Color {
+        Color.LeavnTextColors.tertiary.current(for: themeManager.colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+    }
     
-    public var separator: Color { Color.LeavnBorderColors.separator.current }
-    public var opaqueSeparator: Color { Color.LeavnBorderColors.border.current }
+    public var separator: Color {
+        Color.LeavnBorderColors.separator.current(for: themeManager.colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+    }
+    public var opaqueSeparator: Color {
+        Color.LeavnBorderColors.border.current(for: themeManager.colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+    }
 }
 
 // MARK: - Typography
@@ -102,6 +135,7 @@ public struct CornerRadius {
 }
 
 // MARK: - Shadows
+@MainActor
 public struct Shadows {
     // Reduced shadows for high contrast mode
     public var elevation1: Shadow {
@@ -150,6 +184,7 @@ public struct Shadow {
 }
 
 // MARK: - Animations
+@MainActor
 public struct Animations {
     // Respect reduce motion preference
     public var fast: Animation? {

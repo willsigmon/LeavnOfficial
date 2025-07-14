@@ -74,6 +74,7 @@ public class AccessibilityThemeManager: ObservableObject {
 }
 
 // MARK: - WCAG Compliant Color Palette
+@MainActor
 public struct WCAGColors {
     private let themeManager = AccessibilityThemeManager.shared
     

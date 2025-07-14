@@ -25,7 +25,7 @@ public struct ThemeValidator {
     }
     
     // MARK: - Validate All Theme Components
-    public static func validateTheme() -> [ValidationResult] {
+    @MainActor @MainActor @MainActor @MainActor public static func validateTheme() -> [ValidationResult] {
         var results: [ValidationResult] = []
         
         // Test both light and dark modes
@@ -260,6 +260,8 @@ public struct ThemeValidationView: View {
     @State private var validationResults: [ThemeValidator.ValidationResult] = []
     @State private var showOnlyFailures = false
     @State private var selectedColorScheme: ColorScheme = .light
+    @Environment(\.colorScheme) private var colorScheme
+    @ObservedObject private var themeManager = AccessibilityThemeManager.shared
     
     public init() {}
     
@@ -278,7 +280,7 @@ public struct ThemeValidationView: View {
                         Toggle("Show Only Failures", isOn: $showOnlyFailures)
                     }
                     .padding()
-                    .background(Color.LeavnBackgroundColors.secondary.current)
+                    .background(Color.LeavnBackgroundColors.secondary.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled))
                     .cornerRadius(12)
                     
                     // Results
@@ -309,6 +311,8 @@ public struct ThemeValidationView: View {
 // MARK: - Validation Result Card
 private struct ValidationResultCard: View {
     let result: ThemeValidator.ValidationResult
+    @Environment(\.colorScheme) private var colorScheme
+    @ObservedObject private var themeManager = AccessibilityThemeManager.shared
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -323,7 +327,7 @@ private struct ValidationResultCard: View {
             }
             
             HStack(spacing: 20) {
-                ColorSwatch(color: result.foregroundColor, name: "Foreground")
+                ColorSwatch(color: result.foregroundColor, label: "Foreground")
                 ColorSwatch(color: result.backgroundColor, label: "Background")
                 
                 VStack(alignment: .leading, spacing: 4) {
@@ -360,7 +364,7 @@ private struct ValidationResultCard: View {
             }
         }
         .padding()
-        .background(Color.LeavnBackgroundColors.secondary.current)
+        .background(Color.LeavnBackgroundColors.secondary.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled))
         .cornerRadius(12)
     }
     
@@ -375,6 +379,8 @@ private struct ValidationResultCard: View {
 private struct ColorSwatch: View {
     let color: Color
     let label: String
+    @Environment(\.colorScheme) private var colorScheme
+    @ObservedObject private var themeManager = AccessibilityThemeManager.shared
     
     var body: some View {
         VStack(spacing: 4) {
@@ -383,7 +389,7 @@ private struct ColorSwatch: View {
                 .frame(width: 60, height: 40)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.LeavnBorderColors.border.current, lineWidth: 1)
+                        .stroke(Color.LeavnBorderColors.border.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled), lineWidth: 1)
                 )
             
             Text(label)

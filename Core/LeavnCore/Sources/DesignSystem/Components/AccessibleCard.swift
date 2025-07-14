@@ -19,21 +19,21 @@ public struct AccessibleCard<Content: View>: View {
         case outlined
         case interactive
         
-        @MainActor @MainActor @MainActor func backgroundColor(colorScheme: ColorScheme, highContrast: Bool) -> Color {
+        @MainActor func backgroundColor(colorScheme: ColorScheme, highContrast: Bool) -> Color {
             switch self {
             case .elevated, .interactive:
-                return Color.LeavnBackgroundColors.secondary.current
+                return Color.LeavnBackgroundColors.secondary.current(for: colorScheme, isHighContrast: highContrast)
             case .filled:
-                return Color.LeavnBackgroundColors.tertiary.current
+                return Color.LeavnBackgroundColors.tertiary.current(for: colorScheme, isHighContrast: highContrast)
             case .outlined:
-                return Color.LeavnBackgroundColors.primary.current
+                return Color.LeavnBackgroundColors.primary.current(for: colorScheme, isHighContrast: highContrast)
             }
         }
         
-        @MainActor func borderColor(highContrast: Bool) -> Color {
+        @MainActor func borderColor(colorScheme: ColorScheme, highContrast: Bool) -> Color {
             switch self {
             case .outlined:
-                return Color.LeavnBorderColors.border.current
+                return Color.LeavnBorderColors.border.current(for: colorScheme, isHighContrast: highContrast)
             default:
                 return .clear
             }
@@ -122,7 +122,7 @@ public struct AccessibleCard<Content: View>: View {
     }
     
     private var borderColor: Color {
-        style.borderColor(highContrast: themeManager.isHighContrastEnabled)
+        style.borderColor(colorScheme: colorScheme, highContrast: themeManager.isHighContrastEnabled)
     }
     
     private var borderWidth: CGFloat {
@@ -147,7 +147,7 @@ public struct AccessibleCard<Content: View>: View {
     }
     
     private var focusIndicatorColor: Color {
-        Color.LeavnColors.accent.current
+        Color.LeavnColors.accent.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
     }
     
     private var focusIndicatorWidth: CGFloat {
@@ -163,6 +163,7 @@ public struct AccessibleListItem<Content: View>: View {
     let accessibilityLabel: String?
     let action: (() -> Void)?
     
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.sizeCategory) private var sizeCategory
     @ObservedObject private var themeManager = AccessibilityThemeManager.shared
     @State private var isPressed = false
@@ -194,7 +195,7 @@ public struct AccessibleListItem<Content: View>: View {
                 if showDisclosureIndicator {
                     Image(systemName: "chevron.right")
                         .font(.system(.footnote, design: .default, weight: .semibold))
-                        .foregroundColor(Color.LeavnTextColors.tertiary.current)
+                        .foregroundColor(Color.LeavnTextColors.tertiary.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled))
                         .accessibilityHidden(true)
                 }
             }
@@ -231,7 +232,7 @@ private struct AccessibleListItemButtonStyle: ButtonStyle {
         configuration.label
             .background(
                 configuration.isPressed && isEnabled
-                    ? Color.LeavnBackgroundColors.tertiary.current
+                    ? Color.LeavnBackgroundColors.tertiary.current(for: themeManager.colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
                     : Color.clear
             )
             .animation(
@@ -247,7 +248,9 @@ public struct AccessibleContainer<Content: View>: View {
     let backgroundColor: Color?
     let padding: EdgeInsets?
     
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.sizeCategory) private var sizeCategory
+    @ObservedObject private var themeManager = AccessibilityThemeManager.shared
     
     public init(
         backgroundColor: Color? = nil,
@@ -264,7 +267,7 @@ public struct AccessibleContainer<Content: View>: View {
             .padding(scaledPadding)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(
-                backgroundColor ?? Color.LeavnBackgroundColors.primary.current
+                backgroundColor ?? Color.LeavnBackgroundColors.primary.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
             )
             .accessibilityElement(children: .contain)
     }
@@ -292,6 +295,7 @@ public struct AccessibleContainer<Content: View>: View {
 public struct AccessibleDivider: View {
     let style: DividerStyle
     
+    @Environment(\.colorScheme) private var colorScheme
     @ObservedObject private var themeManager = AccessibilityThemeManager.shared
     
     public enum DividerStyle {
@@ -307,12 +311,12 @@ public struct AccessibleDivider: View {
             }
         }
         
-        var color: Color {
+        @MainActor func color(for colorScheme: ColorScheme, isHighContrast: Bool) -> Color {
             switch self {
             case .regular, .thick:
-                return Color.LeavnBorderColors.separator.current
+                return Color.LeavnBorderColors.separator.current(for: colorScheme, isHighContrast: isHighContrast)
             case .section:
-                return Color.LeavnBackgroundColors.secondary.current
+                return Color.LeavnBackgroundColors.secondary.current(for: colorScheme, isHighContrast: isHighContrast)
             }
         }
     }
@@ -335,7 +339,7 @@ public struct AccessibleDivider: View {
     }
     
     private var dividerColor: Color {
-        style.color
+        style.color(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
     }
 }
 
@@ -347,7 +351,9 @@ public struct AccessibleEmptyState: View {
     let actionTitle: String?
     let action: (() -> Void)?
     
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.sizeCategory) private var sizeCategory
+    @ObservedObject private var themeManager = AccessibilityThemeManager.shared
     
     public init(
         icon: String,
@@ -367,7 +373,7 @@ public struct AccessibleEmptyState: View {
         VStack(spacing: scaledSpacing) {
             Image(systemName: icon)
                 .font(.system(size: scaledIconSize))
-                .foregroundColor(Color.LeavnTextColors.tertiary.current)
+                .foregroundColor(Color.LeavnTextColors.tertiary.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled))
                 .accessibilityHidden(true)
             
             VStack(spacing: scaledTextSpacing) {
