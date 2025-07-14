@@ -88,7 +88,7 @@ public struct BibleTranslation: Codable, Identifiable {
     }
 }
 
-public struct BibleBook: Codable, Identifiable {
+public struct BibleBook: Codable, Identifiable, Sendable, Sendable {
     public let id: String
     public let name: String
     public let abbreviation: String
@@ -422,10 +422,10 @@ final class ESVAPIClient {
                     id: "\(book)-\(chapter)-\(verseNumber)-ESV",
                     reference: "\(book) \(chapter):\(verseNumber)",
                     text: cleanedText,
-                    translation: "ESV",
-                    book: book,
-                    chapter: chapter,
-                    verse: verseNumber
+                    book: "ESV",
+                    chapter: book,
+                    verse: chapter,
+                    translation: verseNumber
                 )
                 verses.append(verse)
             }

@@ -1,5 +1,4 @@
 import SwiftUI
-import LeavnServices
 
 /// A reusable card component for displaying Bible verses
 /// Works across all platforms (iOS, macOS, visionOS, watchOS)
@@ -11,7 +10,8 @@ public struct VerseCard: View {
     let onBookmark: (() -> Void)?
     let onNote: (() -> Void)?
     
-    @Environment(\.hapticManager) private var hapticManager
+    // TODO: Fix Environment access when LeavnCore module structure is resolved
+    // @Environment(\.hapticManager) private var hapticManager
     
     public struct BibleVerse {
         let reference: String // e.g., "John 3:16"
@@ -87,7 +87,8 @@ public struct VerseCard: View {
             // Action buttons
             HStack(spacing: 16) {
                 Button(action: { 
-                    hapticManager.triggerFeedback(.light)
+                    // TODO: Restore haptic feedback when manager is available
+                    // hapticManager.triggerFeedback(.light)
                     onHighlight?() 
                 }) {
                     Label("Highlight", systemImage: isHighlighted ? "highlighter" : "highlighter")
@@ -96,7 +97,8 @@ public struct VerseCard: View {
                 }
                 
                 Button(action: { 
-                    hapticManager.triggerFeedback(.light)
+                    // TODO: Restore haptic feedback when manager is available
+                    // hapticManager.triggerFeedback(.light)
                     onBookmark?() 
                 }) {
                     Label("Bookmark", systemImage: showBookmark ? "bookmark.fill" : "bookmark")
@@ -105,7 +107,8 @@ public struct VerseCard: View {
                 }
                 
                 Button(action: { 
-                    hapticManager.triggerFeedback(.light)
+                    // TODO: Restore haptic feedback when manager is available
+                    // hapticManager.triggerFeedback(.light)
                     onNote?() 
                 }) {
                     Label("Note", systemImage: "note.text")

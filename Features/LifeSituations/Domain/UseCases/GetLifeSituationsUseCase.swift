@@ -1,5 +1,4 @@
 import Foundation
-import LeavnCore
 
 public struct GetLifeSituationsUseCase: UseCase {
     public typealias Input = GetLifeSituationsInput
@@ -68,3 +67,4 @@ public struct GetLifeSituationsInput {
         case recent
     }
 }
+

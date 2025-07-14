@@ -14,7 +14,7 @@ public final class CoreDataStack {
         }
         
         persistentContainer.loadPersistentStores { _, error in
-            if let error = error {
+            if error != nil {
                 fatalError("Core Data failed to load: \\(error)")
             }
         }

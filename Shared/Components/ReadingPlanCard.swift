@@ -1,5 +1,4 @@
 import SwiftUI
-import LeavnServices
 
 /// A card component for displaying Bible reading plan progress
 /// Works across all platforms with adaptive layouts

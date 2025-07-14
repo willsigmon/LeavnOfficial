@@ -1,5 +1,4 @@
 import Foundation
-import LeavnCore
 
 // MARK: - Settings Repository Protocol
 public protocol SettingsRepository: Repository {

@@ -1,6 +1,6 @@
 import Foundation
 import Security
-import KeychainAccess
+// import KeychainAccess - Removed external dependency
 
 // MARK: - Secure Storage Protocol
 public protocol SecureStorage: Storage {
@@ -177,48 +177,9 @@ public final class NativeKeychainStorage: SecureStorage {
     }
 }
 
-// MARK: - Keychain Storage Implementation (Using KeychainAccess)
-public final class KeychainStorage: SecureStorage {
-    private let keychain: Keychain
-    private let encoder = JSONEncoder()
-    private let decoder = JSONDecoder()
-    
-    public init(service: String = Bundle.main.bundleIdentifier ?? "com.leavn.app") {
-        self.keychain = Keychain(service: service)
-            .synchronizable(true)
-            .accessibility(.afterFirstUnlock)
-    }
-    
-    public func save<T: Codable>(_ object: T, forKey key: String) async throws {
-        let data = try encoder.encode(object)
-        try keychain.set(data, key: key)
-    }
-    
-    public func load<T: Codable>(_ type: T.Type, forKey key: String) async throws -> T? {
-        guard let data = try keychain.getData(key) else { return nil }
-        return try decoder.decode(type, from: data)
-    }
-    
-    public func remove(forKey key: String) async throws {
-        try keychain.remove(key)
-    }
-    
-    public func exists(forKey key: String) async throws -> Bool {
-        return (try keychain.getData(key)) != nil
-    }
-    
-    public func clear() async throws {
-        try keychain.removeAll()
-    }
-    
-    public func saveSecure(_ data: Data, forKey key: String) async throws {
-        try keychain.set(data, key: key)
-    }
-    
-    public func loadSecure(forKey key: String) async throws -> Data? {
-        try keychain.getData(key)
-    }
-}
+// MARK: - Keychain Storage Convenience Alias
+// Using the native implementation as the default
+public typealias KeychainStorage = NativeKeychainStorage
 
 // MARK: - Keychain Errors
 public enum KeychainError: LocalizedError {

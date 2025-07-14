@@ -1,659 +1,776 @@
 import Foundation
-import Factory
 import CoreData
+import Combine
 
-// Note: NetworkingKit and PersistenceKit are part of the same package
-// so we don't need to import them explicitly
-
-#if canImport(AnalyticsKit)
-import AnalyticsKit
-#endif
-
-// LeavnLibrary types are now available through LeavnCore
-
-#if canImport(LeavnSettings)
-import LeavnSettings
-#endif
-
-// AuthenticationModule types are now available through LeavnCore
-
-// MARK: - DI Container Extension
-public extension Container {
-    // MARK: - Configuration
-    var configuration: Factory<LeavnConfiguration> {
-        self { LeavnConfiguration(apiKey: "default", environment: .production) }
-            .singleton
-    }
+// MARK: - DI Container
+/// Main dependency injection container for the app
+/// Provides singleton instances of all services without external dependencies
+public final class DIContainer: ObservableObject {
+    public static let shared = DIContainer()
     
     // MARK: - Core Services
-    
-    /// Network service for all API communication
-    /// Uses URLSession under the hood with configurable timeouts and retry logic
-    var networkService: Factory<NetworkServiceProtocol> {
-        self {
-            #if canImport(NetworkingKit)
-            DefaultNetworkService(configuration: self.configuration())
-            #else
-            MockNetworkService() // Stub for testing
-            #endif
-        }
-        .singleton
-    }
-    
-    var coreDataStack: Factory<NSPersistentContainer> {
-        self {
-            let container = NSPersistentContainer(name: "LeavnDataModel")
-            container.loadPersistentStores { _, error in
-                if let error = error {
-                    fatalError("Failed to load Core Data stack: \(error)")
-                }
-            }
-            return container
-        }
-        .singleton
-    }
-    
-    /// Analytics service for tracking user events and app usage
-    /// Supports multiple providers (Firebase, Mixpanel, Console logging)
-    var analyticsService: Factory<AnalyticsServiceProtocol> {
-        self {
-            #if canImport(AnalyticsKit)
-            let service = AnalyticsService(configuration: self.configuration())
-            #if DEBUG
-            service.addProvider(ConsoleAnalyticsProvider())
-            #endif
-            return service
-            #else
-            MockAnalyticsService() // Stub that logs to console
-            #endif
-        }
-        .singleton
-    }
-    
-    // MARK: - Storage Services
-    var userDefaultsStorage: Factory<Storage> {
-        self { UserDefaultsStorage() }
-            .singleton
-    }
-    
-    var keychainStorage: Factory<SecureStorage> {
-        self { KeychainStorage() }
-            .singleton
-    }
-    
-    var fileStorage: Factory<Storage> {
-        self { try! FileStorage() }
-            .singleton
-    }
-    
-    var cacheStorage: Factory<Storage> {
-        self { try! CacheStorage(configuration: self.configuration().cacheConfiguration) }
-            .singleton
-    }
-    
-    // MARK: - Feature Services
-    
-    /// Bible service for fetching and managing Bible content
-    /// Integrates with ESV and Bible.com APIs
-    var bibleService: Factory<BibleServiceProtocol> {
-        self {
-            DefaultBibleService(
-                networkService: self.networkService(),
-                esvAPIKey: self.configuration().esvAPIKey,
-                bibleComAPIKey: self.configuration().bibleComAPIKey,
-                cacheManager: self.bibleCacheManager()
+    private lazy var _configuration: LeavnConfiguration = {
+        LeavnConfiguration(
+            apiKey: ProcessInfo.processInfo.environment["LEAVN_API_KEY"] ?? "",
+            environment: .production,
+            esvAPIKey: ProcessInfo.processInfo.environment["ESV_API_KEY"] ?? "",
+            bibleComAPIKey: ProcessInfo.processInfo.environment["BIBLE_COM_API_KEY"] ?? "",
+            elevenLabsAPIKey: ProcessInfo.processInfo.environment["ELEVENLABS_API_KEY"] ?? "",
+            features: .default,
+            cacheConfiguration: CacheConfiguration(
+                memoryCapacity: 50 * 1024 * 1024, // 50MB
+                diskCapacity: 200 * 1024 * 1024,   // 200MB
+                diskPath: nil
             )
-        }
-        .singleton
-    }
+        )
+    }()
     
-    /// Bible cache manager for offline access to scripture
-    /// Uses Core Data in production, in-memory cache for tests
-    var bibleCacheManager: Factory<BibleCacheManagerProtocol> {
-        self {
-            #if DEBUG
-            // Use in-memory cache for testing/development
-            InMemoryBibleCacheManager()
-            #else
-            // Use Core Data cache for production
-            CoreDataBibleCacheManager(context: self.coreDataStack().viewContext)
-            #endif
-        }
-        .singleton
-    }
-    
-    /// ElevenLabs service for text-to-speech functionality
-    /// Provides natural-sounding voice synthesis for Bible verses
-    var elevenLabsService: Factory<ElevenLabsServiceProtocol> {
-        self {
-            guard !self.configuration().elevenLabsAPIKey.isEmpty else {
-                return MockElevenLabsService() // Return mock if no API key
-            }
-            return DefaultElevenLabsService(
-                networkService: self.networkService(),
-                apiKey: self.configuration().elevenLabsAPIKey
-            )
-        }
-        .singleton
-    }
-    
-    /// Audio cache manager for storing generated speech files
-    /// Reduces API calls and improves offline playback
-    var audioCacheManager: Factory<AudioCacheManagerProtocol> {
-        self {
-            do {
-                return try DefaultAudioCacheManager()
-            } catch {
-                print("Failed to create audio cache manager: \(error)")
-                return InMemoryAudioCacheManager()
+    private lazy var _coreDataStack: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "LeavnDataModel")
+        container.loadPersistentStores { _, error in
+            if let error = error {
+                fatalError("Failed to load Core Data stack: \(error)")
             }
         }
-        .singleton
-    }
+        return container
+    }()
     
-    /// Audio service for playing Bible verses with voice synthesis
-    /// Coordinates between ElevenLabs, cache, and Bible services
-    var audioService: Factory<AudioServiceProtocol> {
-        self {
-            DefaultAudioService(
-                elevenLabsService: self.elevenLabsService(),
-                cacheManager: self.audioCacheManager(),
-                bibleService: self.bibleService()
-            )
-        }
-        .singleton
-    }
+    private lazy var _networkService: NetworkServiceProtocol = {
+        DefaultNetworkService(configuration: self._configuration)
+    }()
     
-    /// Authentication service for user sign-in and session management
-    /// Stores tokens securely in keychain
-    var authenticationService: Factory<AuthenticationServiceProtocol> {
-        self {
-            // Use mock until DefaultAuthenticationService is available
-            MockAuthenticationService()
-        }
-        .singleton
-    }
+    private lazy var _userDataManager: UserDataManagerProtocol = {
+        DefaultUserDataManager(
+            context: self._coreDataStack.viewContext,
+            secureStorage: KeychainStorage()
+        )
+    }()
     
-    var hapticManager: Factory<HapticManager> {
-        self { DefaultHapticManager() }
-            .singleton
-    }
+    // MARK: - Bible Services
+    private lazy var _bibleService: BibleServiceProtocol = {
+        // Create cache manager
+        let cacheManager = CoreDataBibleCacheManager(context: self._coreDataStack.viewContext)
+        
+        // Create a network service that implements the BibleService's expected NetworkService
+        let networkServiceAdapter = NetworkServiceAdapter(networkService: self._networkService)
+        
+        // Use the existing DefaultBibleService which implements BibleService protocol
+        // We need to wrap it to match BibleServiceProtocol
+        let bibleService = DefaultBibleService(
+            networkService: networkServiceAdapter,
+            esvAPIKey: self._configuration.esvAPIKey,
+            bibleComAPIKey: self._configuration.bibleComAPIKey,
+            cacheManager: cacheManager
+        )
+        
+        return BibleServiceAdapter(bibleService: bibleService)
+    }()
     
-    /// Settings-aware haptic manager that respects user preferences
-    /// Automatically enables/disables haptics based on settings
-    var settingsAwareHapticManager: Factory<HapticManager> {
-        self {
-            #if canImport(LeavnSettings)
-            SettingsAwareHapticManager(
-                hapticManager: self.hapticManager(),
-                settingsViewModel: self.settingsViewModel() as! SettingsViewModel
-            )
-            #else
-            self.hapticManager() // Fallback to basic haptic manager
-            #endif
-        }
-        .singleton
-    }
+    // MARK: - AI Services
+    private lazy var _aiService: AIServiceProtocol = {
+        // Use a safe AI service with guardrails until real implementation is ready
+        SafeAIService(
+            bibleService: self._bibleService,
+            analyticsService: self._analyticsService
+        )
+    }()
     
-    // MARK: - Library Module
+    // MARK: - Audio Services
+    private lazy var _audioService: AudioServiceProtocol = {
+        DefaultAudioService(
+            elevenLabsAPIKey: self._configuration.elevenLabsAPIKey,
+            cacheManager: InMemoryAudioCacheManager()
+        )
+    }()
     
-    /// Library repository for managing saved verses, notes, and collections
-    /// Syncs with cloud storage when online
-    var libraryRepository: Factory<LibraryRepositoryProtocol> {
-        self {
-            // Use mock until DefaultLibraryRepository is available
-            MockLibraryRepository()
-        }
-        .singleton
-    }
+    // MARK: - Authentication Services
+    private lazy var _authenticationService: AuthenticationServiceProtocol = {
+        DefaultAuthenticationService(
+            networkService: self._networkService,
+            userDataManager: self._userDataManager,
+            secureStorage: KeychainStorage()
+        )
+    }()
     
-    /// Use case for fetching library items with filtering and pagination
-    var getLibraryItemsUseCase: Factory<GetLibraryItemsUseCaseProtocol> {
-        self {
-            // Use mock until GetLibraryItemsUseCase is available
-            MockGetLibraryItemsUseCase()
-        }
-    }
+    // MARK: - Verse of the Day Service
+    private lazy var _verseOfTheDayService: VerseOfTheDayServiceProtocol = {
+        let cacheService = InMemoryCacheService()
+        return VerseOfTheDayService(bibleService: self._bibleService, cacheService: cacheService)
+    }()
     
-    /// Use case for saving verses, notes, and other content to library
-    var saveContentToLibraryUseCase: Factory<SaveContentToLibraryUseCaseProtocol> {
-        self {
-            // Use mock until SaveContentToLibraryUseCase is available
-            MockSaveContentToLibraryUseCase()
-        }
-    }
+    // MARK: - Other Services
+    private lazy var _analyticsService: AnalyticsServiceProtocol = {
+        let service = DefaultAnalyticsService(configuration: self._configuration)
+        #if DEBUG
+        service.addProvider(ConsoleAnalyticsProvider())
+        #endif
+        return service
+    }()
     
-    /// Use case for managing library collections
-    var manageCollectionsUseCase: Factory<ManageCollectionsUseCaseProtocol> {
-        self {
-            // Use mock until ManageCollectionsUseCase is available
-            MockManageCollectionsUseCase()
-        }
-    }
+    private lazy var _libraryRepository: LibraryRepositoryProtocol = {
+        DefaultLibraryRepository(
+            context: self._coreDataStack.viewContext,
+            networkService: self._networkService
+        )
+    }()
     
-    /// Use case for managing offline downloads
-    var manageDownloadsUseCase: Factory<ManageDownloadsUseCaseProtocol> {
-        self {
-            // Use mock until ManageDownloadsUseCase is available
-            MockManageDownloadsUseCase()
-        }
-    }
+    private lazy var _settingsRepository: SettingsRepositoryProtocol = {
+        let localStorage = UserDefaultsStorage()
+        let secureStorage = KeychainStorage()
+        
+        return DefaultSettingsRepository(
+            context: self._coreDataStack.viewContext,
+            localStorage: StorageSettingsLocalStorage(storage: localStorage),
+            secureStorage: SecureStorageSettingsSecureStorage(storage: secureStorage)
+        )
+    }()
     
-    /// Use case for searching library content
-    var searchLibraryUseCase: Factory<SearchLibraryUseCaseProtocol> {
-        self {
-            // Use mock until SearchLibraryUseCase is available
-            MockSearchLibraryUseCase()
-        }
-    }
+    private lazy var _searchRepository: SearchRepositoryProtocol = {
+        DefaultSearchRepository(
+            bibleService: self._bibleService,
+            libraryRepository: self._libraryRepository,
+            context: self._coreDataStack.viewContext
+        )
+    }()
     
-    /// Use case for retrieving library statistics
-    var getLibraryStatisticsUseCase: Factory<GetLibraryStatisticsUseCaseProtocol> {
-        self {
-            // Use mock until GetLibraryStatisticsUseCase is available
-            MockGetLibraryStatisticsUseCase()
-        }
-    }
+    private lazy var _lifeSituationRepository: LifeSituationRepositoryProtocol = {
+        RealLifeSituationRepository(
+            networkService: self._networkService,
+            bibleService: self._bibleService,
+            context: self._coreDataStack.viewContext
+        )
+    }()
     
-    /// Use case for syncing library with cloud storage
-    var syncLibraryUseCase: Factory<SyncLibraryUseCaseProtocol> {
-        self {
-            // Use mock until SyncLibraryUseCase is available
-            MockSyncLibraryUseCase()
-        }
-    }
+    private lazy var _communityService: CommunityServiceProtocol = {
+        DefaultCommunityService(
+            networkService: self._networkService,
+            context: self._coreDataStack.viewContext,
+            userDataManager: self._userDataManager
+        )
+    }()
     
-    /// Library view model factory
-    /// Creates a new instance with all required dependencies
-    var libraryViewModel: Factory<LibraryViewModelProtocol> {
-        self {
-            #if canImport(LeavnLibrary)
-            LibraryViewModel(
-                libraryRepository: self.libraryRepository(),
-                analyticsService: self.analyticsService(),
-                getLibraryItemsUseCase: self.getLibraryItemsUseCase(),
-                saveContentToLibraryUseCase: self.saveContentToLibraryUseCase(),
-                manageCollectionsUseCase: self.manageCollectionsUseCase(),
-                manageDownloadsUseCase: self.manageDownloadsUseCase(),
-                searchLibraryUseCase: self.searchLibraryUseCase(),
-                getLibraryStatisticsUseCase: self.getLibraryStatisticsUseCase(),
-                syncLibraryUseCase: self.syncLibraryUseCase()
-            )
-            #else
-            MockLibraryViewModel()
-            #endif
-        }
-    }
+    private lazy var _verseCardService: VerseCardServiceProtocol = {
+        VerseCardService()
+    }()
     
-    // MARK: - Settings Module
-    
-    /// Local storage adapter for settings persistence
-    var settingsLocalStorage: Factory<SettingsLocalStorage> {
-        self { StorageSettingsLocalStorage(storage: self.userDefaultsStorage()) }
-            .singleton
-    }
-    
-    var settingsSecureStorage: Factory<SettingsSecureStorage> {
-        self { SecureStorageSettingsSecureStorage(storage: self.keychainStorage()) }
-            .singleton
-    }
-    
-    /// Settings repository for app preferences and configuration
-    /// Handles validation, migration, and secure storage of sensitive settings
-    var settingsRepository: Factory<SettingsRepositoryProtocol> {
-        self {
-            #if canImport(LeavnSettings)
-            DefaultSettingsRepository(
-                localStorage: self.settingsLocalStorage(),
-                cloudStorage: nil, // Will be configured later if needed
-                secureStorage: self.settingsSecureStorage(),
-                validator: DefaultSettingsValidator(),
-                migrator: DefaultSettingsMigrator(),
-                encryptor: nil, // Will be configured later if needed
-                configuration: .default
-            )
-            #else
-            MockSettingsRepository()
-            #endif
-        }
-        .singleton
-    }
-    
-    var getAppSettingsUseCase: Factory<Any> {
-        self { 
-            // TODO: Restore this code when the required module is available.
-            fatalError("Not implemented: missing dependency")
-            /*
-            GetAppSettingsUseCase(settingsRepository: self.settingsRepository())
-            */
-        }
-    }
-    
-    var updateAppSettingsUseCase: Factory<Any> {
-        self {
-            // TODO: Restore this code when the required module is available.
-            fatalError("Not implemented: missing dependency")
-            /*
-            UpdateAppSettingsUseCase(
-                settingsRepository: self.settingsRepository(),
-                analyticsService: self.analyticsService()
-            )
-            */
-        }
-    }
-    
-    var updateIndividualSettingUseCase: Factory<Any> {
-        self {
-            // TODO: Restore this code when the required module is available.
-            fatalError("Not implemented: missing dependency")
-            /*
-            UpdateIndividualSettingUseCase(
-                settingsRepository: self.settingsRepository(),
-                analyticsService: self.analyticsService()
-            )
-            */
-        }
-    }
-    
-    var resetSettingsUseCase: Factory<Any> {
-        self {
-            // TODO: Restore this code when the required module is available.
-            fatalError("Not implemented: missing dependency")
-            /*
-            ResetSettingsUseCase(
-                settingsRepository: self.settingsRepository(),
-                analyticsService: self.analyticsService()
-            )
-            */
-        }
-    }
-    
-    var exportSettingsUseCase: Factory<Any> {
-        self { 
-            // TODO: Restore this code when the required module is available.
-            fatalError("Not implemented: missing dependency")
-            /*
-            ExportSettingsUseCase(settingsRepository: self.settingsRepository())
-            */
-        }
-    }
-    
-    var importSettingsUseCase: Factory<Any> {
-        self {
-            // TODO: Restore this code when the required module is available.
-            fatalError("Not implemented: missing dependency")
-            /*
-            ImportSettingsUseCase(
-                settingsRepository: self.settingsRepository(),
-                analyticsService: self.analyticsService()
-            )
-            */
-        }
-    }
-    
-    var syncSettingsUseCase: Factory<Any> {
-        self {
-            // TODO: Restore this code when the required module is available.
-            fatalError("Not implemented: missing dependency")
-            /*
-            SyncSettingsUseCase(
-                settingsRepository: self.settingsRepository(),
-                analyticsService: self.analyticsService()
-            )
-            */
-        }
-    }
-    
-    var getSettingsHistoryUseCase: Factory<Any> {
-        self { 
-            // TODO: Restore this code when the required module is available.
-            fatalError("Not implemented: missing dependency")
-            /*
-            GetSettingsHistoryUseCase(settingsRepository: self.settingsRepository())
-            */
-        }
-    }
-    
-    var createSettingsBackupUseCase: Factory<Any> {
-        self { 
-            // TODO: Restore this code when the required module is available.
-            fatalError("Not implemented: missing dependency")
-            /*
-            CreateSettingsBackupUseCase(settingsRepository: self.settingsRepository())
-            */
-        }
-    }
-    
-    var validateSettingsUseCase: Factory<Any> {
-        self { 
-            // TODO: Restore this code when the required module is available.
-            fatalError("Not implemented: missing dependency")
-            /*
-            ValidateSettingsUseCase(settingsRepository: self.settingsRepository())
-            */
-        }
-    }
-    
-    /// Settings view model for UI binding
-    /// Provides reactive settings management with SwiftUI integration
-    var settingsViewModel: Factory<SettingsViewModelProtocol> {
-        self {
-            #if canImport(LeavnSettings)
-            SettingsViewModel(
-                getAppSettingsUseCase: self.getAppSettingsUseCase() as! GetAppSettingsUseCase,
-                updateAppSettingsUseCase: self.updateAppSettingsUseCase() as! UpdateAppSettingsUseCase,
-                updateIndividualSettingUseCase: self.updateIndividualSettingUseCase() as! UpdateIndividualSettingUseCase,
-                resetSettingsUseCase: self.resetSettingsUseCase() as! ResetSettingsUseCase,
-                exportSettingsUseCase: self.exportSettingsUseCase() as! ExportSettingsUseCase,
-                importSettingsUseCase: self.importSettingsUseCase() as! ImportSettingsUseCase,
-                syncSettingsUseCase: self.syncSettingsUseCase() as! SyncSettingsUseCase,
-                getSettingsHistoryUseCase: self.getSettingsHistoryUseCase() as! GetSettingsHistoryUseCase,
-                createSettingsBackupUseCase: self.createSettingsBackupUseCase() as! CreateSettingsBackupUseCase,
-                validateSettingsUseCase: self.validateSettingsUseCase() as! ValidateSettingsUseCase,
-                analyticsService: self.analyticsService()
-            )
-            #else
-            MockSettingsViewModel()
-            #endif
-        }
-    }
-    
-    // MARK: - Authentication Module
-    
-    /// Authentication repository for user management
-    var authRepository: Factory<AuthRepositoryProtocol> {
-        self {
-            // Use mock until DefaultAuthRepository is available
-            MockAuthRepository()
-        }
-        .singleton
-    }
-    
-    /// Sign in use case
-    var signInUseCase: Factory<SignInUseCaseProtocol> {
-        self {
-            #if canImport(AuthenticationModule)
-            SignInUseCase(
-                authRepository: self.authRepository(),
-                analyticsService: self.analyticsService()
-            )
-            #else
-            MockSignInUseCase()
-            #endif
-        }
-    }
-    
-    /// Sign up use case
-    var signUpUseCase: Factory<SignUpUseCaseProtocol> {
-        self {
-            #if canImport(AuthenticationModule)
-            SignUpUseCase(
-                authRepository: self.authRepository(),
-                analyticsService: self.analyticsService()
-            )
-            #else
-            MockSignUpUseCase()
-            #endif
-        }
-    }
-    
-    /// Sign out use case
-    var signOutUseCase: Factory<SignOutUseCaseProtocol> {
-        self {
-            #if canImport(AuthenticationModule)
-            SignOutUseCase(
-                authRepository: self.authRepository(),
-                analyticsService: self.analyticsService()
-            )
-            #else
-            MockSignOutUseCase()
-            #endif
-        }
-    }
-    
-    /// Reset password use case
-    var resetPasswordUseCase: Factory<ResetPasswordUseCaseProtocol> {
-        self {
-            #if canImport(AuthenticationModule)
-            ResetPasswordUseCase(
-                authRepository: self.authRepository(),
-                analyticsService: self.analyticsService()
-            )
-            #else
-            MockResetPasswordUseCase()
-            #endif
-        }
-    }
-    
-    /// Update profile use case
-    var updateProfileUseCase: Factory<UpdateProfileUseCaseProtocol> {
-        self {
-            #if canImport(AuthenticationModule)
-            UpdateProfileUseCase(
-                authRepository: self.authRepository(),
-                analyticsService: self.analyticsService()
-            )
-            #else
-            MockUpdateProfileUseCase()
-            #endif
-        }
-    }
-    
-    /// Verify email use case
-    var verifyEmailUseCase: Factory<VerifyEmailUseCaseProtocol> {
-        self {
-            #if canImport(AuthenticationModule)
-            VerifyEmailUseCase(
-                authRepository: self.authRepository(),
-                analyticsService: self.analyticsService()
-            )
-            #else
-            MockVerifyEmailUseCase()
-            #endif
-        }
-    }
-    
-    /// Authentication view model factory
-    var authViewModel: Factory<AuthViewModelProtocol> {
-        self {
-            #if canImport(AuthenticationModule)
-            AuthViewModel(
-                authRepository: self.authRepository(),
-                analyticsService: self.analyticsService(),
-                signInUseCase: self.signInUseCase(),
-                signUpUseCase: self.signUpUseCase(),
-                signOutUseCase: self.signOutUseCase(),
-                resetPasswordUseCase: self.resetPasswordUseCase(),
-                updateProfileUseCase: self.updateProfileUseCase(),
-                verifyEmailUseCase: self.verifyEmailUseCase()
-            )
-            #else
-            MockAuthViewModel()
-            #endif
-        }
-    }
-}
-
-// MARK: - Service Locator
-public final class ServiceLocator {
-    public static let shared = ServiceLocator()
+    // MARK: - Public Accessors
+    public var configuration: LeavnConfiguration { _configuration }
+    public var coreDataStack: NSPersistentContainer { _coreDataStack }
+    public var networkService: NetworkServiceProtocol { _networkService }
+    public var bibleService: BibleServiceProtocol { _bibleService }
+    public var aiService: AIServiceProtocol { _aiService }
+    public var audioService: AudioServiceProtocol { _audioService }
+    public var authenticationService: AuthenticationServiceProtocol { _authenticationService }
+    public var analyticsService: AnalyticsServiceProtocol { _analyticsService }
+    public var libraryRepository: LibraryRepositoryProtocol { _libraryRepository }
+    public var settingsRepository: SettingsRepositoryProtocol { _settingsRepository }
+    public var searchRepository: SearchRepositoryProtocol { _searchRepository }
+    public var lifeSituationRepository: LifeSituationRepositoryProtocol { _lifeSituationRepository }
+    public var userDataManager: UserDataManagerProtocol { _userDataManager }
+    public var communityService: CommunityServiceProtocol { _communityService }
+    public var verseOfTheDayService: VerseOfTheDayServiceProtocol { _verseOfTheDayService }
+    public var verseCardService: VerseCardServiceProtocol { _verseCardService }
     
     private init() {}
     
+    // MARK: - Configuration
     public func configure(with configuration: LeavnConfiguration) {
-        Container.shared.configuration.register { configuration }
-        
-        // Setup error handling
-        setupGlobalErrorHandling()
-        
-        // Validate configuration
-        validateConfiguration(configuration)
+        self._configuration = configuration
     }
     
     public func reset() {
-        Container.shared.reset()
-    }
-    
-    private func setupGlobalErrorHandling() {
-        // Set up global error handling for all services
-        NSSetUncaughtExceptionHandler { exception in
-            let error = LeavnError.systemError("Uncaught exception: \(exception.description)")
-            // Track error if analytics is available
-            #if canImport(AnalyticsKit)
-            Container.shared.analyticsService().trackError(error, properties: [
-                "exception_name": exception.name.rawValue,
-                "exception_reason": exception.reason ?? "Unknown"
-            ])
-            #else
-            print("[Error] Uncaught exception: \(exception)")
-            #endif
-        }
-    }
-    
-    private func validateConfiguration(_ configuration: LeavnConfiguration) {
-        // Validate required API keys
-        if configuration.environment == .production {
-            assert(!configuration.esvAPIKey.isEmpty, "ESV API key is required for production")
-            assert(!configuration.elevenLabsAPIKey.isEmpty, "ElevenLabs API key is required for production")
-        }
+        // Reset would recreate all lazy properties
+        // For now, we'll just log this action
+        print("[DIContainer] Reset requested - services will be recreated on next access")
     }
 }
 
-// MARK: - Injectable Property Wrapper
-@propertyWrapper
-public struct Injected<T> {
-    private let keyPath: KeyPath<Container, Factory<T>>
+// MARK: - Service Adapters
+
+/// Adapter to bridge between NetworkServiceProtocol and NetworkService expected by BibleService
+private final class NetworkServiceAdapter: NetworkService {
+    private let networkService: NetworkServiceProtocol
     
-    public init(_ keyPath: KeyPath<Container, Factory<T>>) {
-        self.keyPath = keyPath
+    init(networkService: NetworkServiceProtocol) {
+        self.networkService = networkService
     }
     
-    public var wrappedValue: T {
-        Container.shared[keyPath: keyPath]()
+    func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
+        return try await networkService.request(endpoint)
+    }
+    
+    func request(_ endpoint: Endpoint) async throws -> Data {
+        return try await networkService.request(endpoint)
+    }
+    
+    func requestData(_ endpoint: Endpoint) async throws -> Data {
+        return try await networkService.request(endpoint)
+    }
+    
+    func upload<T: Decodable>(_ endpoint: Endpoint, data: Data) async throws -> T {
+        return try await networkService.upload(endpoint, data: data)
+    }
+    
+    func download(_ endpoint: Endpoint) async throws -> URL {
+        return try await networkService.download(endpoint)
     }
 }
 
-// MARK: - Lazy Injectable Property Wrapper
-@propertyWrapper
-public struct LazyInjected<T> {
-    private let keyPath: KeyPath<Container, Factory<T>>
-    private var instance: T?
+// MARK: - Service Adapters
+
+/// Adapter to bridge between BibleService and BibleServiceProtocol
+private final class BibleServiceAdapter: BibleServiceProtocol {
+    private let bibleService: BibleService
     
-    public init(_ keyPath: KeyPath<Container, Factory<T>>) {
-        self.keyPath = keyPath
+    init(bibleService: BibleService) {
+        self.bibleService = bibleService
     }
     
-    public var wrappedValue: T {
-        mutating get {
-            if instance == nil {
-                instance = Container.shared[keyPath: keyPath]()
+    func getChapter(book: String, chapter: Int, translation: String) async throws -> BibleChapter {
+        let chapter = try await bibleService.fetchChapter(book: book, chapter: chapter, translation: translation)
+        return BibleChapter(
+            book: chapter.book,
+            chapter: chapter.chapter,
+            verses: chapter.verses.map { verse in
+                BibleVerse(
+                    id: verse.id,
+                    reference: verse.reference,
+                    text: verse.text,
+                    book: verse.book,
+                    chapter: verse.chapter,
+                    verse: verse.verse,
+                    translation: verse.translation
+                )
+            },
+            translation: chapter.translation
+        )
+    }
+    
+    func getVerse(reference: String, translation: String) async throws -> BibleVerse {
+        let verse = try await bibleService.fetchVerse(reference: reference, translation: translation)
+        return BibleVerse(
+            id: verse.id,
+            reference: verse.reference,
+            text: verse.text,
+            book: verse.book,
+            chapter: verse.chapter,
+            verse: verse.verse,
+            translation: verse.translation
+        )
+    }
+    
+    func searchVerses(query: String, translation: String) async throws -> [BibleVerse] {
+        let results = try await bibleService.search(query: query, translation: translation)
+        return results.map { $0.verse }
+    }
+    
+    func getAvailableTranslations() async throws -> [BibleTranslation] {
+        let translations = try await bibleService.fetchTranslations()
+        return translations.map { translation in
+            BibleTranslation(
+                id: translation.id,
+                name: translation.name,
+                abbreviation: translation.abbreviation,
+                language: translation.language
+            )
+        }
+    }
+    
+    func getDailyVerse() async throws -> BibleVerse {
+        // For now, return a fixed verse - in production, this would fetch from a daily verse API
+        return try await getVerse(reference: "John 3:16", translation: "ESV")
+    }
+}
+
+// MARK: - Default Service Implementations
+
+private final class DefaultNetworkService: NetworkServiceProtocol {
+    private let configuration: LeavnConfiguration
+    private let session: URLSession
+    private let reachabilitySubject = CurrentValueSubject<Bool, Never>(true)
+    
+    init(configuration: LeavnConfiguration) {
+        self.configuration = configuration
+        self.session = URLSession.shared
+    }
+    
+    func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
+        let data = try await request(endpoint)
+        return try JSONDecoder().decode(T.self, from: data)
+    }
+    
+    func request(_ endpoint: Endpoint) async throws -> Data {
+        guard let url = URL(string: configuration.baseURL)?.appendingPathComponent(endpoint.path) else {
+            throw LeavnError.invalidInput("Invalid URL")
+        }
+        
+        var components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+        if let parameters = endpoint.parameters {
+            components.queryItems = parameters.map { key, value in
+                URLQueryItem(name: key, value: "\(value)")
             }
-            return instance!
         }
+        
+        var request = URLRequest(url: components.url!)
+        request.httpMethod = endpoint.method.rawValue
+        
+        if let headers = endpoint.headers {
+            for (key, value) in headers {
+                request.setValue(value, forHTTPHeaderField: key)
+            }
+        }
+        
+        let (data, response) = try await session.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200...299).contains(httpResponse.statusCode) else {
+            throw LeavnError.networkError(underlying: nil)
+        }
+        
+        return data
+    }
+    
+    func upload(_ endpoint: Endpoint, data: Data) async throws -> Data {
+        throw LeavnError.notImplemented("Upload not implemented")
+    }
+    
+    func download(_ endpoint: Endpoint) async throws -> URL {
+        throw LeavnError.notImplemented("Download not implemented")
+    }
+    
+    var isReachable: AnyPublisher<Bool, Never> {
+        reachabilitySubject.eraseToAnyPublisher()
     }
 }
 
-// MARK: - Settings Storage Adapters
+private final class DefaultAnalyticsService: AnalyticsServiceProtocol {
+    private let configuration: LeavnConfiguration
+    private var providers: [AnalyticsProvider] = []
+    
+    init(configuration: LeavnConfiguration) {
+        self.configuration = configuration
+    }
+    
+    func track(event: String, properties: [String: Any]?) {
+        providers.forEach { $0.track(event: event, properties: properties) }
+    }
+    
+    func trackError(_ error: Error, properties: [String: Any]?) {
+        var props = properties ?? [:]
+        props["error_description"] = error.localizedDescription
+        track(event: "error", properties: props)
+    }
+    
+    func identify(userId: String, traits: [String: Any]?) {
+        providers.forEach { $0.identify(userId: userId, traits: traits) }
+    }
+    
+    func reset() {
+        providers.forEach { $0.reset() }
+    }
+    
+    func addProvider(_ provider: AnalyticsProvider) {
+        providers.append(provider)
+    }
+}
+
+private struct ConsoleAnalyticsProvider: AnalyticsProvider {
+    func track(event: String, properties: [String: Any]?) {
+        print("[Analytics] Event: \(event), Properties: \(properties ?? [:])")
+    }
+    
+    func identify(userId: String, traits: [String: Any]?) {
+        print("[Analytics] Identify: \(userId), Traits: \(traits ?? [:])")
+    }
+    
+    func reset() {
+        print("[Analytics] Reset")
+    }
+}
+
+// MARK: - Mock Implementations (to be replaced with real ones)
+
+private final class DefaultLibraryRepository: LibraryRepositoryProtocol {
+    private let context: NSManagedObjectContext
+    private let networkService: NetworkServiceProtocol
+    
+    init(context: NSManagedObjectContext, networkService: NetworkServiceProtocol) {
+        self.context = context
+        self.networkService = networkService
+    }
+    
+    func getItems(filter: LibraryFilter?) async throws -> [LibraryItem] {
+        return try await context.perform {
+            let request: NSFetchRequest<LibraryItemEntity> = LibraryItemEntity.fetchRequest()
+            
+            // Apply filters
+            var predicates: [NSPredicate] = []
+            
+            if let types = filter?.types {
+                let typeStrings = types.map { $0.rawValue }
+                predicates.append(NSPredicate(format: "type IN %@", typeStrings))
+            }
+            
+            if let dateRange = filter?.dateRange {
+                predicates.append(NSPredicate(format: "createdAt >= %@ AND createdAt <= %@", 
+                                            dateRange.startDate as NSDate, 
+                                            dateRange.endDate as NSDate))
+            }
+            
+            if let searchTerm = filter?.searchTerm, !searchTerm.isEmpty {
+                predicates.append(NSPredicate(format: "title CONTAINS[cd] %@ OR content CONTAINS[cd] %@", 
+                                            searchTerm, searchTerm))
+            }
+            
+            if !predicates.isEmpty {
+                request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+            }
+            
+            request.sortDescriptors = [NSSortDescriptor(key: "createdAt", ascending: false)]
+            
+            let entities = try self.context.fetch(request)
+            return entities.compactMap { self.convertToLibraryItem($0) }
+        }
+    }
+    
+    func getItem(id: String) async throws -> LibraryItem? {
+        return try await context.perform {
+            let request: NSFetchRequest<LibraryItemEntity> = LibraryItemEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "id == %@", id)
+            request.fetchLimit = 1
+            
+            guard let entity = try self.context.fetch(request).first else {
+                return nil
+            }
+            
+            return self.convertToLibraryItem(entity)
+        }
+    }
+    
+    func saveItem(_ item: LibraryItem) async throws {
+        try await context.perform {
+            let entity = LibraryItemEntity(context: self.context)
+            entity.id = item.id
+            entity.type = item.type.rawValue
+            entity.title = item.title
+            entity.content = item.content
+            entity.reference = item.reference
+            entity.createdAt = item.createdAt
+            entity.updatedAt = item.updatedAt
+            
+            if let metadata = item.metadata {
+                entity.metadata = try? JSONEncoder().encode(metadata)
+            }
+            
+            try self.context.save()
+        }
+    }
+    
+    func updateItem(_ item: LibraryItem) async throws {
+        try await context.perform {
+            let request: NSFetchRequest<LibraryItemEntity> = LibraryItemEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "id == %@", item.id)
+            
+            guard let entity = try self.context.fetch(request).first else {
+                throw LeavnError.notFound
+            }
+            
+            entity.type = item.type.rawValue
+            entity.title = item.title
+            entity.content = item.content
+            entity.reference = item.reference
+            entity.updatedAt = Date()
+            
+            if let metadata = item.metadata {
+                entity.metadata = try? JSONEncoder().encode(metadata)
+            }
+            
+            try self.context.save()
+        }
+    }
+    
+    func deleteItem(id: String) async throws {
+        try await context.perform {
+            let request: NSFetchRequest<LibraryItemEntity> = LibraryItemEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "id == %@", id)
+            
+            guard let entity = try self.context.fetch(request).first else {
+                throw LeavnError.notFound
+            }
+            
+            self.context.delete(entity)
+            try self.context.save()
+        }
+    }
+    
+    func getCollections() async throws -> [LibraryCollection] {
+        return try await context.perform {
+            let request: NSFetchRequest<LibraryCollectionEntity> = LibraryCollectionEntity.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+            
+            let entities = try self.context.fetch(request)
+            return entities.compactMap { self.convertToLibraryCollection($0) }
+        }
+    }
+    
+    func getCollection(id: String) async throws -> LibraryCollection? {
+        return try await context.perform {
+            let request: NSFetchRequest<LibraryCollectionEntity> = LibraryCollectionEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "id == %@", id)
+            request.fetchLimit = 1
+            
+            guard let entity = try self.context.fetch(request).first else {
+                return nil
+            }
+            
+            return self.convertToLibraryCollection(entity)
+        }
+    }
+    
+    func createCollection(_ collection: LibraryCollection) async throws {
+        try await context.perform {
+            let entity = LibraryCollectionEntity(context: self.context)
+            entity.id = collection.id
+            entity.name = collection.name
+            entity.collectionDescription = collection.description
+            entity.createdAt = collection.createdAt
+            entity.updatedAt = collection.updatedAt
+            
+            try self.context.save()
+        }
+    }
+    
+    func updateCollection(_ collection: LibraryCollection) async throws {
+        try await context.perform {
+            let request: NSFetchRequest<LibraryCollectionEntity> = LibraryCollectionEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "id == %@", collection.id)
+            
+            guard let entity = try self.context.fetch(request).first else {
+                throw LeavnError.notFound
+            }
+            
+            entity.name = collection.name
+            entity.collectionDescription = collection.description
+            entity.updatedAt = Date()
+            
+            // Update items relationship
+            if !collection.itemIds.isEmpty {
+                let itemRequest: NSFetchRequest<LibraryItemEntity> = LibraryItemEntity.fetchRequest()
+                itemRequest.predicate = NSPredicate(format: "id IN %@", collection.itemIds)
+                let items = try self.context.fetch(itemRequest)
+                entity.items = NSSet(array: items)
+            }
+            
+            try self.context.save()
+        }
+    }
+    
+    func deleteCollection(id: String) async throws {
+        try await context.perform {
+            let request: NSFetchRequest<LibraryCollectionEntity> = LibraryCollectionEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "id == %@", id)
+            
+            guard let entity = try self.context.fetch(request).first else {
+                throw LeavnError.notFound
+            }
+            
+            self.context.delete(entity)
+            try self.context.save()
+        }
+    }
+    
+    func search(query: String, filter: LibraryFilter?) async throws -> [LibraryItem] {
+        var searchFilter = filter ?? LibraryFilter()
+        searchFilter.searchTerm = query
+        return try await getItems(filter: searchFilter)
+    }
+    
+    func getStatistics() async throws -> LibraryStatistics {
+        return try await context.perform {
+            let itemRequest: NSFetchRequest<LibraryItemEntity> = LibraryItemEntity.fetchRequest()
+            let totalItems = try self.context.count(for: itemRequest)
+            
+            let collectionRequest: NSFetchRequest<LibraryCollectionEntity> = LibraryCollectionEntity.fetchRequest()
+            let totalCollections = try self.context.count(for: collectionRequest)
+            
+            // Count by type
+            var itemsByType: [LibraryContentType: Int] = [:]
+            for type in LibraryContentType.allCases {
+                let typeRequest: NSFetchRequest<LibraryItemEntity> = LibraryItemEntity.fetchRequest()
+                typeRequest.predicate = NSPredicate(format: "type == %@", type.rawValue)
+                let count = try self.context.count(for: typeRequest)
+                if count > 0 {
+                    itemsByType[type] = count
+                }
+            }
+            
+            return LibraryStatistics(
+                totalItems: totalItems,
+                itemsByType: itemsByType,
+                totalCollections: totalCollections
+            )
+        }
+    }
+    
+    func sync() async throws {
+        // TODO: Implement cloud sync when backend is ready
+        UserDefaults.standard.set(Date(), forKey: "lastLibrarySync")
+    }
+    
+    func getLastSyncDate() async throws -> Date? {
+        return UserDefaults.standard.object(forKey: "lastLibrarySync") as? Date
+    }
+    
+    // MARK: - Private Helpers
+    
+    private func convertToLibraryItem(_ entity: LibraryItemEntity) -> LibraryItem? {
+        guard let id = entity.id,
+              let typeString = entity.type,
+              let type = LibraryContentType(rawValue: typeString),
+              let title = entity.title,
+              let content = entity.content else {
+            return nil
+        }
+        
+        var metadata: [String: String]?
+        if let metadataData = entity.metadata {
+            metadata = try? JSONDecoder().decode([String: String].self, from: metadataData)
+        }
+        
+        return LibraryItem(
+            id: id,
+            type: type,
+            title: title,
+            content: content,
+            reference: entity.reference,
+            metadata: metadata,
+            createdAt: entity.createdAt ?? Date(),
+            updatedAt: entity.updatedAt ?? Date()
+        )
+    }
+    
+    private func convertToLibraryCollection(_ entity: LibraryCollectionEntity) -> LibraryCollection? {
+        guard let id = entity.id,
+              let name = entity.name else {
+            return nil
+        }
+        
+        let itemIds = (entity.items?.allObjects as? [LibraryItemEntity])?.compactMap { $0.id } ?? []
+        
+        return LibraryCollection(
+            id: id,
+            name: name,
+            description: entity.collectionDescription,
+            itemIds: itemIds,
+            createdAt: entity.createdAt ?? Date(),
+            updatedAt: entity.updatedAt ?? Date()
+        )
+    }
+}
+
+private final class DefaultSearchRepository: SearchRepositoryProtocol {
+    private let bibleService: BibleServiceProtocol
+    private let libraryRepository: LibraryRepositoryProtocol
+    private let context: NSManagedObjectContext
+    
+    init(bibleService: BibleServiceProtocol, libraryRepository: LibraryRepositoryProtocol, context: NSManagedObjectContext) {
+        self.bibleService = bibleService
+        self.libraryRepository = libraryRepository
+        self.context = context
+    }
+    
+    func searchBible(query: String, translation: String?, books: [String]?) async throws -> [BibleSearchResult] {
+        let verses = try await bibleService.searchVerses(query: query, translation: translation ?? "ESV")
+        return verses.map { verse in
+            BibleSearchResult(
+                id: verse.id,
+                verse: verse,
+                relevance: 1.0
+            )
+        }
+    }
+    
+    func searchLibrary(query: String) async throws -> [LibrarySearchResult] {
+        let items = try await libraryRepository.search(query: query, filter: nil)
+        return items.map { item in
+            LibrarySearchResult(
+                id: item.id,
+                item: item,
+                relevance: 1.0
+            )
+        }
+    }
+    
+    func getRecentSearches(limit: Int) async throws -> [SearchQuery] {
+        // TODO: Implement Core Data fetch
+        return []
+    }
+    
+    func saveSearch(_ query: SearchQuery) async throws {
+        // TODO: Implement Core Data save
+    }
+    
+    func clearSearchHistory() async throws {
+        // TODO: Implement Core Data delete
+    }
+}
+
+private final class DefaultLifeSituationRepository: LifeSituationRepositoryProtocol {
+    private let networkService: NetworkServiceProtocol
+    private let bibleService: BibleServiceProtocol
+    
+    init(networkService: NetworkServiceProtocol, bibleService: BibleServiceProtocol) {
+        self.networkService = networkService
+        self.bibleService = bibleService
+    }
+    
+    func getSituations() async throws -> [LifeSituation] {
+        // TODO: Implement network fetch or use local data
+        return []
+    }
+    
+    func getSituation(id: String) async throws -> LifeSituation? {
+        // TODO: Implement
+        return nil
+    }
+    
+    func getRelatedVerses(for situationId: String) async throws -> [BibleVerse] {
+        // TODO: Implement
+        return []
+    }
+    
+    func getRelatedContent(for situationId: String) async throws -> [RelatedContent] {
+        // TODO: Implement
+        return []
+    }
+}
+
+// MARK: - Settings Storage Protocols
+
+public protocol SettingsLocalStorage {
+    func loadAppSettings() async throws -> AppSettings?
+    func saveAppSettings(_ settings: AppSettings) async throws
+    func getSetting<T: Codable>(key: String, type: T.Type) async throws -> T?
+    func setSetting<T: Codable>(key: String, value: T) async throws
+    func removeSetting(key: String) async throws
+    func getAllSettings() async throws -> [String: Any]
+    func getSettingsHistory(limit: Int, offset: Int) async throws -> [SettingsChangeEvent]
+    func getSettingChanges(for key: String, limit: Int) async throws -> [SettingsChangeEvent]
+    func trackSettingChange(_ event: SettingsChangeEvent) async throws
+    func saveBackup(_ backup: SettingsBackup) async throws
+    func getBackups(limit: Int) async throws -> [SettingsBackup]
+    func deleteBackup(_ backupId: String) async throws
+    func getSettingsVersion() async throws -> String?
+}
+
+public protocol SettingsSecureStorage {
+    func store<T: Codable>(_ value: T, forKey key: String) async throws
+    func retrieve<T: Codable>(_ type: T.Type, forKey key: String) async throws -> T?
+    func remove(forKey key: String) async throws
+}
+
+// MARK: - Storage Adapters
+
 private final class StorageSettingsLocalStorage: SettingsLocalStorage {
     private let storage: Storage
     
@@ -682,12 +799,10 @@ private final class StorageSettingsLocalStorage: SettingsLocalStorage {
     }
     
     func getAllSettings() async throws -> [String: Any] {
-        // Return a dictionary representation of current app settings
         guard let settings = try await loadAppSettings() else {
             return [:]
         }
         
-        // Convert settings to dictionary using JSONSerialization
         let data = try JSONEncoder().encode(settings)
         let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
         return json as? [String: Any] ?? [:]
@@ -705,7 +820,6 @@ private final class StorageSettingsLocalStorage: SettingsLocalStorage {
     func trackSettingChange(_ event: SettingsChangeEvent) async throws {
         var history = try await getSettingsHistory(limit: 1000, offset: 0)
         history.append(event)
-        // Keep only the latest 1000 changes
         if history.count > 1000 {
             history = Array(history.suffix(1000))
         }
@@ -754,4 +868,312 @@ private final class SecureStorageSettingsSecureStorage: SettingsSecureStorage {
     }
 }
 
-// TODO: When all modules are restored, uncomment and restore stubs and dependencies above.
+// MARK: - Missing Protocols
+
+public protocol AIServiceProtocol {
+    func generateInsight(for verse: BibleVerse) async throws -> String
+    func generateSummary(for chapter: BibleChapter) async throws -> String
+    func answerQuestion(_ question: String, context: [BibleVerse]) async throws -> String
+}
+
+public protocol UserDataManagerProtocol {
+    var currentUser: User? { get }
+    func updateUser(_ user: User) async throws
+    func clearUserData() async throws
+}
+
+public protocol CommunityServiceProtocol {
+    func getPosts() async throws -> [CommunityPost]
+    func createPost(_ post: CommunityPost) async throws
+    func deletePost(_ postId: String) async throws
+}
+
+public struct CommunityPost: Identifiable {
+    public let id: String
+    public let userId: String
+    public let content: String
+    public let createdAt: Date
+}
+
+// MARK: - Library Types
+
+public struct LibraryItem: Identifiable, Codable {
+    public let id: String
+    public let type: LibraryContentType
+    public let title: String
+    public let content: String
+    public let reference: String?
+    public let metadata: [String: String]?
+    public let createdAt: Date
+    public let updatedAt: Date
+    
+    public init(id: String = UUID().uuidString, type: LibraryContentType, title: String, content: String, reference: String? = nil, metadata: [String: String]? = nil, createdAt: Date = Date(), updatedAt: Date = Date()) {
+        self.id = id
+        self.type = type
+        self.title = title
+        self.content = content
+        self.reference = reference
+        self.metadata = metadata
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+    }
+}
+
+public enum LibraryContentType: String, Codable, CaseIterable {
+    case verse
+    case note
+    case highlight
+    case bookmark
+    case favorite
+}
+
+public struct LibraryCollection: Identifiable, Codable {
+    public let id: String
+    public let name: String
+    public let description: String?
+    public let itemIds: [String]
+    public let createdAt: Date
+    public let updatedAt: Date
+}
+
+public struct LibraryFilter {
+    public let types: [LibraryContentType]?
+    public let dateRange: DateRange?
+    public let searchTerm: String?
+    
+    public init(types: [LibraryContentType]? = nil, dateRange: DateRange? = nil, searchTerm: String? = nil) {
+        self.types = types
+        self.dateRange = dateRange
+        self.searchTerm = searchTerm
+    }
+}
+
+public struct DateRange {
+    public let startDate: Date
+    public let endDate: Date
+    
+    public init(startDate: Date, endDate: Date) {
+        self.startDate = startDate
+        self.endDate = endDate
+    }
+}
+
+public struct LibraryStatistics {
+    public let totalItems: Int
+    public let totalCollections: Int
+    public let totalVerses: Int
+    public let totalNotes: Int
+    public let totalHighlights: Int
+    public let lastUpdated: Date
+    
+    public init(totalItems: Int, totalCollections: Int, totalVerses: Int, totalNotes: Int, totalHighlights: Int, lastUpdated: Date) {
+        self.totalItems = totalItems
+        self.totalCollections = totalCollections
+        self.totalVerses = totalVerses
+        self.totalNotes = totalNotes
+        self.totalHighlights = totalHighlights
+        self.lastUpdated = lastUpdated
+    }
+}
+
+// MARK: - Mock Implementations
+
+private final class MockAIService: AIServiceProtocol {
+    func generateInsight(for verse: BibleVerse) async throws -> String {
+        return "This verse teaches us about God's love and grace."
+    }
+    
+    func generateSummary(for chapter: BibleChapter) async throws -> String {
+        return "Chapter \(chapter.chapter) of \(chapter.book) contains \(chapter.verses.count) verses."
+    }
+    
+    func answerQuestion(_ question: String, context: [BibleVerse]) async throws -> String {
+        return "Based on the provided verses, here's an answer to your question."
+    }
+}
+
+private final class MockAuthenticationService: AuthenticationServiceProtocol {
+    private let userSubject = CurrentValueSubject<AuthUser?, Never>(nil)
+    
+    func signIn(email: String, password: String) async throws -> AuthUser {
+        let user = AuthUser(id: "mock-id", email: email, name: "Mock User")
+        userSubject.send(user)
+        return user
+    }
+    
+    func signUp(email: String, password: String, name: String) async throws -> AuthUser {
+        let user = AuthUser(id: "mock-id", email: email, name: name)
+        userSubject.send(user)
+        return user
+    }
+    
+    func signOut() async throws {
+        userSubject.send(nil)
+    }
+    
+    func resetPassword(email: String) async throws {
+        // Mock implementation
+    }
+    
+    func refreshToken() async throws {
+        // Mock implementation
+    }
+    
+    var currentUser: AnyPublisher<AuthUser?, Never> {
+        userSubject.eraseToAnyPublisher()
+    }
+    
+    var isAuthenticated: Bool {
+        userSubject.value != nil
+    }
+}
+
+private final class MockUserDataManager: UserDataManagerProtocol {
+    var currentUser: User?
+    
+    func updateUser(_ user: User) async throws {
+        currentUser = user
+    }
+    
+    func clearUserData() async throws {
+        currentUser = nil
+    }
+}
+
+private final class MockAudioService: AudioServiceProtocol {
+    private let isPlayingSubject = CurrentValueSubject<Bool, Never>(false)
+    private let progressSubject = CurrentValueSubject<Double, Never>(0.0)
+    
+    func playVerse(_ verse: BibleVerse, voice: VoiceConfiguration?) async throws {
+        isPlayingSubject.send(true)
+    }
+    
+    func pause() {
+        isPlayingSubject.send(false)
+    }
+    
+    func resume() {
+        isPlayingSubject.send(true)
+    }
+    
+    func stop() {
+        isPlayingSubject.send(false)
+        progressSubject.send(0.0)
+    }
+    
+    func generateAudio(text: String, voice: VoiceConfiguration) async throws -> URL {
+        return URL(string: "file:///mock/audio.mp3")!
+    }
+    
+    var isPlaying: AnyPublisher<Bool, Never> {
+        isPlayingSubject.eraseToAnyPublisher()
+    }
+    
+    var progress: AnyPublisher<Double, Never> {
+        progressSubject.eraseToAnyPublisher()
+    }
+}
+
+private final class MockSettingsRepository: SettingsRepositoryProtocol {
+    private var settings = AppSettings()
+    
+    func getSettings() async throws -> AppSettings {
+        return settings
+    }
+    
+    func updateSettings(_ settings: AppSettings) async throws {
+        self.settings = settings
+    }
+    
+    func updateSetting<T: Codable>(key: String, value: T) async throws {
+        // Mock implementation
+    }
+    
+    func resetToDefaults() async throws {
+        settings = AppSettings()
+    }
+    
+    func exportSettings() async throws -> Data {
+        return try JSONEncoder().encode(settings)
+    }
+    
+    func importSettings(from data: Data) async throws {
+        settings = try JSONDecoder().decode(AppSettings.self, from: data)
+    }
+    
+    func getSettingsHistory(limit: Int) async throws -> [SettingsChangeEvent] {
+        return []
+    }
+    
+    func createBackup(name: String) async throws -> SettingsBackup {
+        return SettingsBackup(settings: settings)
+    }
+    
+    func getBackups() async throws -> [SettingsBackup] {
+        return []
+    }
+    
+    func restoreBackup(_ backup: SettingsBackup) async throws {
+        settings = backup.settings
+    }
+}
+
+// MARK: - Missing Extensions for SettingsChangeEvent
+extension SettingsChangeEvent {
+    var settingKey: String {
+        return setting
+    }
+}
+
+extension SettingsBackup {
+    var id: String {
+        return "\(createdAt.timeIntervalSince1970)"
+    }
+}
+
+// MARK: - Environment Key for SwiftUI
+
+public struct DIContainerKey: EnvironmentKey {
+    public static let defaultValue = DIContainer.shared
+}
+
+public extension EnvironmentValues {
+    var diContainer: DIContainer {
+        get { self[DIContainerKey.self] }
+        set { self[DIContainerKey.self] = newValue }
+    }
+}
+
+// MARK: - Property Wrappers
+
+@propertyWrapper
+public struct Injected<T> {
+    private let keyPath: KeyPath<DIContainer, T>
+    
+    public init(_ keyPath: KeyPath<DIContainer, T>) {
+        self.keyPath = keyPath
+    }
+    
+    public var wrappedValue: T {
+        DIContainer.shared[keyPath: keyPath]
+    }
+}
+
+@propertyWrapper
+public struct LazyInjected<T> {
+    private let keyPath: KeyPath<DIContainer, T>
+    private var instance: T?
+    
+    public init(_ keyPath: KeyPath<DIContainer, T>) {
+        self.keyPath = keyPath
+    }
+    
+    public var wrappedValue: T {
+        mutating get {
+            if instance == nil {
+                instance = DIContainer.shared[keyPath: keyPath]
+            }
+            return instance!
+        }
+    }
+}

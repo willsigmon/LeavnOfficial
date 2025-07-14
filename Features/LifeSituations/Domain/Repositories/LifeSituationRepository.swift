@@ -1,5 +1,4 @@
 import Foundation
-import LeavnCore
 
 public protocol LifeSituationRepository: Repository {
     func getLifeSituations() async throws -> [LifeSituation]

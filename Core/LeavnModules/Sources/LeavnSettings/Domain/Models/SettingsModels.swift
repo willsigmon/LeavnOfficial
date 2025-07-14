@@ -1,5 +1,4 @@
 import Foundation
-import LeavnCore
 
 // MARK: - App Settings Models
 public struct AppSettings: Codable {

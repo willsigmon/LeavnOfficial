@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assets>
+    <imageSet name="Map_Sample_Modern">
+        <image filename="map_sample_modern.png" />
+        <image filename="map_sample_modern@2x.png" scale="2x" />
+    </imageSet>
+    <imageSet name="Map_Sample_Ancient">
+        <image filename="map_sample_ancient.png" />
+        <image filename="map_sample_ancient@2x.png" scale="2x" />
+    </imageSet>
+</assets>

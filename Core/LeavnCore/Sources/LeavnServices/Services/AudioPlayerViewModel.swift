@@ -1,6 +1,5 @@
 import Foundation
 import Combine
-import LeavnCore
 
 // MARK: - Audio Player View Model
 @MainActor
@@ -16,9 +15,9 @@ public final class AudioPlayerViewModel: ObservableObject {
     @Published public private(set) var isDownloading = false
     
     // Services
-    private let audioService: AudioService
+    private let audioService: any AudioService
     private let bibleService: BibleService
-    private let voiceConfigService: VoiceConfigurationService
+    private let voiceConfigService: any VoiceConfigurationService
     private let elevenLabsService: ElevenLabsService
     private let cacheManager: AudioCacheManager
     
@@ -26,9 +25,9 @@ public final class AudioPlayerViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     public init(
-        audioService: AudioService,
+        audioService: any AudioService,
         bibleService: BibleService,
-        voiceConfigService: VoiceConfigurationService,
+        voiceConfigService: any VoiceConfigurationService,
         elevenLabsService: ElevenLabsService,
         cacheManager: AudioCacheManager
     ) {

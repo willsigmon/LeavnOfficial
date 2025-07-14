@@ -1,7 +1,6 @@
 import Foundation
 import SwiftUI
 import Combine
-import LeavnCore
 
 @MainActor
 public final class AuthViewModel: BaseViewModel<AuthViewState, AuthViewEvent> {

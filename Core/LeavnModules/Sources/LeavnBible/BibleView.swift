@@ -1,7 +1,4 @@
 import SwiftUI
-import LeavnCore
-import DesignSystem
-import LeavnServices
 
 public struct BibleView: View {
     @StateObject private var viewModel = BibleViewModel()

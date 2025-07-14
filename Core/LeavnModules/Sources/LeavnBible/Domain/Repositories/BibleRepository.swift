@@ -1,6 +1,4 @@
 import Foundation
-import LeavnCore
-import LeavnServices
 
 public protocol BibleRepository: Repository {
     func getVerse(reference: String, translation: String?) async throws -> BibleVerse

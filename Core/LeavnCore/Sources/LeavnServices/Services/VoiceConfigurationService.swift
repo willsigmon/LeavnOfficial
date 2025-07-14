@@ -1,6 +1,6 @@
 import Foundation
 import Combine
-import LeavnCore
+import AVFoundation
 
 // MARK: - Voice Configuration Service Protocol
 public protocol VoiceConfigurationService: ObservableObject {
@@ -14,6 +14,7 @@ public protocol VoiceConfigurationService: ObservableObject {
     func updatePreferences(_ preferences: VoicePreferences)
     func loadVoices() async
     func previewVoice(_ voiceId: String, text: String) async throws
+    func getEmotionalSettings(for book: String) -> VoiceSettings
 }
 
 // MARK: - Voice Preferences
@@ -26,6 +27,12 @@ public struct VoicePreferences: Codable {
     public var downloadQuality: AudioQuality
     public var autoDownload: Bool
     public var maxCacheSize: Int64 // In bytes
+    
+    // Emotional Voice Settings
+    public var useEmotionalVoice: Bool
+    public var emotionalIntensity: Double // 0.0 to 1.0
+    public var contextAwareness: Bool
+    public var adaptToContent: Bool
     
     public enum AudioQuality: String, Codable, CaseIterable {
         case standard = "mp3_44100_128"
@@ -53,7 +60,11 @@ public struct VoicePreferences: Codable {
         useBackgroundPlayback: Bool = true,
         downloadQuality: AudioQuality = .standard,
         autoDownload: Bool = false,
-        maxCacheSize: Int64 = 2_000_000_000 // 2GB
+        maxCacheSize: Int64 = 2_000_000_000, // 2GB
+        useEmotionalVoice: Bool = true,
+        emotionalIntensity: Double = 0.7,
+        contextAwareness: Bool = true,
+        adaptToContent: Bool = true
     ) {
         self.autoSelectByGenre = autoSelectByGenre
         self.defaultMaleVoice = defaultMaleVoice
@@ -63,6 +74,10 @@ public struct VoicePreferences: Codable {
         self.downloadQuality = downloadQuality
         self.autoDownload = autoDownload
         self.maxCacheSize = maxCacheSize
+        self.useEmotionalVoice = useEmotionalVoice
+        self.emotionalIntensity = emotionalIntensity
+        self.contextAwareness = contextAwareness
+        self.adaptToContent = adaptToContent
     }
 }
 
@@ -185,14 +200,44 @@ public final class DefaultVoiceConfigurationService: ObservableObject, VoiceConf
     }
     
     public func previewVoice(_ voiceId: String, text: String = "The Lord is my shepherd; I shall not want.") async throws {
+        let settings = userPreferences.useEmotionalVoice ? 
+            getEmotionalSettings(for: "Psalms") : 
+            VoiceSettings(stability: 0.6, similarity_boost: 0.8)
+            
         let audioData = try await elevenLabsService.synthesizeText(
             text,
             voiceId: voiceId,
-            settings: VoiceSettings(stability: 0.6, similarity_boost: 0.8)
+            settings: settings
         )
         
         // Play preview audio
         try await playPreviewAudio(audioData.data)
+    }
+    
+    public func getEmotionalSettings(for book: String) -> VoiceSettings {
+        guard userPreferences.useEmotionalVoice else {
+            return VoiceSettings(stability: 0.6, similarity_boost: 0.8)
+        }
+        
+        let preset = EmotionalVoicePreset.preset(for: book)
+        var settings = preset.voiceSettings
+        
+        // Adjust emotional intensity based on user preference
+        if let emotionalRange = settings.emotional_range {
+            let adjustedRange = emotionalRange * userPreferences.emotionalIntensity
+            settings = VoiceSettings(
+                stability: settings.stability,
+                similarity_boost: settings.similarity_boost,
+                style: settings.style,
+                use_speaker_boost: settings.use_speaker_boost,
+                emotional_range: adjustedRange,
+                speaking_style: settings.speaking_style,
+                emotion: settings.emotion,
+                context_awareness: userPreferences.contextAwareness ? settings.context_awareness : false
+            )
+        }
+        
+        return settings
     }
     
     // MARK: - Private Methods

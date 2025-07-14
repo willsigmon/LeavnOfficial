@@ -224,7 +224,7 @@ public final class BibleBookCatalog {
     
     // MARK: - Utility Methods
     public func validateReference(_ reference: String, includeApocrypha: Bool = false) -> Bool {
-        let books = getBooks(includeApocrypha: includeApocrypha)
+        _ = getBooks(includeApocrypha: includeApocrypha)
         
         // Simple validation - in production, use more sophisticated parsing
         let components = reference.split(separator: " ")

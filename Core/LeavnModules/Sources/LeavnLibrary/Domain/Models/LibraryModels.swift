@@ -1,5 +1,4 @@
 import Foundation
-import LeavnCore
 
 // MARK: - Library View State
 // This file now contains only module-specific types

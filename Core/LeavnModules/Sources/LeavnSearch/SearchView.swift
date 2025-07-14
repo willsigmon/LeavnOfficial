@@ -1,6 +1,4 @@
 import SwiftUI
-import LeavnCore
-import DesignSystem
 
 public struct SearchView: View {
     @State private var searchText = ""

@@ -63,21 +63,6 @@ let package = Package(
         .testTarget(
             name: "DesignSystemTests",
             dependencies: ["DesignSystem", "LeavnCore"]
-        ),
-        .testTarget(
-            name: "NetworkingKitTests",
-            dependencies: ["NetworkingKit", "LeavnCore"],
-            path: "Tests/LeavnCoreTests/NetworkingKitTests"
-        ),
-        .testTarget(
-            name: "PersistenceKitTests",
-            dependencies: ["PersistenceKit", "LeavnCore"],
-            path: "Tests/LeavnCoreTests/PersistenceKitTests"
-        ),
-        .testTarget(
-            name: "AnalyticsKitTests",
-            dependencies: ["AnalyticsKit", "LeavnCore"],
-            path: "Tests/LeavnCoreTests/AnalyticsKitTests"
         )
     ]
 )

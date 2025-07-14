@@ -1,18 +1,15 @@
 import SwiftUI
-import LeavnServices
-import LeavnCore
-import NetworkingKit
 
 /// Example of how to integrate the ElevenLabs audio narration into a Bible reading view
 public struct BibleAudioIntegrationView: View {
     @StateObject private var viewModel: AudioPlayerViewModel
-    @StateObject private var voiceConfigService: VoiceConfigurationService
+    @StateObject private var voiceConfigService: any VoiceConfigurationService
     @State private var showVoiceSelection = false
     @State private var showDownloadManager = false
     @State private var isAudioExpanded = false
     
     private let bibleService: BibleService
-    private let audioService: AudioService
+    private let audioService: any AudioService
     private let elevenLabsService: ElevenLabsService
     private let cacheManager: AudioCacheManager
     

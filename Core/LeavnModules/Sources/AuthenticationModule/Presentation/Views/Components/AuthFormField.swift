@@ -1,6 +1,4 @@
 import SwiftUI
-import LeavnCore
-import DesignSystem
 
 public struct AuthFormField: View {
     let title: String

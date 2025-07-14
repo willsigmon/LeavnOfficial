@@ -1,5 +1,4 @@
 import Foundation
-import LeavnCore
 
 // MARK: - Sign In Use Case Implementation
 public final class SignInUseCase: SignInUseCaseProtocol {

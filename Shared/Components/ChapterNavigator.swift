@@ -1,5 +1,4 @@
 import SwiftUI
-import LeavnServices
 
 /// A navigation component for browsing Bible chapters
 /// Provides adaptive layouts for different platforms

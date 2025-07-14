@@ -1,9 +1,4 @@
 import SwiftUI
-import LeavnBible
-import LeavnSearch
-import LeavnLibrary
-import LeavnSettings
-import LeavnCommunity
 
 struct ContentView: View {
     @State private var selectedTab = 0

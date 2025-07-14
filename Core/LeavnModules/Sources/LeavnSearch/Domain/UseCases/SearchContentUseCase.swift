@@ -1,5 +1,4 @@
 import Foundation
-import LeavnCore
 
 // MARK: - Search Content Use Case
 public struct SearchContentUseCase: UseCase {

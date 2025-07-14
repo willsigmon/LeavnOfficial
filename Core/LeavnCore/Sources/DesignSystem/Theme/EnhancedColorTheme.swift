@@ -1,8 +1,9 @@
 import SwiftUI
 
 // MARK: - Enhanced Color Theme with WCAG Compliance
+@MainActor
 public extension Color {
-    static let wcag = WCAGColors()
+    static let wcag = WCAGColors() // Now main-actor isolated
     
     // MARK: - Primary Brand Colors (WCAG AA Compliant)
     @MainActor
@@ -172,11 +173,19 @@ public struct ColorSet {
     let highContrastLight: Color
     let highContrastDark: Color
     
-    @Environment(\.colorScheme) private var colorScheme
-    @ObservedObject private var themeManager = AccessibilityThemeManager.shared
-    
-    public var current: Color {
-        if themeManager.isHighContrastEnabled {
+    /// Picks the correct color for a given colorScheme and high contrast user setting.
+    /// Usage in a SwiftUI View:
+    /// ```
+    /// @Environment(\.colorScheme) var colorScheme
+    /// @ObservedObject var themeManager = AccessibilityThemeManager.shared
+    ///
+    /// var body: some View {
+    ///     let color = myColorSet.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+    ///     Text("Example").foregroundColor(color)
+    /// }
+    /// ```
+    public func current(for colorScheme: ColorScheme, isHighContrast: Bool) -> Color {
+        if isHighContrast {
             return colorScheme == .dark ? highContrastDark : highContrastLight
         }
         return colorScheme == .dark ? dark : light
@@ -191,11 +200,18 @@ public struct ColorSet {
 }
 
 // MARK: - Gradient Extensions with Accessibility
+@MainActor
 public extension LinearGradient {
-    static func leavnGradient(colors: [Color], startPoint: UnitPoint = .topLeading, endPoint: UnitPoint = .bottomTrailing) -> LinearGradient {
-        let themeManager = AccessibilityThemeManager.shared
-        
-        if themeManager.isHighContrastEnabled {
+    /// Creates a gradient that adapts to accessibility settings.
+    /// - Parameters:
+    ///   - colors: Array of colors for the gradient.
+    ///   - startPoint: Starting point of the gradient.
+    ///   - endPoint: Ending point of the gradient.
+    ///   - isHighContrast: If true, reduces gradient complexity for better accessibility.
+    /// - Returns: A LinearGradient adapted for accessibility.
+    static func leavnGradient(colors: [Color], startPoint: UnitPoint = .topLeading, endPoint: UnitPoint = .bottomTrailing, isHighContrast: Bool = false) -> LinearGradient {
+        // The caller should provide the isHighContrast flag based on user settings.
+        if isHighContrast {
             // Reduce gradient complexity in high contrast mode
             return LinearGradient(
                 colors: [colors.first ?? .clear],
@@ -203,29 +219,22 @@ public extension LinearGradient {
                 endPoint: endPoint
             )
         }
-        
         return LinearGradient(
             colors: colors,
             startPoint: startPoint,
             endPoint: endPoint
         )
     }
-    
-    static var leavnPrimaryGradient: LinearGradient {
+    /*
+    // Usage example for gradients with explicit parameters:
+    static func leavnPrimaryGradient(colorScheme: ColorScheme, isHighContrast: Bool) -> LinearGradient {
         leavnGradient(
             colors: [
-                Color.LeavnColors.primary.current,
-                Color.LeavnColors.primary.current.opacity(0.8)
-            ]
+                Color.LeavnColors.primary.current(for: colorScheme, isHighContrast: isHighContrast),
+                Color.LeavnColors.primary.current(for: colorScheme, isHighContrast: isHighContrast).opacity(0.8)
+            ],
+            isHighContrast: isHighContrast
         )
     }
-    
-    static var leavnSuccessGradient: LinearGradient {
-        leavnGradient(
-            colors: [
-                Color.LeavnColors.success.current,
-                Color.LeavnColors.success.current.opacity(0.8)
-            ]
-        )
-    }
+    */
 }

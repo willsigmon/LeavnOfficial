@@ -1,5 +1,4 @@
 import Foundation
-import LeavnCore
 
 // MARK: - Settings Local Storage Protocol
 public protocol SettingsLocalStorage {

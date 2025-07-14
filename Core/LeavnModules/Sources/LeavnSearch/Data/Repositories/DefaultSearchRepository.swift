@@ -1,7 +1,4 @@
 import Foundation
-import LeavnCore
-import NetworkingKit
-import PersistenceKit
 
 public final class DefaultSearchRepository: SearchRepository {
     private let networkService: NetworkService

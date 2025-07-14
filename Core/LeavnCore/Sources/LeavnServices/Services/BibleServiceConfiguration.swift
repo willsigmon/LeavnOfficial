@@ -1,6 +1,5 @@
 import Foundation
 import CoreData
-import LeavnCore
 
 // MARK: - Bible Service Configuration
 public struct BibleServiceConfiguration {

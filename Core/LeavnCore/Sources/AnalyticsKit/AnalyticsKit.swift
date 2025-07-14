@@ -1,6 +1,5 @@
 import Foundation
 import os.log
-import LeavnCore
 
 // MARK: - Analytics Event Protocol
 public protocol AnalyticsEvent {

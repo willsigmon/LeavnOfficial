@@ -1,6 +1,5 @@
 import Foundation
 import Combine
-import LeavnCore
 
 // MARK: - Verse Narration Service Protocol
 public protocol VerseNarrationService: ObservableObject {
@@ -103,18 +102,18 @@ public final class DefaultVerseNarrationService: ObservableObject, VerseNarratio
     // Events
     public let narrationEvents = PassthroughSubject<VerseNarrationEvent, Never>()
     
-    private let audioService: AudioService
+    private let audioService: any AudioService
     private let elevenLabsService: ElevenLabsService
-    private let voiceConfigService: VoiceConfigurationService
+    private let voiceConfigService: any VoiceConfigurationService
     
     // Timing tracking
     private var timingTracker: VerseTimingTracker?
     private var cancellables = Set<AnyCancellable>()
     
     public init(
-        audioService: AudioService,
+        audioService: any AudioService,
         elevenLabsService: ElevenLabsService,
-        voiceConfigService: VoiceConfigurationService
+        voiceConfigService: any VoiceConfigurationService
     ) {
         self.audioService = audioService
         self.elevenLabsService = elevenLabsService
@@ -251,11 +250,12 @@ public final class DefaultVerseNarrationService: ObservableObject, VerseNarratio
         
         let voiceId = voiceConfigService.getVoice(for: chapter.book)
         
-        // Generate audio for individual verse
-        let audioData = try await elevenLabsService.synthesizeText(
+        // Generate audio for individual verse with emotional settings
+        let emotionalSettings = voiceConfigService.getEmotionalSettings(for: chapter.book)
+        _ = try await elevenLabsService.synthesizeText(
             verse.text,
             voiceId: voiceId,
-            settings: VoiceSettings(stability: 0.6, similarity_boost: 0.8)
+            settings: emotionalSettings
         )
         
         // Create temporary audio chapter for single verse
@@ -365,11 +365,16 @@ public extension DefaultVerseNarrationService {
         var currentTime: TimeInterval = 0
         
         for verse in verses {
-            // Generate actual audio to get precise timing
+            // Generate actual audio to get precise timing with emotional settings
+            guard let chapter = audioService.currentChapter else {
+                throw VerseNarrationError.noChapterLoaded
+            }
+            
+            let emotionalSettings = voiceConfigService.getEmotionalSettings(for: chapter.book)
             let audioData = try await elevenLabsService.synthesizeText(
                 verse.text,
                 voiceId: voiceId,
-                settings: VoiceSettings(stability: 0.6, similarity_boost: 0.8)
+                settings: emotionalSettings
             )
             
             let actualDuration = audioData.duration ?? estimateVerseDuration(verse.text)

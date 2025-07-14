@@ -1,6 +1,5 @@
 import Foundation
 import Combine
-import LeavnCore
 
 // MARK: - Mock Network Service
 public final class MockNetworkService: NetworkServiceProtocol {
@@ -12,7 +11,7 @@ public final class MockNetworkService: NetworkServiceProtocol {
     
     public func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
         // Return mock data based on endpoint
-        throw LeavnError.networkError("Mock network service - not implemented")
+        throw LeavnError.networkError(underlying: "Mock network service - not implemented" as! Error)
     }
     
     public func request(_ endpoint: Endpoint) async throws -> Data {
@@ -765,3 +764,4 @@ public final class MockAuthViewModel: AuthViewModelProtocol {
         }
     }
 }
+

@@ -1,0 +1,1 @@
+172:/Users/wsig/Cursor Repos/LeavnOfficial/Packages/LeavnCore/Sources/LeavnCore/SyncManager.swift:20:18: error: cannot access property 'syncTimer' with a non-sendable type 'Timer?' from nonisolated deinit

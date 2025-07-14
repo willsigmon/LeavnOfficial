@@ -1,5 +1,4 @@
 import SwiftUI
-import LeavnServices
 
 /// Displays Bible verses with synchronized audio highlighting
 public struct VerseAudioView: View {
@@ -144,7 +143,7 @@ struct CompactVerseRow: View {
 
 // MARK: - Voice Selection Sheet
 public struct VoiceSelectionView: View {
-    @ObservedObject private var voiceConfigService: VoiceConfigurationService
+    @ObservedObject private var voiceConfigService: any VoiceConfigurationService
     @ObservedObject private var viewModel: AudioPlayerViewModel
     let book: String
     @Binding var isPresented: Bool
@@ -153,7 +152,7 @@ public struct VoiceSelectionView: View {
     @State private var previewingVoiceId: String?
     
     public init(
-        voiceConfigService: VoiceConfigurationService,
+        voiceConfigService: any VoiceConfigurationService,
         viewModel: AudioPlayerViewModel,
         book: String,
         isPresented: Binding<Bool>

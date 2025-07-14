@@ -152,10 +152,15 @@ public protocol LifeSituationRepositoryProtocol {
     func getSituation(id: String) async throws -> LifeSituation?
     func getRelatedVerses(for situationId: String) async throws -> [BibleVerse]
     func getRelatedContent(for situationId: String) async throws -> [RelatedContent]
+    func searchSituations(query: String) async throws -> [LifeSituation]
+    func getRecentlyViewed() async throws -> [LifeSituation]
+    func markAsViewed(_ situationId: String) async throws
+    func getFavorites() async throws -> [LifeSituation]
+    func toggleFavorite(_ situationId: String) async throws
 }
 
 // MARK: - Supporting Types
-public struct Endpoint: @unchecked Sendable {
+public struct ServiceEndpoint: @unchecked Sendable {
     public let path: String
     public let method: HTTPMethod
     public let parameters: [String: Any]?

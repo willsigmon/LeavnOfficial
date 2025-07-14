@@ -1,5 +1,4 @@
 import Foundation
-import LeavnCore
 
 // MARK: - Authentication Module-Specific Models
 // All shared authentication types are imported from LeavnCore

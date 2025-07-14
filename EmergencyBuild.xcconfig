@@ -1,0 +1,17 @@
+// Emergency fallback settings for when Xcode beta crashes
+
+// Downgrade Swift version if needed
+SWIFT_VERSION = 5.9
+
+// Disable all beta features
+SWIFT_STRICT_CONCURRENCY = minimal
+ENABLE_PREVIEWS = NO
+ENABLE_TESTING_SEARCH_PATHS = NO
+ENABLE_USER_SCRIPT_SANDBOXING = NO
+
+// Use legacy build system
+UseModernBuildSystem = NO
+
+// Minimal optimization to reduce compiler stress
+SWIFT_OPTIMIZATION_LEVEL = -Onone
+GCC_OPTIMIZATION_LEVEL = 0

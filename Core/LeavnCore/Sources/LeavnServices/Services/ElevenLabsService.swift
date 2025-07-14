@@ -1,7 +1,5 @@
 import Foundation
 import AVFoundation
-import LeavnCore
-import NetworkingKit
 
 // MARK: - ElevenLabs Service Protocol
 public protocol ElevenLabsService {
@@ -56,16 +54,30 @@ public struct VoiceSettings: Codable {
     public let style: Double?
     public let use_speaker_boost: Bool?
     
+    // ElevenLabs v3 Emotional Parameters
+    public let emotional_range: Double?
+    public let speaking_style: String?
+    public let emotion: String?
+    public let context_awareness: Bool?
+    
     public init(
         stability: Double = 0.5,
         similarity_boost: Double = 0.75,
         style: Double? = nil,
-        use_speaker_boost: Bool? = nil
+        use_speaker_boost: Bool? = nil,
+        emotional_range: Double? = nil,
+        speaking_style: String? = nil,
+        emotion: String? = nil,
+        context_awareness: Bool? = nil
     ) {
         self.stability = stability
         self.similarity_boost = similarity_boost
         self.style = style
         self.use_speaker_boost = use_speaker_boost
+        self.emotional_range = emotional_range
+        self.speaking_style = speaking_style
+        self.emotion = emotion
+        self.context_awareness = context_awareness
     }
 }
 
@@ -157,10 +169,11 @@ public final class DefaultElevenLabsService: ElevenLabsService {
         
         let requestBody = TextToSpeechRequest(
             text: text,
-            model_id: "eleven_multilingual_v2", // v3 model with better quality
+            model_id: "eleven_turbo_v2_5", // Latest v3 emotional model
             voice_settings: settings ?? VoiceSettings(),
             optimize_streaming_latency: 2, // Balanced latency/quality
-            output_format: "mp3_44100_128"
+            output_format: "mp3_44100_128",
+            apply_text_normalization: "auto"
         )
         
         let encoder = JSONEncoder()
@@ -267,6 +280,23 @@ private struct TextToSpeechRequest: Codable {
     let voice_settings: VoiceSettings
     let optimize_streaming_latency: Int?
     let output_format: String?
+    let apply_text_normalization: String?
+    
+    init(
+        text: String,
+        model_id: String,
+        voice_settings: VoiceSettings,
+        optimize_streaming_latency: Int? = nil,
+        output_format: String? = nil,
+        apply_text_normalization: String? = "auto"
+    ) {
+        self.text = text
+        self.model_id = model_id
+        self.voice_settings = voice_settings
+        self.optimize_streaming_latency = optimize_streaming_latency
+        self.output_format = output_format
+        self.apply_text_normalization = apply_text_normalization
+    }
 }
 
 private struct VoicesResponse: Codable {
@@ -406,6 +436,190 @@ public enum BibleVoiceCategory {
         
         // Default to narrative
         return .oldTestamentNarrative
+    }
+}
+
+// MARK: - Emotional Voice Presets
+public enum EmotionalVoicePreset {
+    case joyful        // For Psalms of praise
+    case solemn        // For Lamentations, serious prophecy
+    case contemplative // For wisdom literature
+    case narrative     // For historical books
+    case authoritative // For law and commandments
+    case gentle        // For comforting passages
+    case dramatic      // For apocalyptic literature
+    case conversational // For epistles
+    
+    public var voiceSettings: VoiceSettings {
+        switch self {
+        case .joyful:
+            return VoiceSettings(
+                stability: 0.6,
+                similarity_boost: 0.8,
+                style: 0.7,
+                use_speaker_boost: true,
+                emotional_range: 0.8,
+                speaking_style: "expressive",
+                emotion: "joy",
+                context_awareness: true
+            )
+        case .solemn:
+            return VoiceSettings(
+                stability: 0.8,
+                similarity_boost: 0.7,
+                style: 0.3,
+                use_speaker_boost: false,
+                emotional_range: 0.4,
+                speaking_style: "serious",
+                emotion: "contemplative",
+                context_awareness: true
+            )
+        case .contemplative:
+            return VoiceSettings(
+                stability: 0.7,
+                similarity_boost: 0.75,
+                style: 0.4,
+                use_speaker_boost: false,
+                emotional_range: 0.5,
+                speaking_style: "thoughtful",
+                emotion: "peaceful",
+                context_awareness: true
+            )
+        case .narrative:
+            return VoiceSettings(
+                stability: 0.6,
+                similarity_boost: 0.8,
+                style: 0.5,
+                use_speaker_boost: true,
+                emotional_range: 0.6,
+                speaking_style: "storytelling",
+                emotion: "neutral",
+                context_awareness: true
+            )
+        case .authoritative:
+            return VoiceSettings(
+                stability: 0.8,
+                similarity_boost: 0.9,
+                style: 0.2,
+                use_speaker_boost: true,
+                emotional_range: 0.3,
+                speaking_style: "commanding",
+                emotion: "serious",
+                context_awareness: true
+            )
+        case .gentle:
+            return VoiceSettings(
+                stability: 0.7,
+                similarity_boost: 0.7,
+                style: 0.6,
+                use_speaker_boost: false,
+                emotional_range: 0.7,
+                speaking_style: "caring",
+                emotion: "compassionate",
+                context_awareness: true
+            )
+        case .dramatic:
+            return VoiceSettings(
+                stability: 0.5,
+                similarity_boost: 0.8,
+                style: 0.8,
+                use_speaker_boost: true,
+                emotional_range: 0.9,
+                speaking_style: "dramatic",
+                emotion: "intense",
+                context_awareness: true
+            )
+        case .conversational:
+            return VoiceSettings(
+                stability: 0.6,
+                similarity_boost: 0.75,
+                style: 0.5,
+                use_speaker_boost: false,
+                emotional_range: 0.6,
+                speaking_style: "conversational",
+                emotion: "warm",
+                context_awareness: true
+            )
+        }
+    }
+    
+    public static func preset(for category: BibleVoiceCategory) -> EmotionalVoicePreset {
+        switch category {
+        case .oldTestamentNarrative:
+            return .narrative
+        case .law:
+            return .authoritative
+        case .wisdom:
+            return .contemplative
+        case .psalms:
+            return .joyful
+        case .prophecy:
+            return .solemn
+        case .gospels:
+            return .gentle
+        case .epistles:
+            return .conversational
+        case .apocalyptic:
+            return .dramatic
+        }
+    }
+    
+    public static func preset(for book: String) -> EmotionalVoicePreset {
+        let category = BibleVoiceCategory.category(for: book)
+        
+        // Special cases for specific books
+        let bookLower = book.lowercased()
+        switch bookLower {
+        case "lamentations":
+            return .solemn
+        case "song of songs", "song of solomon":
+            return .gentle
+        case "revelation":
+            return .dramatic
+        case "job":
+            return .contemplative
+        case "ecclesiastes":
+            return .contemplative
+        case "psalm 23", "psalm 91", "psalm 139":
+            return .gentle
+        case "psalm 98", "psalm 100", "psalm 150":
+            return .joyful
+        default:
+            return preset(for: category)
+        }
+    }
+}
+
+// MARK: - Enhanced ElevenLabs Service with Emotional Presets
+public extension DefaultElevenLabsService {
+    func synthesizeTextWithEmotion(
+        _ text: String,
+        voiceId: String,
+        emotionalPreset: EmotionalVoicePreset? = nil,
+        customSettings: VoiceSettings? = nil
+    ) async throws -> AudioData {
+        let settings: VoiceSettings
+        
+        if let customSettings = customSettings {
+            settings = customSettings
+        } else if let preset = emotionalPreset {
+            settings = preset.voiceSettings
+        } else {
+            settings = VoiceSettings()
+        }
+        
+        return try await synthesizeText(text, voiceId: voiceId, settings: settings)
+    }
+    
+    func synthesizeVerseWithContextualEmotion(
+        _ text: String,
+        voiceId: String,
+        book: String,
+        chapter: Int? = nil,
+        verse: Int? = nil
+    ) async throws -> AudioData {
+        let preset = EmotionalVoicePreset.preset(for: book)
+        return try await synthesizeTextWithEmotion(text, voiceId: voiceId, emotionalPreset: preset)
     }
 }
 

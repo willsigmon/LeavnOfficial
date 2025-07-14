@@ -51,11 +51,7 @@ public struct AccessibilityPreviewContainer<Content: View>: View {
             }
             .padding()
             .background(
-                #if canImport(UIKit)
-                Color(UIColor.secondarySystemBackground)
-                #else
-                Color.LeavnBackgroundColors.secondary.current
-                #endif
+                Color(uiColor: .secondarySystemBackground)
             )
             
             // Content
@@ -187,7 +183,7 @@ public struct AccessibilityComponentGallery: View {
             HStack(spacing: 16) {
                 ColorSwatch(
                     color: Color.LeavnColors.primary.current,
-                    label: "Primary"
+                    name: "Primary"
                 )
                 ColorSwatch(
                     color: Color.LeavnColors.secondary.current,

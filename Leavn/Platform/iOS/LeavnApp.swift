@@ -1,12 +1,5 @@
 import SwiftUI
-import LeavnCore
-import LeavnServices
-import LeavnBible
-import LeavnSearch
-import LeavnLibrary
-import LeavnSettings
-import LeavnCommunity
-import AuthenticationModule
+
 import Factory
 
 @main

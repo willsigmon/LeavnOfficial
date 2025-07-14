@@ -1,5 +1,4 @@
 import Foundation
-import LeavnCore
 
 // MARK: - Search Repository Protocol
 public protocol SearchRepository: Repository {

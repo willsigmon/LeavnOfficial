@@ -1,7 +1,7 @@
 import Foundation
 import AVFoundation
 import MediaPlayer
-import LeavnCore
+
 #if canImport(UIKit)
 import UIKit
 #endif
@@ -30,7 +30,7 @@ public protocol AudioService: ObservableObject {
 }
 
 // MARK: - Audio Chapter Model
-public struct AudioChapter: Identifiable, Codable {
+public struct AudioChapter: Identifiable, Codable, Sendable, Sendable, Sendable {
     public let id: String
     public let book: String
     public let chapter: Int
@@ -81,7 +81,7 @@ public struct AudioChapter: Identifiable, Codable {
     }
 }
 
-public struct AudioVerse: Identifiable, Codable {
+public struct AudioVerse: Identifiable, Codable, Sendable, Sendable, Sendable, Sendable {
     public let id: String
     public let verseNumber: Int
     public let text: String
@@ -543,7 +543,7 @@ public final class DefaultAudioService: NSObject, AudioService, AVAudioPlayerDel
     
     private func setupAudioSession() throws {
         let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.allowBluetooth, .allowAirPlay])
+        try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.AVAudioSession.CategoryOptions.allowBluetoothHFP, .allowAirPlay])
         try audioSession.setActive(true)
         
         // Enable background audio on iOS

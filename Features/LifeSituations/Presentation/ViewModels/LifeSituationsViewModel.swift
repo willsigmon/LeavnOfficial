@@ -1,30 +1,24 @@
 import Foundation
 import SwiftUI
 import Combine
-import LeavnCore
-import LeavnServices
-import NetworkingKit
-import PersistenceKit
-import AnalyticsKit
-import Factory
+
+// import Factory - Removed external dependency
 
 @MainActor
 public final class LifeSituationsViewModel: BaseViewModel<LifeSituationsViewState, LifeSituationsViewEvent> {
-    @Injected(\.networkService) private var networkService
-    @Injected(\.analyticsService) private var analyticsService
-    @Injected(\.userDefaultsStorage) private var localStorage
-    @Injected(\.cacheStorage) private var cacheStorage
+    // TODO: Restore when Factory is available
+    // @Injected(\.networkService) private var networkService
+    // @Injected(\.analyticsService) private var analyticsService
+    // @Injected(\.userDefaultsStorage) private var localStorage
+    // @Injected(\.cacheStorage) private var cacheStorage
     
     private let repository: LifeSituationRepository
     private let getLifeSituationsUseCase: GetLifeSituationsUseCase
     
     public override init(initialState: LifeSituationsViewState = .init()) {
-        self.repository = DefaultLifeSituationRepository(
-            networkService: networkService,
-            localStorage: localStorage,
-            cacheStorage: cacheStorage
-        )
-        self.getLifeSituationsUseCase = GetLifeSituationsUseCase(repository: repository)
+        // TODO: Restore when Factory is available
+        self.repository = MockLifeSituationRepository()
+        self.getLifeSituationsUseCase = MockGetLifeSituationsUseCase()
         
         super.init(initialState: initialState)
     }
@@ -41,11 +35,11 @@ public final class LifeSituationsViewModel: BaseViewModel<LifeSituationsViewStat
             await loadSituations()
             
         case .selectCategory(let category):
-            updateState { $0.selectedCategory = category }
+            await updateState { $0.selectedCategory = category }
             await loadSituations()
             
         case .search(let query):
-            updateState { $0.searchQuery = query }
+            await updateState { $0.searchQuery = query }
             await performSearch(query: query)
             
         case .selectSituation(let situation):
@@ -64,7 +58,7 @@ public final class LifeSituationsViewModel: BaseViewModel<LifeSituationsViewStat
     }
     
     private func loadSituations() async {
-        updateState { $0.isLoading = true }
+        await updateState { $0.isLoading = true }
         
         do {
             let input = GetLifeSituationsInput(
@@ -80,11 +74,12 @@ public final class LifeSituationsViewModel: BaseViewModel<LifeSituationsViewStat
                 $0.error = nil
             }
             
-            analyticsService.track(event: LifeSituationAnalyticsEvent.listViewed(
-                category: state.selectedCategory?.rawValue
-            ))
+            // TODO: Track analytics when service is available
+            // analyticsService.track(event: LifeSituationAnalyticsEvent.listViewed(
+            //     category: state.selectedCategory?.rawValue
+            // ))
         } catch {
-            updateState {
+            await updateState {
                 $0.isLoading = false
                 $0.error = error
             }
@@ -97,7 +92,7 @@ public final class LifeSituationsViewModel: BaseViewModel<LifeSituationsViewStat
             return
         }
         
-        updateState { $0.isSearching = true }
+        await updateState { $0.isSearching = true }
         
         do {
             let results = try await repository.searchLifeSituations(query: query)
@@ -107,12 +102,13 @@ public final class LifeSituationsViewModel: BaseViewModel<LifeSituationsViewStat
                 $0.error = nil
             }
             
-            analyticsService.track(event: CommonAnalyticsEvent.search(
-                query: query,
-                category: "life_situations"
-            ))
+            // TODO: Track analytics when service is available
+            // analyticsService.track(event: CommonAnalyticsEvent.search(
+            //     query: query,
+            //     category: "life_situations"
+            // ))
         } catch {
-            updateState {
+            await updateState {
                 $0.isSearching = false
                 $0.error = error
             }
@@ -123,11 +119,12 @@ public final class LifeSituationsViewModel: BaseViewModel<LifeSituationsViewStat
         do {
             try await repository.markAsViewed(situation)
             
-            analyticsService.track(event: LifeSituationAnalyticsEvent.situationViewed(
-                situationId: situation.id,
-                title: situation.title,
-                category: situation.category.rawValue
-            ))
+            // TODO: Track analytics when service is available
+            // analyticsService.track(event: LifeSituationAnalyticsEvent.situationViewed(
+            //     situationId: situation.id,
+            //     title: situation.title,
+            //     category: situation.category.rawValue
+            // ))
         } catch {
             // Silently fail for analytics
             print("Failed to mark as viewed: \\(error)")
@@ -149,12 +146,13 @@ public final class LifeSituationsViewModel: BaseViewModel<LifeSituationsViewStat
                 }
             }
             
-            analyticsService.track(event: LifeSituationAnalyticsEvent.situationFavorited(
-                situationId: situation.id,
-                title: situation.title
-            ))
+            // TODO: Track analytics when service is available
+            // analyticsService.track(event: LifeSituationAnalyticsEvent.situationFavorited(
+            //     situationId: situation.id,
+            //     title: situation.title
+            // ))
         } catch {
-            updateState { $0.error = error }
+            await updateState { $0.error = error }
         }
     }
     

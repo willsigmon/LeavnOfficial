@@ -1,14 +1,37 @@
 import Foundation
-import LeavnCore
-import Factory
+
+// import Factory - Removed external dependency
+
+// MARK: - Environment Type
+public enum AppEnvironment {
+    case development
+    case production
+}
+
+// MARK: - Configuration Types
+public struct LeavnConfiguration {
+    let apiKey: String
+    let environment: AppEnvironment
+    let analyticsEnabled: Bool
+    let cacheConfiguration: CacheConfiguration
+    let esvAPIKey: String
+    let bibleComAPIKey: String
+    let elevenLabsAPIKey: String
+    let audioNarrationEnabled: Bool
+    let offlineModeEnabled: Bool
+}
+
+public struct CacheConfiguration: Sendable {
+    static let `default` = CacheConfiguration()
+}
 
 // MARK: - App Configuration
-public final class AppConfiguration {
+public final class AppConfiguration: @unchecked Sendable {
     // MARK: - Singleton
     public static let shared = AppConfiguration()
     
     // MARK: - Environment Configuration
-    private let environment: Environment
+    private let environment: AppEnvironment
     
     // MARK: - API Keys (should be loaded from secure storage in production)
     private struct APIKeys {
@@ -65,9 +88,10 @@ public final class AppConfiguration {
         Task {
             do {
                 // Pre-warm critical services
-                _ = Container.shared.networkService()
-                _ = Container.shared.analyticsService()
-                _ = Container.shared.hapticManager()
+                // TODO: Replace with actual service initialization when Factory is available
+                // _ = Container.shared.networkService()
+                // _ = Container.shared.analyticsService()
+                // _ = Container.shared.hapticManager()
                 
                 // Load initial data if needed
                 await loadInitialData()
@@ -81,15 +105,17 @@ public final class AppConfiguration {
         // Load any initial data needed for the app
         do {
             // Pre-fetch Bible translations
-            let translations = try await Container.shared.bibleService().fetchTranslations()
-            print("Loaded \(translations.count) Bible translations")
+            // TODO: Replace with actual service calls when Factory is available
+            // let translations = try await Container.shared.bibleService().fetchTranslations()
+            // print("Loaded \(translations.count) Bible translations")
             
             // Pre-fetch default settings
-            _ = try await Container.shared.getAppSettingsUseCase().execute(())
+            // _ = try await Container.shared.getAppSettingsUseCase().execute(())
             
         } catch {
             print("Failed to load initial data: \(error)")
-            Container.shared.analyticsService().trackError(error)
+            // TODO: Replace with actual service call when Factory is available
+            // Container.shared.analyticsService().trackError(error)
         }
     }
 }
@@ -124,14 +150,15 @@ extension AppConfiguration {
 // MARK: - Error Monitoring
 extension AppConfiguration {
     public func handleUncaughtException(_ exception: NSException) {
-        let error = LeavnError.systemError("Uncaught exception: \(exception.description)")
+        _ = LeavnError.systemError("Uncaught exception: \(exception.description)")
         
         // Log to analytics
-        Container.shared.analyticsService().trackError(error, additionalInfo: [
-            "exception_name": exception.name.rawValue,
-            "exception_reason": exception.reason ?? "Unknown",
-            "call_stack": exception.callStackSymbols.joined(separator: "\n")
-        ])
+        // TODO: Replace with actual service call when Factory is available
+        // Container.shared.analyticsService().trackError(error, additionalInfo: [
+        //     "exception_name": exception.name.rawValue,
+        //     "exception_reason": exception.reason ?? "Unknown",
+        //     "call_stack": exception.callStackSymbols.joined(separator: "\n")
+        // ])
         
         // In production, you might want to show a user-friendly error dialog
         #if !DEBUG

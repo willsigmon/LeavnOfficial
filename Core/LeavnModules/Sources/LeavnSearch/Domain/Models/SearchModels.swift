@@ -1,5 +1,4 @@
 import Foundation
-import LeavnCore
 
 // MARK: - Search Domain Models
 public struct SearchQuery: Codable {

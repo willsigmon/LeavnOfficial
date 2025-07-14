@@ -19,7 +19,7 @@ public struct AccessibleCard<Content: View>: View {
         case outlined
         case interactive
         
-        func backgroundColor(colorScheme: ColorScheme, highContrast: Bool) -> Color {
+        @MainActor @MainActor @MainActor func backgroundColor(colorScheme: ColorScheme, highContrast: Bool) -> Color {
             switch self {
             case .elevated, .interactive:
                 return Color.LeavnBackgroundColors.secondary.current
@@ -30,7 +30,7 @@ public struct AccessibleCard<Content: View>: View {
             }
         }
         
-        func borderColor(highContrast: Bool) -> Color {
+        @MainActor func borderColor(highContrast: Bool) -> Color {
             switch self {
             case .outlined:
                 return Color.LeavnBorderColors.border.current

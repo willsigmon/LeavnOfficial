@@ -1,6 +1,5 @@
 import Foundation
 import CoreData
-import LeavnCore
 
 // MARK: - Bible Cache Manager Protocol
 public protocol BibleCacheManager {
@@ -175,7 +174,7 @@ public final class CoreDataBibleCacheManager: BibleCacheManager {
             
             let totalSize = verses.reduce(0) { size, verse in
                 let textSize = verse.text?.data(using: .utf8)?.count ?? 0
-                return size + Int64(textSize)
+                return size + Int(Int64(textSize))
             }
             
             return totalSize

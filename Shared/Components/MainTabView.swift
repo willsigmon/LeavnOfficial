@@ -1,10 +1,4 @@
 import SwiftUI
-import LeavnBible
-import LeavnSearch
-import LeavnLibrary
-import LeavnSettings
-import LeavnCommunity
-import LeavnServices
 
 /// Main tab navigation view for the Leavn Bible app
 /// Provides consistent navigation across all platforms with adaptive layouts

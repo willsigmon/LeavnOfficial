@@ -1,5 +1,4 @@
 import Foundation
-import LeavnCore
 
 public struct LifeSituation: Codable, Identifiable {
     public let id: String

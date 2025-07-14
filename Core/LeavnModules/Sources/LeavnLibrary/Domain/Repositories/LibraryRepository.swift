@@ -1,5 +1,4 @@
 import Foundation
-import LeavnCore
 
 // MARK: - Library Repository Protocol
 public protocol LibraryRepository: Repository {

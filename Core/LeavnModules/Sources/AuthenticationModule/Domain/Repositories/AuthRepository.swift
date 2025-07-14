@@ -1,5 +1,4 @@
 import Foundation
-import LeavnCore
 
 // MARK: - Authentication Repository Protocol Extension
 // The main AuthRepositoryProtocol is defined in LeavnCore

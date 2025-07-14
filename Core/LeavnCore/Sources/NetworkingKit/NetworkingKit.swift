@@ -1,6 +1,4 @@
 import Foundation
-import Alamofire
-import LeavnCore
 
 // MARK: - Network Service Protocol
 public protocol NetworkService {
@@ -11,20 +9,35 @@ public protocol NetworkService {
     func download(_ endpoint: Endpoint) async throws -> URL
 }
 
+// MARK: - HTTP Method
+public enum HTTPMethod: String {
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case patch = "PATCH"
+    case delete = "DELETE"
+}
+
+// MARK: - Parameter Encoding
+public enum ParameterEncoding {
+    case url
+    case json
+}
+
 // MARK: - Endpoint Definition
 public struct Endpoint {
     public let path: String
     public let method: HTTPMethod
-    public let parameters: Parameters?
-    public let headers: HTTPHeaders?
+    public let parameters: [String: Any]?
+    public let headers: [String: String]?
     public let encoding: ParameterEncoding
     
     public init(
         path: String,
         method: HTTPMethod = .get,
-        parameters: Parameters? = nil,
-        headers: HTTPHeaders? = nil,
-        encoding: ParameterEncoding = URLEncoding.default
+        parameters: [String: Any]? = nil,
+        headers: [String: String]? = nil,
+        encoding: ParameterEncoding = .url
     ) {
         self.path = path
         self.method = method
@@ -36,25 +49,17 @@ public struct Endpoint {
 
 // MARK: - Network Service Implementation
 public final class DefaultNetworkService: NetworkService {
-    private let session: Session
+    private let session: URLSession
     private let configuration: LeavnConfiguration
-    private let interceptor: RequestInterceptor?
     
-    public init(
-        configuration: LeavnConfiguration,
-        interceptor: RequestInterceptor? = nil
-    ) {
+    public init(configuration: LeavnConfiguration) {
         self.configuration = configuration
-        self.interceptor = interceptor
         
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 30
         config.timeoutIntervalForResource = 300
         
-        self.session = Session(
-            configuration: config,
-            interceptor: interceptor
-        )
+        self.session = URLSession(configuration: config)
     }
     
     public func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
@@ -64,25 +69,43 @@ public final class DefaultNetworkService: NetworkService {
     
     public func request(_ endpoint: Endpoint) async throws -> Data {
         let url = configuration.baseURL.appendingPathComponent(endpoint.path)
+        var request = URLRequest(url: url)
+        request.httpMethod = endpoint.method.rawValue
         
-        return try await withCheckedThrowingContinuation { continuation in
-            session.request(
-                url,
-                method: endpoint.method,
-                parameters: endpoint.parameters,
-                encoding: endpoint.encoding,
-                headers: endpoint.headers
-            )
-            .validate()
-            .responseData { response in
-                switch response.result {
-                case .success(let data):
-                    continuation.resume(returning: data)
-                case .failure(let error):
-                    continuation.resume(throwing: self.mapError(error))
+        // Add headers
+        endpoint.headers?.forEach { key, value in
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+        
+        // Add parameters
+        if let parameters = endpoint.parameters {
+            switch endpoint.encoding {
+            case .url:
+                if endpoint.method == .get {
+                    var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+                    components?.queryItems = parameters.map { URLQueryItem(name: $0.key, value: "\($0.value)") }
+                    request.url = components?.url
+                } else {
+                    request.httpBody = parameters.map { "\($0.key)=\($0.value)" }.joined(separator: "&").data(using: .utf8)
+                    request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
                 }
+            case .json:
+                request.httpBody = try JSONSerialization.data(withJSONObject: parameters)
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             }
         }
+        
+        let (data, response) = try await session.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw LeavnError.networkError(underlying: nil)
+        }
+        
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw mapHTTPError(statusCode: httpResponse.statusCode)
+        }
+        
+        return data
     }
     
     public func requestData(_ endpoint: Endpoint) async throws -> Data {
@@ -91,76 +114,75 @@ public final class DefaultNetworkService: NetworkService {
     
     public func upload<T: Decodable>(_ endpoint: Endpoint, data: Data) async throws -> T {
         let url = configuration.baseURL.appendingPathComponent(endpoint.path)
+        var request = URLRequest(url: url)
+        request.httpMethod = endpoint.method.rawValue
+        request.httpBody = data
         
-        return try await withCheckedThrowingContinuation { continuation in
-            session.upload(
-                data,
-                to: url,
-                method: endpoint.method,
-                headers: endpoint.headers
-            )
-            .validate()
-            .responseDecodable(of: T.self) { response in
-                switch response.result {
-                case .success(let value):
-                    continuation.resume(returning: value)
-                case .failure(let error):
-                    continuation.resume(throwing: self.mapError(error))
-                }
-            }
+        // Add headers
+        endpoint.headers?.forEach { key, value in
+            request.setValue(value, forHTTPHeaderField: key)
         }
+        
+        let (responseData, response) = try await session.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw LeavnError.networkError(underlying: nil)
+        }
+        
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw mapHTTPError(statusCode: httpResponse.statusCode)
+        }
+        
+        return try JSONDecoder().decode(T.self, from: responseData)
     }
     
     public func download(_ endpoint: Endpoint) async throws -> URL {
         let url = configuration.baseURL.appendingPathComponent(endpoint.path)
-        let destination = DownloadRequest.suggestedDownloadDestination()
+        var request = URLRequest(url: url)
+        request.httpMethod = endpoint.method.rawValue
         
-        return try await withCheckedThrowingContinuation { continuation in
-            session.download(
-                url,
-                method: endpoint.method,
-                parameters: endpoint.parameters,
-                encoding: endpoint.encoding,
-                headers: endpoint.headers,
-                to: destination
-            )
-            .validate()
-            .response { response in
-                if let fileURL = response.fileURL {
-                    continuation.resume(returning: fileURL)
-                } else if let error = response.error {
-                    continuation.resume(throwing: self.mapError(error))
-                } else {
-                    continuation.resume(throwing: LeavnError.unknown)
-                }
-            }
+        // Add headers
+        endpoint.headers?.forEach { key, value in
+            request.setValue(value, forHTTPHeaderField: key)
         }
+        
+        let (localURL, response) = try await session.download(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw LeavnError.networkError(underlying: nil)
+        }
+        
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw mapHTTPError(statusCode: httpResponse.statusCode)
+        }
+        
+        // Move to permanent location
+        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let destinationURL = documentsPath.appendingPathComponent(url.lastPathComponent)
+        
+        try? FileManager.default.removeItem(at: destinationURL)
+        try FileManager.default.moveItem(at: localURL, to: destinationURL)
+        
+        return destinationURL
     }
     
-    private func mapError(_ error: AFError) -> LeavnError {
-        switch error {
-        case .responseValidationFailed(let reason):
-            switch reason {
-            case .unacceptableStatusCode(let code):
-                switch code {
-                case 401:
-                    return .unauthorized
-                case 404:
-                    return .notFound
-                case 500...599:
-                    return .serverError(message: "Server error: \\(code)")
-                default:
-                    return .networkError(underlying: error)
-                }
-            default:
-                return .networkError(underlying: error)
-            }
-        case .responseSerializationFailed:
-            return .decodingError(underlying: error)
+    private func mapHTTPError(statusCode: Int) -> LeavnError {
+        switch statusCode {
+        case 401:
+            return .unauthorized
+        case 404:
+            return .notFound
+        case 500...599:
+            return .serverError(message: "Server error: \(statusCode)")
         default:
-            return .networkError(underlying: error)
+            return .networkError(underlying: nil)
         }
     }
+}
+
+// MARK: - Request Interceptor Protocol
+public protocol RequestInterceptor {
+    func adapt(_ request: URLRequest) async -> URLRequest
 }
 
 // MARK: - Auth Interceptor
@@ -171,17 +193,11 @@ public final class AuthInterceptor: RequestInterceptor {
         self.tokenProvider = tokenProvider
     }
     
-    public func adapt(
-        _ urlRequest: URLRequest,
-        for session: Session,
-        completion: @escaping (Result<URLRequest, Error>) -> Void
-    ) {
-        Task {
-            var request = urlRequest
-            if let token = await tokenProvider() {
-                request.setValue("Bearer \\(token)", forHTTPHeaderField: "Authorization")
-            }
-            completion(.success(request))
+    public func adapt(_ request: URLRequest) async -> URLRequest {
+        var modifiedRequest = request
+        if let token = await tokenProvider() {
+            modifiedRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
+        return modifiedRequest
     }
 }

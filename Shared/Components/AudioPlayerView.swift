@@ -1,6 +1,11 @@
 import SwiftUI
 import AVFoundation
-import LeavnServices
+
+// MARK: - Type Aliases for Legacy Code
+typealias LeavnServices = DIContainer
+typealias AudioService = AudioServiceProtocol
+typealias BibleService = BibleServiceProtocol
+typealias VoiceConfigurationService = VoiceConfigurationServiceProtocol
 
 /// Audio player component for Bible narration with ElevenLabs integration
 /// Works across all platforms with adaptive controls
@@ -456,73 +461,70 @@ public struct MiniAudioPlayerView: View {
 
 // MARK: - Dummy Services for Legacy Mode
 @MainActor
-private final class DummyAudioService: AudioService {
-    @Published var isPlaying = false
-    @Published var isLoading = false
-    @Published var currentTime: TimeInterval = 0
-    @Published var duration: TimeInterval = 0
-    @Published var playbackSpeed: Float = 1.0
-    @Published var currentChapter: AudioChapter? = nil
-    @Published var playbackQueue: [AudioChapter] = []
+private final class DummyAudioService: AudioServiceProtocol {
+    func getAudioChapter(book: String, chapter: Int) async throws -> AudioChapter {
+        return AudioChapter(id: "\(book)_\(chapter)", bookId: book, bookName: book, chapter: chapter, audioUrl: "", duration: 0)
+    }
     
-    func loadChapter(_ chapter: AudioChapter) async throws {}
-    func play() async throws {}
-    func pause() {}
-    func stop() {}
-    func seek(to time: TimeInterval) {}
-    func setPlaybackSpeed(_ speed: Float) {}
-    func skipToNext() async throws {}
-    func skipToPrevious() async throws {}
-    func addToQueue(_ chapter: AudioChapter) {}
-    func removeFromQueue(at index: Int) {}
-    func clearQueue() {}
+    func playAudio(chapter: AudioChapter) async throws {}
+    func pauseAudio() async throws {}
+    func stopAudio() async throws {}
+    func setVolume(_ volume: Double) async throws {}
+    func setPlaybackSpeed(_ speed: Double) async throws {}
 }
 
-private final class DummyBibleService: BibleService {
-    func fetchVerse(reference: String, translation: String?) async throws -> BibleVerse {
-        throw LeavnError.notImplemented("Dummy service")
+private final class DummyBibleService: BibleServiceProtocol {
+    func getAvailableTranslations() async throws -> [BibleTranslation] { [] }
+    func getChapter(book: String, chapter: Int, translation: String) async throws -> BibleChapter {
+        throw AudioPlayerError.notImplemented("Dummy service")
     }
-    func fetchChapter(book: String, chapter: Int, translation: String?) async throws -> BibleChapter {
-        throw LeavnError.notImplemented("Dummy service")
+    func searchVerses(query: String, translation: String) async throws -> [BibleVerse] { [] }
+    func getDailyVerse() async throws -> BibleVerse {
+        throw AudioPlayerError.notImplemented("Dummy service")
     }
-    func fetchTranslations() async throws -> [BibleTranslation] { [] }
-    func search(query: String, translation: String?) async throws -> [BibleSearchResult] { [] }
-    func getBooks(includeApocrypha: Bool) async throws -> [BibleBook] { [] }
-    func fetchPassage(reference: String, translation: String?) async throws -> BiblePassage {
-        throw LeavnError.notImplemented("Dummy service")
-    }
+    func getBooks() async throws -> [BibleBook] { [] }
+}
+
+enum AudioPlayerError: Error {
+    case notImplemented(String)
 }
 
 @MainActor
-private final class DummyVoiceConfigService: VoiceConfigurationService {
-    @Published var selectedVoices: [String: String] = [:]
-    @Published var userPreferences = VoicePreferences()
-    @Published var availableVoices: [Voice] = []
-    
-    func setVoice(_ voiceId: String, for book: String) {}
-    func getVoice(for book: String) -> String { "" }
-    func resetToDefaults() {}
-    func updatePreferences(_ preferences: VoicePreferences) {}
-    func loadVoices() async {}
-    func previewVoice(_ voiceId: String, text: String) async throws {}
+private final class DummyVoiceConfigService: VoiceConfigurationServiceProtocol {
+    func getAvailableVoices() async throws -> [Voice] { [] }
+    func getVoicePreferences() async throws -> VoicePreferences {
+        let defaultVoice = Voice(id: "default", name: "Default", language: "en", gender: "neutral")
+        return VoicePreferences(selectedVoice: defaultVoice)
+    }
+    func setVoicePreferences(_ preferences: VoicePreferences) async throws {}
 }
 
-private final class DummyElevenLabsService: ElevenLabsService {
+private final class DummyElevenLabsService {
     func synthesizeText(_ text: String, voiceId: String, settings: VoiceSettings?) async throws -> AudioData {
-        throw LeavnError.notImplemented("Dummy service")
+        throw AudioPlayerError.notImplemented("Dummy service")
     }
     func getAvailableVoices() async throws -> [Voice] { [] }
     func getVoiceSettings(voiceId: String) async throws -> VoiceSettings {
-        throw LeavnError.notImplemented("Dummy service")
+        throw AudioPlayerError.notImplemented("Dummy service")
     }
     func getUserSubscription() async throws -> SubscriptionInfo {
-        throw LeavnError.notImplemented("Dummy service")
+        throw AudioPlayerError.notImplemented("Dummy service")
     }
 }
 
-private final class DummyCacheManager: AudioCacheManager {
+public struct SubscriptionInfo: Codable {
+    public let isActive: Bool
+    public let plan: String
+    
+    public init(isActive: Bool, plan: String) {
+        self.isActive = isActive
+        self.plan = plan
+    }
+}
+
+private final class DummyCacheManager {
     func cacheAudio(_ data: Data, for chapter: AudioChapter) async throws -> URL {
-        throw LeavnError.notImplemented("Dummy service")
+        throw AudioPlayerError.notImplemented("Dummy service")
     }
     func getCachedAudioURL(for chapter: AudioChapter) -> URL? { nil }
     func isCached(_ chapter: AudioChapter) -> Bool { false }
@@ -538,7 +540,7 @@ struct AudioPlayerView_Previews: PreviewProvider {
         VStack(spacing: 20) {
             // Legacy mode preview
             AudioPlayerView(
-                audioState: AudioPlayerState(
+                viewModel: AudioPlayerViewModel(), audioState: AudioPlayerState(
                     isPlaying: true,
                     currentTime: 125,
                     duration: 847,

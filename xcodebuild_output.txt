@@ -1,0 +1,8 @@
+Command line invocation:
+    /Applications/Xcode-beta.app/Contents/Developer/usr/bin/xcodebuild build -project Leavn.xcodeproj -scheme Leavn -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 16 Pro Max,OS=26.0" -configuration Debug
+
+Build settings from command line:
+    SDKROOT = iphonesimulator26.0
+
+Resolve Package Graph
+the package manifest at '/Users/wsig/Cursor Repos/LeavnOfficial/Packages/LeavnCore/Package.swift' cannot be accessed (/Users/wsig/Cursor Repos/LeavnOfficial/Packages/LeavnCore/Package.swift doesn't exist in file system)

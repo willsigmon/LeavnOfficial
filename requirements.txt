@@ -1,0 +1,29 @@
+# App Store Connect API Integration Requirements
+# 
+# This file contains the Python dependencies required for the App Store Connect API integration module.
+# Install with: pip install -r requirements.txt
+
+# JWT token generation and validation
+PyJWT==2.8.0
+
+# Cryptography library for ES256 signature support (required by PyJWT for ES256)
+cryptography==41.0.7
+
+# HTTP requests library for making API calls
+requests==2.31.0
+
+# Environment variable management
+python-dotenv==1.0.0
+
+# Optional: For better JSON handling (already included in standard library)
+# json
+
+# Optional: For advanced logging (already included in standard library)
+# logging
+
+# Development dependencies (optional)
+# pytest==7.4.3              # For testing
+# pytest-mock==3.12.0        # For mocking in tests
+# black==23.11.0              # Code formatting
+# flake8==6.1.0               # Code linting
+# mypy==1.7.1                 # Type checking

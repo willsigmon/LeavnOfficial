@@ -1,6 +1,4 @@
 import Foundation
-import LeavnCore
-import LeavnServices
 
 public struct FetchVerseUseCase: UseCase {
     public typealias Input = String // Bible reference

@@ -1,6 +1,45 @@
 import Foundation
-import LeavnCore
-import Factory
+
+// import Factory - Removed external dependency
+
+// MARK: - Leavn Error Types
+public enum LeavnError: LocalizedError, Equatable {
+    case networkError(String)
+    case bibleServiceError(String)
+    case audioServiceError(String)
+    case searchServiceError(String)
+    case libraryServiceError(String)
+    case communityServiceError(String)
+    case userDataError(String)
+    case configurationError(String)
+    case systemError(String)
+    case unknown(String)
+    
+    public var errorDescription: String? {
+        switch self {
+        case .networkError(let message):
+            return "Network error: \(message)"
+        case .bibleServiceError(let message):
+            return "Bible service error: \(message)"
+        case .audioServiceError(let message):
+            return "Audio service error: \(message)"
+        case .searchServiceError(let message):
+            return "Search service error: \(message)"
+        case .libraryServiceError(let message):
+            return "Library service error: \(message)"
+        case .communityServiceError(let message):
+            return "Community service error: \(message)"
+        case .userDataError(let message):
+            return "User data error: \(message)"
+        case .configurationError(let message):
+            return "Configuration error: \(message)"
+        case .systemError(let message):
+            return "System error: \(message)"
+        case .unknown(let message):
+            return "Unknown error: \(message)"
+        }
+    }
+}
 
 // MARK: - Error Recovery Service
 public protocol ErrorRecoveryService {
@@ -40,15 +79,16 @@ public enum ErrorRecoveryStrategy {
 
 // MARK: - Default Error Recovery Service
 public final class DefaultErrorRecoveryService: ErrorRecoveryService {
-    @Injected(\.networkService) private var networkService: NetworkService
-    @Injected(\.authenticationService) private var authService: AuthenticationService
-    @Injected(\.analyticsService) private var analyticsService: AnalyticsService
+    // TODO: Restore when Factory is available
+    // @Injected(\.networkService) private var networkService: NetworkService
+    // @Injected(\.authenticationService) private var authService: AuthenticationService
+    // @Injected(\.analyticsService) private var analyticsService: AnalyticsService
     
     public init() {}
     
     public func handleError(_ error: Error) -> ErrorRecoveryStrategy {
-        // Log error to analytics
-        analyticsService.trackError(error)
+        // TODO: Log error to analytics when service is available
+        // analyticsService.trackError(error)
         
         // Determine recovery strategy based on error type
         if let leavnError = error as? LeavnError {
@@ -134,27 +174,27 @@ public final class DefaultErrorRecoveryService: ErrorRecoveryService {
     }
     
     private func executeAuthentication() async throws {
-        // Trigger authentication flow
-        try await authService.signOut()
+        // TODO: Trigger authentication flow when service is available
+        // try await authService.signOut()
         // The UI should detect the sign-out and show login screen
     }
     
     private func executeClearCacheAndRetry() async throws {
-        // Clear various caches
-        if let audioCache = try? Container.shared.audioCacheManager() {
-            try audioCache.clearCache()
-        }
-        
-        if let bibleCache = Container.shared.bibleCacheManager() {
-            try await bibleCache.clearCache()
-        }
+        // TODO: Clear various caches when services are available
+        // if let audioCache = try? Container.shared.audioCacheManager() {
+        //     try audioCache.clearCache()
+        // }
+        // 
+        // if let bibleCache = Container.shared.bibleCacheManager() {
+        //     try await bibleCache.clearCache()
+        // }
         
         // Clear URL cache
         URLCache.shared.removeAllCachedResponses()
     }
     
     private func logErrorForSupport(_ error: Error) {
-        let errorInfo: [String: Any] = [
+        let _: [String: Any] = [
             "error_type": String(describing: type(of: error)),
             "error_description": error.localizedDescription,
             "timestamp": Date().timeIntervalSince1970,
@@ -162,7 +202,8 @@ public final class DefaultErrorRecoveryService: ErrorRecoveryService {
             "os_version": ProcessInfo.processInfo.operatingSystemVersionString
         ]
         
-        analyticsService.trackError(error, additionalInfo: errorInfo)
+        // TODO: Track error when analytics service is available
+        // analyticsService.trackError(error, additionalInfo: errorInfo)
     }
 }
 

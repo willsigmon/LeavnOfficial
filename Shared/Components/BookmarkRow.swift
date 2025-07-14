@@ -1,5 +1,4 @@
 import SwiftUI
-import LeavnServices
 
 /// A reusable row component for displaying bookmarked verses
 /// Works across all platforms with adaptive layouts
