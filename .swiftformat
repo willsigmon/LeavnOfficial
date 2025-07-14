@@ -1,0 +1,77 @@
+# SwiftFormat Configuration
+
+# Format Options
+--swiftversion 6.0
+--indent 4
+--indentcase false
+--trimwhitespace always
+--voidtype tuple
+--nospaceoperators ..<, ...
+--stripunusedargs closure-only
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--maxwidth 120
+
+# Rules
+--enable blankLinesBetweenScopes
+--enable consecutiveBlankLines
+--enable consecutiveSpaces
+--enable duplicateImports
+--enable elseOnSameLine
+--enable emptyBraces
+--enable initCoderUnavailable
+--enable leadingDelimiters
+--enable numberFormatting
+--enable preferKeyPath
+--enable redundantBreak
+--enable redundantExtensionACL
+--enable redundantFileprivate
+--enable redundantGet
+--enable redundantInit
+--enable redundantLet
+--enable redundantLetError
+--enable redundantNilInit
+--enable redundantObjc
+--enable redundantParens
+--enable redundantPattern
+--enable redundantRawValues
+--enable redundantReturn
+--enable redundantSelf
+--enable redundantType
+--enable redundantVoidReturnType
+--enable semicolons
+--enable sortImports
+--enable sortedSwitchCases
+--enable spaceAroundBraces
+--enable spaceAroundBrackets
+--enable spaceAroundComments
+--enable spaceAroundGenerics
+--enable spaceAroundOperators
+--enable spaceAroundParens
+--enable spaceInsideBraces
+--enable spaceInsideBrackets
+--enable spaceInsideComments
+--enable spaceInsideGenerics
+--enable spaceInsideParens
+--enable todos
+--enable trailingClosures
+--enable typeSugar
+--enable void
+--enable wrapArguments
+--enable wrapAttributes
+--enable wrapEnumCases
+--enable wrapSwitchCases
+
+# Disabled Rules
+--disable andOperator
+--disable wrapMultilineStatementBraces
+
+# Excluded Paths
+--exclude .build
+--exclude .swiftpm
+--exclude DerivedData
+--exclude Pods
+--exclude vendor
+--exclude Carthage
+--exclude "**/*.generated.swift"

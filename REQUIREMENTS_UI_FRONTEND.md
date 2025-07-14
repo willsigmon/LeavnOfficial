@@ -1,264 +1,330 @@
-# Leavn App - UI/Frontend Requirements (Agent 2)
+# UI/Frontend Requirements Document
 
-## Overview
-This document outlines the UI/Frontend requirements for the Leavn Bible app, focusing on view and asset integrations as specified by Agent 2.
+## Design System Specifications
 
-## Current UI Architecture
+### Color Palette
+- **Primary Colors**
+  - Primary: #007AFF (iOS Blue)
+  - Secondary: #34C759 (Success Green)
+  - Tertiary: #FF3B30 (Error Red)
+  - Warning: #FF9500 (Warning Orange)
 
-### Core UI Structure
-- **Main Entry**: `MainTabView.swift` - Custom tab bar implementation with 5 main sections
-  - Bible (book icon)
-  - Search (magnifyingglass icon)
-  - Library (books.vertical icon)
-  - Community (person.3 icon)
-  - Settings (gearshape icon)
+- **Neutral Colors**
+  - Background: Dynamic (Light: #FFFFFF, Dark: #000000)
+  - Surface: Dynamic (Light: #F2F2F7, Dark: #1C1C1E)
+  - Text Primary: Dynamic (Light: #000000, Dark: #FFFFFF)
+  - Text Secondary: Dynamic (Light: #3C3C43, Dark: #EBEBF5)
 
-### Design System
-- **Theme**: `LeavnTheme.swift` - Vibrant, whimsical design system
-  - Primary gradient: Light purple to deeper purple
-  - Accent colors: Purple-based palette
-  - Special colors: Jesus words (warm red), semantic colors (success/warning/error/info)
-  - Glass morphism effects with ultra-thin materials
-  - Rich motion system with spring animations
+### Typography
+- **Font Family**: SF Pro Display (iOS/macOS), SF Pro Text (body text)
+- **Font Sizes**
+  - Large Title: 34pt
+  - Title 1: 28pt
+  - Title 2: 22pt
+  - Title 3: 20pt
+  - Headline: 17pt (Semibold)
+  - Body: 17pt
+  - Callout: 16pt
+  - Subheadline: 15pt
+  - Footnote: 13pt
+  - Caption 1: 12pt
+  - Caption 2: 11pt
 
-### Platform-Specific Views
-Currently implemented platform-specific views:
-- **macOS**: `MacBibleView.swift`, `MacBibleViewModel.swift`
-- **visionOS**: `VisionBibleStudyView.swift`, `VisionBibleStudyViewModel.swift`, `VisionImmersiveSpaceView.swift`
-- **watchOS**: `WatchBibleView.swift`, `WatchBibleViewModel.swift`
+### Spacing System
+- Base unit: 4pt
+- Spacing scale: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96
 
-## Requirements for UI Manifest Integration
+### Corner Radius
+- Small: 4pt
+- Medium: 8pt
+- Large: 12pt
+- Extra Large: 20pt
+- Continuous corners for iOS/macOS
 
-### Sub-agent 2.1: UI Manifest Requirements
+## Platform-Specific UI Guidelines
 
-#### Target Configuration for Project.swift
+### iOS/iPadOS
+- **Navigation**
+  - Use `NavigationStack` for hierarchical navigation
+  - Implement `NavigationSplitView` for iPad
+  - Support swipe-to-go-back gesture
+  - Dynamic Type support required
+
+- **Layout Adaptation**
+  - Compact width: Single column
+  - Regular width: Multi-column support
+  - Support all device orientations
+  - Safe area compliance
+
+- **Interactions**
+  - Haptic feedback for important actions
+  - Pull-to-refresh where applicable
+  - Swipe actions for list items
+  - Context menus for additional options
+
+### macOS
+- **Window Management**
+  - Resizable windows with minimum size: 800x600
+  - Support for multiple windows
+  - Toolbar customization
+  - Full screen mode support
+
+- **Menu Bar**
+  - Complete menu structure
+  - Keyboard shortcuts for all major actions
+  - Standard macOS menu conventions
+
+- **Mouse & Trackpad**
+  - Hover states for interactive elements
+  - Right-click context menus
+  - Cursor changes for different states
+
+### watchOS
+- **Complications**
+  - Support all complication families
+  - Real-time data updates
+  - Complication descriptors
+
+- **Layout**
+  - Vertical scrolling only
+  - Large tap targets (44pt minimum)
+  - Crown navigation support
+
+### visionOS
+- **Spatial Design**
+  - Glass materials for panels
+  - Depth and layering
+  - Proximity-aware interactions
+  - Window positioning in 3D space
+
+- **Interactions**
+  - Eye tracking support
+  - Hand gesture recognition
+  - Voice commands
+  - Spatial audio feedback
+
+## Component Library Documentation
+
+### Buttons
 ```swift
-.target(
-    name: "LeavnUI",
-    dependencies: [
-        "DesignSystem",
-        "LeavnCore",
-        "LeavnBible",
-        "LeavnSearch",
-        "LeavnLibrary",
-        "LeavnCommunity",
-        "LeavnSettings"
-    ],
-    sources: ["Sources/UI/**"],
-    resources: [
-        .process("Resources/Assets.xcassets"),
-        .process("Resources/Fonts"),
-        .process("Resources/Localizations")
-    ]
+// Primary Button
+Button(action: {}) {
+    Text("Primary Action")
+}
+.buttonStyle(.borderedProminent)
+
+// Secondary Button
+Button(action: {}) {
+    Text("Secondary Action")
+}
+.buttonStyle(.bordered)
+
+// Destructive Button
+Button(role: .destructive, action: {}) {
+    Text("Delete")
+}
+```
+
+### Lists
+```swift
+// Standard List
+List {
+    Section("Section Title") {
+        ForEach(items) { item in
+            ListRow(item: item)
+        }
+    }
+}
+.listStyle(.insetGrouped) // iOS
+.listStyle(.sidebar) // macOS
+```
+
+### Forms
+```swift
+Form {
+    Section("User Information") {
+        TextField("Name", text: $name)
+        SecureField("Password", text: $password)
+        Toggle("Enable Notifications", isOn: $notificationsEnabled)
+    }
+}
+```
+
+### Cards
+```swift
+struct CardView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            // Content
+        }
+        .padding()
+        .background(Color(.systemBackground))
+        .cornerRadius(12)
+        .shadow(radius: 2)
+    }
+}
+```
+
+### Modals & Sheets
+```swift
+.sheet(isPresented: $showingSheet) {
+    SheetContent()
+        .presentationDetents([.medium, .large]) // iOS 16+
+        .presentationDragIndicator(.visible)
+}
+```
+
+## Accessibility Requirements
+
+### VoiceOver Support
+- All interactive elements must have accessibility labels
+- Proper accessibility hints for complex interactions
+- Logical reading order
+- Grouped elements where appropriate
+
+### Dynamic Type
+- Support all Dynamic Type sizes
+- Text must scale appropriately
+- Layout must adapt without truncation
+- Images should scale with text when relevant
+
+### Color & Contrast
+- Minimum contrast ratio: 4.5:1 for normal text
+- Minimum contrast ratio: 3:1 for large text
+- Support for increased contrast mode
+- Don't rely solely on color to convey information
+
+### Motion
+- Respect "Reduce Motion" preference
+- Provide alternatives to motion-based interactions
+- Smooth animations with appropriate duration
+
+### Keyboard Navigation (macOS)
+- Full keyboard navigation support
+- Visual focus indicators
+- Tab order must be logical
+- Escape key dismisses modals
+
+## Animation and Interaction Patterns
+
+### Animation Timing
+- **Fast**: 0.2s (quick state changes)
+- **Medium**: 0.3s (standard transitions)
+- **Slow**: 0.5s (complex animations)
+- **Spring**: Response: 0.5, Damping: 0.8
+
+### Standard Animations
+```swift
+// Fade In/Out
+.transition(.opacity)
+.animation(.easeInOut(duration: 0.3), value: isVisible)
+
+// Scale
+.scaleEffect(isPressed ? 0.95 : 1.0)
+.animation(.spring(response: 0.3, dampingFraction: 0.6), value: isPressed)
+
+// Slide
+.transition(.asymmetric(
+    insertion: .move(edge: .trailing),
+    removal: .move(edge: .leading)
+))
+```
+
+### Gesture Recognizers
+```swift
+// Tap Gesture
+.onTapGesture {
+    // Action
+}
+
+// Long Press
+.onLongPressGesture(minimumDuration: 0.5) {
+    // Action
+}
+
+// Drag Gesture
+.gesture(
+    DragGesture()
+        .onChanged { value in
+            // Update during drag
+        }
+        .onEnded { value in
+            // Finalize
+        }
 )
 ```
 
-#### Asset Integration Requirements
-1. **Assets.xcassets Migration**
-   - Move from `Leavn/Assets.xcassets` to structured resources
-   - Ensure AccentColor and AppIcon sets are preserved
-   - Add platform-specific icon variants
+### Loading States
+- Show loading indicators for operations > 0.5s
+- Skeleton screens for content loading
+- Progress indicators for deterministic operations
+- Error states with retry options
 
-2. **Resource Processing**
-   - Process all image assets for multiple resolutions
-   - Include PDF vectors for scalable graphics
-   - Optimize PNG assets for size
+### Feedback Patterns
+- **Visual**: Highlight, color change, animation
+- **Haptic**: Impact, selection, notification feedback
+- **Audio**: System sounds for important actions
+- **Combination**: Layer multiple feedback types
 
-### Sub-agent 2.2: Platform-Specific View Requirements
+## Design Tokens
 
-#### Platform Conditional Dependencies
+### Shadows
 ```swift
-.target(
-    name: "LeavnUI",
-    destinations: [.iOS, .macOS, .watchOS, .visionOS, .tvOS],
-    dependencies: [
-        .target(name: "DesignSystem"),
-        .product(name: "LeavnCore", package: "LeavnCore"),
-        .product(name: "LeavnModules", package: "LeavnModules")
-    ],
-    sources: ["Sources/UI/**"],
-    swiftSettings: [
-        .define("PLATFORM_IOS", .when(platforms: [.iOS])),
-        .define("PLATFORM_MACOS", .when(platforms: [.macOS])),
-        .define("PLATFORM_WATCHOS", .when(platforms: [.watchOS])),
-        .define("PLATFORM_VISIONOS", .when(platforms: [.visionOS]))
-    ]
-)
+// Elevation levels
+.shadow(color: .black.opacity(0.1), radius: 2, y: 1) // Low
+.shadow(color: .black.opacity(0.15), radius: 4, y: 2) // Medium
+.shadow(color: .black.opacity(0.2), radius: 8, y: 4) // High
 ```
 
-#### Migration Structure
-```
-Sources/UI/
-├── Shared/
-│   ├── MainTabView.swift
-│   ├── ContentView.swift
-│   └── Components/
-├── iOS/
-│   └── (iOS-specific views)
-├── macOS/
-│   ├── MacBibleView.swift
-│   └── MacBibleViewModel.swift
-├── watchOS/
-│   ├── WatchBibleView.swift
-│   └── WatchBibleViewModel.swift
-└── visionOS/
-    ├── VisionBibleStudyView.swift
-    ├── VisionBibleStudyViewModel.swift
-    └── VisionImmersiveSpaceView.swift
-```
-
-### Sub-agent 2.3: Manifest Generation and Editing
-
-#### Required Manifests
-1. **Package.swift Updates**
-   - Add UI target with proper dependencies
-   - Configure platform-specific compilation conditions
-   - Set up resource processing rules
-
-2. **Info.plist Requirements**
-   - Scene configuration for multi-window support
-   - Privacy descriptions for camera/photo library access
-   - URL schemes for deep linking
-
-3. **Entitlements**
-   - Push notifications
-   - CloudKit
-   - App Groups (for widgets)
-
-#### MainTabView.swift Updates Required
-1. **Import Cleanup**
-   - Remove duplicate/commented imports (lines 9-11)
-   - Ensure all module imports are valid
-
-2. **Platform Adaptations**
-   ```swift
-   #if os(iOS)
-   // iOS-specific tab bar implementation
-   #elseif os(macOS)
-   // macOS sidebar implementation
-   #elseif os(watchOS)
-   // watchOS page-based navigation
-   #elseif os(visionOS)
-   // visionOS ornament-based navigation
-   #endif
-   ```
-
-3. **Accessibility**
-   - Add accessibility labels to all tab items
-   - Support VoiceOver navigation
-   - Include keyboard shortcuts for macOS
-
-## Component Library Requirements
-
-### Shared Components (from DesignSystem)
-- **ActionButton**: Primary action buttons with vibrant styling
-- **ErrorView**: Consistent error state display
-- **LoadingView**: Animated loading states
-- **LeavnCard**: Glass morphism card container
-- **LeavnSearchBar**: Unified search input
-- **LeavnTabBar**: Custom tab bar component
-- **VibrantComponents**: Collection of animated UI elements
-
-### Platform-Specific Components Needed
-1. **iOS/iPadOS**
-   - Adaptive split view for iPad
-   - Context menus
-   - Swipe actions
-
-2. **macOS**
-   - Window toolbar
-   - Menu bar items
-   - Keyboard shortcuts
-
-3. **watchOS**
-   - Complications
-   - Digital Crown navigation
-   - Glanceable views
-
-4. **visionOS**
-   - Ornaments
-   - Immersive spaces
-   - 3D content views
-
-## Asset Requirements
-
-### Required Assets
-1. **App Icons**
-   - iOS: 1024x1024 + all required sizes
-   - macOS: 16x16 to 1024x1024
-   - watchOS: Circular variants
-   - visionOS: 3D layer variants
-
-2. **Launch Assets**
-   - Storyboard-based launch screens
-   - Platform-specific splash screens
-
-3. **Custom Fonts**
-   - Georgia for Bible reading
-   - SF Rounded for UI elements
-   - Fallback system fonts
-
-4. **Color Assets**
-   - Dark/Light mode variants
-   - High contrast accessibility variants
-   - Platform-specific tints
-
-## Tuist Integration Commands
-
-### Required Commands
-```bash
-# Generate Xcode project
-tuist generate
-
-# Edit manifests in Xcode
-tuist edit
-
-# Fetch dependencies
-tuist fetch
-
-# Clean and regenerate
-tuist clean
-tuist generate
-```
-
-### Build Configuration
-- Use xcconfig files for build settings
-- Configure schemes for each platform
-- Set up test targets
-
-## Testing Requirements
-
-### UI Testing Targets
+### Blur Effects
 ```swift
-.target(
-    name: "LeavnUITests",
-    dependencies: ["LeavnUI"],
-    sources: ["Tests/UITests/**"]
-)
+.background(.ultraThinMaterial) // Subtle
+.background(.thinMaterial) // Light
+.background(.regularMaterial) // Standard
+.background(.thickMaterial) // Heavy
 ```
 
-### Snapshot Testing
-- Configure for all platforms
-- Test in light/dark modes
-- Verify accessibility states
+### Grid System
+- Column count: 12 (flexible)
+- Gutter: 16pt (compact), 20pt (regular)
+- Margins: 16pt (compact), 20pt (regular)
 
-## Migration Checklist
+## Platform Adaptation Rules
 
-- [ ] Create LeavnUI target in Project.swift
-- [ ] Move views to appropriate platform folders
-- [ ] Update imports in all view files
-- [ ] Migrate Assets.xcassets to resources
-- [ ] Configure platform-specific build settings
-- [ ] Update MainTabView for platform adaptations
-- [ ] Add accessibility identifiers
-- [ ] Configure Info.plist for each platform
-- [ ] Set up entitlements
-- [ ] Run `tuist generate` and verify build
-- [ ] Test on all target platforms
+### Content Density
+- **iOS**: Spacious, touch-optimized
+- **macOS**: Compact, information-dense
+- **watchOS**: Minimal, glanceable
+- **visionOS**: Spatial, layered
 
-## Notes
+### Navigation Patterns
+- **iOS**: Tab bar, navigation stack
+- **macOS**: Sidebar, toolbar, menu bar
+- **watchOS**: Page-based, hierarchical
+- **visionOS**: Spatial, volumetric
 
-- The app uses a vibrant, whimsical design language with purple gradients
-- Glass morphism is a key visual element
-- Custom tab bar provides unified navigation across platforms
-- Platform-specific views should maintain design consistency while respecting platform conventions
+### Input Methods
+- **iOS**: Touch, gestures
+- **macOS**: Mouse, keyboard, trackpad
+- **watchOS**: Crown, touch, gestures
+- **visionOS**: Eyes, hands, voice
+
+## Performance Guidelines
+
+### Image Optimization
+- Use SF Symbols where possible
+- Vector assets for scalability
+- Appropriate compression for raster images
+- Lazy loading for large image sets
+
+### Animation Performance
+- Prefer SwiftUI animations over custom
+- Use `drawingGroup()` for complex animations
+- Minimize view hierarchy changes during animation
+- Profile with Instruments
+
+### Memory Management
+- Lazy loading for off-screen content
+- Proper image caching strategies
+- Release resources when views disappear
+- Monitor memory usage in different states

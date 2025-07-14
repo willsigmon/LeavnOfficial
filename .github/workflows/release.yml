@@ -1,0 +1,160 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode_16.0.app/Contents/Developer
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: macos-14
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+  build-ios-release:
+    name: Build iOS Release
+    runs-on: macos-14
+    needs: create-release
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Select Xcode
+      run: sudo xcode-select -s $DEVELOPER_DIR
+      
+    - name: Install Dependencies
+      run: |
+        brew install xcbeautify
+        if [ -f "project.yml" ]; then
+          brew install xcodegen
+          xcodegen generate
+        fi
+        
+    - name: Setup Certificates
+      env:
+        CERTIFICATES_P12: ${{ secrets.CERTIFICATES_P12 }}
+        CERTIFICATES_PASSWORD: ${{ secrets.CERTIFICATES_PASSWORD }}
+        PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE }}
+      run: |
+        # Create variables
+        CERTIFICATE_PATH=$RUNNER_TEMP/certificate.p12
+        PP_PATH=$RUNNER_TEMP/provisioning_profile.mobileprovision
+        KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+        KEYCHAIN_PASSWORD=$(openssl rand -base64 32)
+        
+        # Import certificate
+        echo -n "$CERTIFICATES_P12" | base64 --decode -o $CERTIFICATE_PATH
+        echo -n "$PROVISIONING_PROFILE" | base64 --decode -o $PP_PATH
+        
+        # Create keychain
+        security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+        security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+        security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+        
+        # Import certificate to keychain
+        security import $CERTIFICATE_PATH -P "$CERTIFICATES_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+        security list-keychain -d user -s $KEYCHAIN_PATH
+        
+        # Apply provisioning profile
+        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+        cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+        
+    - name: Build Archive
+      run: |
+        xcodebuild archive \
+          -scheme Leavn-iOS \
+          -configuration Release \
+          -archivePath $RUNNER_TEMP/Leavn-iOS.xcarchive \
+          -allowProvisioningUpdates \
+          | xcbeautify
+          
+    - name: Export Archive
+      run: |
+        xcodebuild -exportArchive \
+          -archivePath $RUNNER_TEMP/Leavn-iOS.xcarchive \
+          -exportPath $RUNNER_TEMP/export \
+          -exportOptionsPlist ExportOptions.plist \
+          | xcbeautify
+          
+    - name: Upload IPA
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ${{ runner.temp }}/export/Leavn.ipa
+        asset_name: Leavn-iOS.ipa
+        asset_content_type: application/octet-stream
+
+  build-macos-release:
+    name: Build macOS Release
+    runs-on: macos-14
+    needs: create-release
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Select Xcode
+      run: sudo xcode-select -s $DEVELOPER_DIR
+      
+    - name: Install Dependencies
+      run: |
+        brew install xcbeautify
+        if [ -f "project.yml" ]; then
+          brew install xcodegen
+          xcodegen generate
+        fi
+        
+    - name: Build Archive
+      run: |
+        xcodebuild archive \
+          -scheme Leavn-macOS \
+          -configuration Release \
+          -archivePath $RUNNER_TEMP/Leavn-macOS.xcarchive \
+          | xcbeautify
+          
+    - name: Export Archive
+      run: |
+        xcodebuild -exportArchive \
+          -archivePath $RUNNER_TEMP/Leavn-macOS.xcarchive \
+          -exportPath $RUNNER_TEMP/export \
+          -exportOptionsPlist ExportOptions-macOS.plist \
+          | xcbeautify
+          
+    - name: Create DMG
+      run: |
+        create-dmg \
+          --volname "Leavn" \
+          --window-pos 200 120 \
+          --window-size 600 400 \
+          --icon-size 100 \
+          --icon "Leavn.app" 175 120 \
+          --hide-extension "Leavn.app" \
+          --app-drop-link 425 120 \
+          "$RUNNER_TEMP/Leavn-macOS.dmg" \
+          "$RUNNER_TEMP/export/Leavn.app"
+          
+    - name: Upload DMG
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ${{ runner.temp }}/Leavn-macOS.dmg
+        asset_name: Leavn-macOS.dmg
+        asset_content_type: application/octet-stream

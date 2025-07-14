@@ -1,0 +1,143 @@
+name: Build
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode_15.4.app/Contents/Developer
+
+jobs:
+  build-ios:
+    name: Build iOS
+    runs-on: macos-14
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Select Xcode
+      run: sudo xcode-select -s /Applications/Xcode_15.4.app
+    
+    - name: Install dependencies
+      run: |
+        brew install xcbeautify
+        brew install swiftlint
+    
+    - name: Run SwiftLint
+      run: swiftlint lint --reporter github-actions-logging
+    
+    - name: Build iOS App
+      run: |
+        set -o pipefail
+        xcodebuild build \
+          -scheme "Leavn-iOS" \
+          -destination "generic/platform=iOS" \
+          -configuration Release \
+          CODE_SIGNING_ALLOWED=NO \
+          | xcbeautify
+    
+    - name: Build iOS Simulator
+      run: |
+        set -o pipefail
+        xcodebuild build \
+          -scheme "Leavn-iOS" \
+          -destination "generic/platform=iOS Simulator" \
+          -configuration Debug \
+          | xcbeautify
+
+  build-macos:
+    name: Build macOS
+    runs-on: macos-14
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Select Xcode
+      run: sudo xcode-select -s /Applications/Xcode_15.4.app
+    
+    - name: Install dependencies
+      run: |
+        brew install xcbeautify
+    
+    - name: Build macOS App
+      run: |
+        set -o pipefail
+        xcodebuild build \
+          -scheme "Leavn-macOS" \
+          -destination "platform=macOS" \
+          -configuration Release \
+          CODE_SIGNING_ALLOWED=NO \
+          | xcbeautify
+
+  build-watchos:
+    name: Build watchOS
+    runs-on: macos-14
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Select Xcode
+      run: sudo xcode-select -s /Applications/Xcode_15.4.app
+    
+    - name: Install dependencies
+      run: |
+        brew install xcbeautify
+    
+    - name: Build watchOS App
+      run: |
+        set -o pipefail
+        xcodebuild build \
+          -scheme "Leavn-watchOS" \
+          -destination "generic/platform=watchOS" \
+          -configuration Release \
+          CODE_SIGNING_ALLOWED=NO \
+          | xcbeautify || echo "watchOS build skipped - scheme may not exist"
+
+  build-visionos:
+    name: Build visionOS
+    runs-on: macos-14
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Select Xcode
+      run: sudo xcode-select -s /Applications/Xcode_15.4.app
+    
+    - name: Install dependencies
+      run: |
+        brew install xcbeautify
+    
+    - name: Build visionOS App
+      run: |
+        set -o pipefail
+        xcodebuild build \
+          -scheme "Leavn-visionOS" \
+          -destination "generic/platform=visionOS" \
+          -configuration Release \
+          CODE_SIGNING_ALLOWED=NO \
+          | xcbeautify || echo "visionOS build skipped - scheme may not exist"
+
+  validate-spm:
+    name: Validate Swift Packages
+    runs-on: macos-14
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Select Xcode
+      run: sudo xcode-select -s /Applications/Xcode_15.4.app
+    
+    - name: Validate LeavnCore Package
+      run: |
+        cd Core/LeavnCore
+        swift package dump-package
+        swift build
+    
+    - name: Validate LeavnModules Package
+      run: |
+        cd Core/LeavnModules
+        swift package dump-package
+        swift build

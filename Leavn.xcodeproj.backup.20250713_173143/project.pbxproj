@@ -1,0 +1,2113 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 63;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		02DF974C9A0377010FAC8246 /* AuthenticationModule in Frameworks */ = {isa = PBXBuildFile; productRef = 778A3E0C9471959BAD203123 /* AuthenticationModule */; };
+		039DF8269777C723D6D1BD2A /* LeavnBible in Frameworks */ = {isa = PBXBuildFile; productRef = D1E149BD5F8C4D639E2A195A /* LeavnBible */; };
+		0417983C6565715F7429D531 /* LeavnBible in Frameworks */ = {isa = PBXBuildFile; productRef = 9ABE0A0B08D37DEF90D91618 /* LeavnBible */; };
+		06615D5D4A3CB95E017CEB74 /* LeavnCore in Frameworks */ = {isa = PBXBuildFile; productRef = 58ECFC1FC782B644F166152F /* LeavnCore */; };
+		0DE5B4583E2136B88D1EE303 /* LeavnBible in Frameworks */ = {isa = PBXBuildFile; productRef = 5E60E898E271B0ED0091061C /* LeavnBible */; };
+		1464C27DD618C4CBC434B967 /* LeavnLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = FC76210E3685FD605C1A1D16 /* LeavnLibrary */; };
+		167AA7A27D4825A34473C673 /* LeavnCore in Frameworks */ = {isa = PBXBuildFile; productRef = 74F51B668038015C78CAD567 /* LeavnCore */; };
+		17FD1595678C5DFD475A6C44 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 5677BB3404E649098C1A45BC /* DesignSystem */; };
+		213AB66ED36F88ABCE12821F /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 9609E6B151913EEF785138BE /* DesignSystem */; };
+		2C19DA7C3E0899F8E4265392 /* AnalyticsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 342C8E0772947E8408B5BD8B /* AnalyticsKit */; };
+		3199018A8416C09DDAE70BB4 /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48837856E6319296D9CE346 /* AppConfiguration.swift */; };
+		36620664E4896EA5A3D33F4A /* LeavnApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF8BB8130C4E3CE03F8ABD3 /* LeavnApp.swift */; };
+		37F7B3410A212A7D733CAB56 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 1862FA2AB81A6E4B07C1271F /* DesignSystem */; };
+		3A2F294083F79B9B2231474B /* PersistenceKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1D07196E72A40F5D05899ADA /* PersistenceKit */; };
+		3A328AE076F88E6EE174CAE9 /* LeavnCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7ADE1E40842C287FAE354C6C /* LeavnCore */; };
+		3E361D3F7458905D21EF0028 /* LeavnSettings in Frameworks */ = {isa = PBXBuildFile; productRef = DA28AFF18D4AC4B1A5563935 /* LeavnSettings */; };
+		414D472BF2824F8411B99BBD /* LeavnUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8328F3C367628229F2B5C76 /* LeavnUITestsLaunchTests.swift */; };
+		4303F226AA2790680EE0AA32 /* LeavnApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87770F5AD37D68979FA7D90F /* LeavnApp.swift */; };
+		44951A15D682291D11650D3D /* LeavnApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50173D4EBBB6D94CF3132FB2 /* LeavnApp.swift */; };
+		47F66D43B2A1CDF432F96DD9 /* LeavnCommunity in Frameworks */ = {isa = PBXBuildFile; productRef = C006793551F6E68343F1BCE5 /* LeavnCommunity */; };
+		49515DF10FE2660B523AA43F /* LeavnServices in Frameworks */ = {isa = PBXBuildFile; productRef = BB87D4DD9BDFDF629DEAAEC3 /* LeavnServices */; };
+		565F4F3D644E848DCE32D8B3 /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48837856E6319296D9CE346 /* AppConfiguration.swift */; };
+		5744FF670E0474C75D3B0913 /* NetworkingKit in Frameworks */ = {isa = PBXBuildFile; productRef = 95E6FDCB356046264F02268E /* NetworkingKit */; };
+		59BCABA8A811872F4F779286 /* AnalyticsKit in Frameworks */ = {isa = PBXBuildFile; productRef = E6E7B586C287EDA96083BCDC /* AnalyticsKit */; };
+		5D90FA9A7415256AB467E34E /* LeavnCommunity in Frameworks */ = {isa = PBXBuildFile; productRef = FC7C106792E151F1406C0838 /* LeavnCommunity */; };
+		66153EB0CA0C400AB3C82270 /* LeavnSettings in Frameworks */ = {isa = PBXBuildFile; productRef = B26EC880FAE481099CE2B053 /* LeavnSettings */; };
+		666D98599BDC1CA1A1D2F708 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 032F280865848EC599A8512E /* DesignSystem */; };
+		68395DB958D85051AFD651BF /* LeavnApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FCE3D4130F93D8B1D5FC84 /* LeavnApp.swift */; };
+		71E223B1E0AE9B55A36CF51A /* LeavnSearch in Frameworks */ = {isa = PBXBuildFile; productRef = 8CFD3D8D6C24286FE8919E70 /* LeavnSearch */; };
+		751445A4FE2011245B80B394 /* PersistenceKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1989AD66A3D7D806401EB0FE /* PersistenceKit */; };
+		756BA01D600620DA0676D1B2 /* NetworkingKit in Frameworks */ = {isa = PBXBuildFile; productRef = 35B8A8DB3FA517A19B10A1C0 /* NetworkingKit */; };
+		7B6C58F6ABC1BAA34873CB4C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEFECBAAB78AA40AB3E186B2 /* ContentView.swift */; };
+		7B85CC12C19AD405B5AB7D70 /* ErrorRecoveryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EEE341E7E97ABCF3AEBF99A /* ErrorRecoveryService.swift */; };
+		7F139AA4A9523BACF3480B40 /* PersistenceKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8A5FA282F3B0A67A66078721 /* PersistenceKit */; };
+		847A91458A8DB4EFEAE1A1BC /* LeavnLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 2E295AD17E93D2BEFEDA7F5D /* LeavnLibrary */; };
+		84B06458239F161D48974D5F /* PersistenceKit in Frameworks */ = {isa = PBXBuildFile; productRef = CA00F4FA89BD2023CD665295 /* PersistenceKit */; };
+		8B0EE9239A5CFCA38CD20237 /* LeavnSettings in Frameworks */ = {isa = PBXBuildFile; productRef = D3A855E317D0215EBA6B0705 /* LeavnSettings */; };
+		95C685F1F109F42314991DE1 /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48837856E6319296D9CE346 /* AppConfiguration.swift */; };
+		9EEAAF8609FC1283A16ED72A /* ErrorRecoveryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EEE341E7E97ABCF3AEBF99A /* ErrorRecoveryService.swift */; };
+		A285BCFDFD9B88A947CD8387 /* LeavnLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 9591EBC1E5A5670910E7A2E7 /* LeavnLibrary */; };
+		A4F1323D4CF64A54C8664788 /* NetworkingKit in Frameworks */ = {isa = PBXBuildFile; productRef = D3EDA2C7D25C66AE64630FF8 /* NetworkingKit */; };
+		A92EDF08BE57AB5EF8E7A60A /* LeavnCommunity in Frameworks */ = {isa = PBXBuildFile; productRef = 334826DE40DC70BB037CC8A4 /* LeavnCommunity */; };
+		ABCE6C8EEAD61EF70677D071 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 101129FD8C8DFDEE61C92AC2 /* ContentView.swift */; };
+		AD1EBF25090655CADF7418C9 /* LeavnUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C27C39D2B1D6D2306C52438 /* LeavnUITests.swift */; };
+		B51093C7F7DA7F541A19A5AC /* LeavnTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F0F24CE68B699D020D6893 /* LeavnTests.swift */; };
+		B64A5D0A72512931E58A507A /* LeavnServices in Frameworks */ = {isa = PBXBuildFile; productRef = 4F9B3243DC529D67E4BEADBB /* LeavnServices */; };
+		C405D6552652DC9B11DDC66B /* LeavnBible in Frameworks */ = {isa = PBXBuildFile; productRef = 44803FCA1B4A915C275C5412 /* LeavnBible */; };
+		C60127BD30A0EF9FD9339E63 /* ErrorRecoveryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EEE341E7E97ABCF3AEBF99A /* ErrorRecoveryService.swift */; };
+		C714A225D705D477F5B1EEBA /* LeavnSearch in Frameworks */ = {isa = PBXBuildFile; productRef = 646AC529244BFE356F355805 /* LeavnSearch */; };
+		C93323F4FB5BF6A32D8E8110 /* LeavnCore in Frameworks */ = {isa = PBXBuildFile; productRef = 87B8DD0B8F2AAB30F022C061 /* LeavnCore */; };
+		D387EE6A0F4F884FF2DDE480 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D9869725F00CF54A35F43D4 /* ContentView.swift */; };
+		E0F617544446232945D88A21 /* LeavnServices in Frameworks */ = {isa = PBXBuildFile; productRef = 34BE001C5666AFC310BD1779 /* LeavnServices */; };
+		E2D0EA99AFBD3DDBCAAA05B0 /* AuthenticationModule in Frameworks */ = {isa = PBXBuildFile; productRef = DA885BCF73F66A5A9ACD51C0 /* AuthenticationModule */; };
+		EB84E5011EE29E82E183CE2B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9191BE38121F15A7471A57BD /* LaunchScreen.storyboard */; };
+		EE4D5CFEF37B2B44D90C4AE4 /* AuthenticationModule in Frameworks */ = {isa = PBXBuildFile; productRef = 05BAD5F48106E89A77C760C9 /* AuthenticationModule */; };
+		F257DDF52928F38C1273FEEA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9434E664817BC65A19B33B47 /* ContentView.swift */; };
+		F2FADC1DDC2BAC116EA95DE0 /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48837856E6319296D9CE346 /* AppConfiguration.swift */; };
+		F3D5A01E2752A78580397F5A /* NetworkingKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4A360E75BA73D586645F52EB /* NetworkingKit */; };
+		F4F4177467D2D1C1D137CF7D /* AnalyticsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 92FAEC35CA214599D64C87A2 /* AnalyticsKit */; };
+		F677DB2483231E120BC974E1 /* LeavnSearch in Frameworks */ = {isa = PBXBuildFile; productRef = 50EF9EF822C9627CC701B425 /* LeavnSearch */; };
+		FAC5D892B29350FD6F6B835A /* ErrorRecoveryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EEE341E7E97ABCF3AEBF99A /* ErrorRecoveryService.swift */; };
+		FBB85669BEC2A2F39DEA3E29 /* LeavnLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 2126EEBD49B0DC1067703DFB /* LeavnLibrary */; };
+		FED8914656163EA36B718FB6 /* LeavnServices in Frameworks */ = {isa = PBXBuildFile; productRef = 5FE91EDB603DF238D31A9505 /* LeavnServices */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		07452BC6E7E1274571808318 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 80D3060FE8F0E244F5A393E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2B8B28BF8EDE2C3A572D1CE;
+			remoteInfo = "Leavn-iOS";
+		};
+		CD82D5BD392D8801DE71051C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 80D3060FE8F0E244F5A393E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2B8B28BF8EDE2C3A572D1CE;
+			remoteInfo = "Leavn-iOS";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0186C9C9AD109CC77121263D /* Leavn-iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Leavn-iOS.entitlements"; sourceTree = "<group>"; };
+		0251B3C7AC9BE90DF27999F4 /* SearchModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModels.swift; sourceTree = "<group>"; };
+		029A89DA17BAC02A1F25401C /* AuthenticationModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationModels.swift; sourceTree = "<group>"; };
+		02D7976D140A1060153B2FC3 /* remove-nvme-references.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "remove-nvme-references.sh"; sourceTree = "<group>"; };
+		07435FB388C483B2DA658410 /* BibleCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleCacheManager.swift; sourceTree = "<group>"; };
+		0C6EF503BC6E1265BFACB059 /* AuthAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPIClient.swift; sourceTree = "<group>"; };
+		0DC71C4444871FADD2CDE341 /* xcschememanagement.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = xcschememanagement.plist; sourceTree = "<group>"; };
+		0EE202DB16CADE153994ED86 /* Environment.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Environment.xcconfig; sourceTree = "<group>"; };
+		101129FD8C8DFDEE61C92AC2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		15888824D14EA30028D25BAC /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		18A040DEBC19C515FE71EC7A /* LeavnSearchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeavnSearchTests.swift; sourceTree = "<group>"; };
+		1C83EA4C474243709019563D /* BibleServiceConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleServiceConfiguration.swift; sourceTree = "<group>"; };
+		1D9869725F00CF54A35F43D4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		1DF1C9F01AC03AE56E978431 /* clean-and-reset.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "clean-and-reset.sh"; sourceTree = "<group>"; };
+		1EF8BB8130C4E3CE03F8ABD3 /* LeavnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeavnApp.swift; sourceTree = "<group>"; };
+		1EFE770CD7F1FF3E1A3A3D40 /* resolve-packages.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "resolve-packages.sh"; sourceTree = "<group>"; };
+		21305ADC67ABECC9CAEE6EFB /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		2292D7652ACD39944ECCDB5E /* SignUpUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpUseCase.swift; sourceTree = "<group>"; };
+		28DEEA198A65B1F141D97481 /* Leavn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Leavn.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BA6D466BB85F1D7966D343C /* VoiceConfigurationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceConfigurationService.swift; sourceTree = "<group>"; };
+		2CE266C20E1C37A58349F945 /* VerseNarrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerseNarrationService.swift; sourceTree = "<group>"; };
+		32FCE3D4130F93D8B1D5FC84 /* LeavnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeavnApp.swift; sourceTree = "<group>"; };
+		34128263169F8EF1DA1C34A0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		36718CDA02DCCBD3535E5371 /* BibleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleService.swift; sourceTree = "<group>"; };
+		37D768F4D3F6084E3895182E /* setup-code-signing.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "setup-code-signing.sh"; sourceTree = "<group>"; };
+		38EB775AC88FBD79EB080CC2 /* SignInUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInUseCase.swift; sourceTree = "<group>"; };
+		3989F6E2214099DEADD2A658 /* LibraryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryModels.swift; sourceTree = "<group>"; };
+		3A203D15D56E03EF6CEE2EF0 /* ElevenLabsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElevenLabsService.swift; sourceTree = "<group>"; };
+		3A3DE5175C45185D6054371C /* AccessibilityPreviewHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityPreviewHelpers.swift; sourceTree = "<group>"; };
+		3AB7C4301A3CD684E9B4E180 /* SearchContentUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchContentUseCase.swift; sourceTree = "<group>"; };
+		3CADF18849204A31A50FF735 /* Leavn-macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Leavn-macOS.entitlements"; sourceTree = "<group>"; };
+		3D7E4159718320544478CC14 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		3EF300D31DAD35D5DCD42B11 /* setup_development.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = setup_development.sh; sourceTree = "<group>"; };
+		414A9BA61A2964DBD40FA70B /* AnalyticsKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsKitTests.swift; sourceTree = "<group>"; };
+		42856DFDEE181FC57262D60A /* storm-validation-cycle.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "storm-validation-cycle.sh"; sourceTree = "<group>"; };
+		46BFA357A84E66029F0E7108 /* LeavnCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeavnCore.swift; sourceTree = "<group>"; };
+		497E95C9604B2BA2DAEE91B7 /* emergency-project-fix.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "emergency-project-fix.sh"; sourceTree = "<group>"; };
+		499CDE4A195392B9DD1675DD /* fix-module-resolution.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "fix-module-resolution.sh"; sourceTree = "<group>"; };
+		4B2EE30AAC6D6A1B0ACA9AC7 /* full-build-test-cycle.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "full-build-test-cycle.sh"; sourceTree = "<group>"; };
+		4B71736EA00F71564644E610 /* DefaultSearchRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSearchRepository.swift; sourceTree = "<group>"; };
+		4C27C39D2B1D6D2306C52438 /* LeavnUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeavnUITests.swift; sourceTree = "<group>"; };
+		50173D4EBBB6D94CF3132FB2 /* LeavnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeavnApp.swift; sourceTree = "<group>"; };
+		50BDA74BFFFE99473C20D1DE /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
+		518D07981CDDA233B6D36591 /* LeavnModules */ = {isa = PBXFileReference; lastKnownFileType = folder; name = LeavnModules; path = Core/LeavnModules; sourceTree = SOURCE_ROOT; };
+		542841B4893371F0B0758621 /* AccessibleText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibleText.swift; sourceTree = "<group>"; };
+		5568794DAF0836DB58B862C6 /* run_tests.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = run_tests.sh; sourceTree = "<group>"; };
+		584D73FDE7F56BB4975221B4 /* NetworkingKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingKit.swift; sourceTree = "<group>"; };
+		590847817ED6CBC24C0B4286 /* SearchRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchRepository.swift; sourceTree = "<group>"; };
+		5D36EE18115544EF2189D41F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		631344E6BF86A2916290B599 /* BibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleView.swift; sourceTree = "<group>"; };
+		6958FE4032B75E85826438B1 /* LeavnLibraryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeavnLibraryTests.swift; sourceTree = "<group>"; };
+		74F0F24CE68B699D020D6893 /* LeavnTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeavnTests.swift; sourceTree = "<group>"; };
+		757AAF35C5ADF6AC94CAC3FA /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		765124749E3A3147D5154D50 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		773B812438F78C218D2DF986 /* AuthRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRepository.swift; sourceTree = "<group>"; };
+		7EEE341E7E97ABCF3AEBF99A /* ErrorRecoveryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorRecoveryService.swift; sourceTree = "<group>"; };
+		8488A4B7076EF8D00E07993E /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		85AE480C70861E163FBA023C /* SettingsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRepository.swift; sourceTree = "<group>"; };
+		87770F5AD37D68979FA7D90F /* LeavnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeavnApp.swift; sourceTree = "<group>"; };
+		8D4B849A4AC50372736DB50F /* ThemeValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeValidator.swift; sourceTree = "<group>"; };
+		8FE097EA75FDAC266049FFF2 /* fix-build-paths.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "fix-build-paths.sh"; sourceTree = "<group>"; };
+		9191BE38121F15A7471A57BD /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		929D50A4B236958779D4E723 /* test_single_module.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = test_single_module.sh; sourceTree = "<group>"; };
+		9434E664817BC65A19B33B47 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		9733B6BCF02856B204EA060F /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		983A8ADBD74256A3561D08D6 /* BibleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleViewModel.swift; sourceTree = "<group>"; };
+		9A183A50D8879EEBD7CFC76B /* Leavn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Leavn.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C39A552B4473A4650126423 /* FetchVerseUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchVerseUseCase.swift; sourceTree = "<group>"; };
+		9D8A8A3AA721CF60488EE048 /* ci_build.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_build.sh; sourceTree = "<group>"; };
+		9FE22EEEF980EB172E98E8FC /* Leavn.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Leavn.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A019D62CF98783F237CC4E35 /* LeavnButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeavnButton.swift; sourceTree = "<group>"; };
+		A0F13479362B053097D6B9C1 /* BibleBookCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleBookCatalog.swift; sourceTree = "<group>"; };
+		A1495EC7AFD92C6F5BA9518B /* generate-app-icons.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "generate-app-icons.sh"; sourceTree = "<group>"; };
+		A568086E9BA53083FD2887BB /* DIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
+		A58021751F1994A2B494B0D8 /* Leavn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Leavn.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A61B9EC5F34FF4D76483F3D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		A7980972A8887796E9B121A9 /* CommunityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityView.swift; sourceTree = "<group>"; };
+		A93DA4759F223E9E0D1C5DE7 /* Leavn-visionOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Leavn-visionOS.entitlements"; sourceTree = "<group>"; };
+		AB3CB336010423404A0AAF95 /* Leavn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Leavn.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB6A58A9495AD6F9BF854849 /* SettingsUseCases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUseCases.swift; sourceTree = "<group>"; };
+		AC6B9ED4E53BDDF35C62F0CF /* AccessibilityTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityTheme.swift; sourceTree = "<group>"; };
+		AF91AFDE4675F51CD80899AF /* LeavnBibleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeavnBibleTests.swift; sourceTree = "<group>"; };
+		AFC01C1BD2B8D79E1306C9BC /* NetworkingKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingKitTests.swift; sourceTree = "<group>"; };
+		B09E569D741C3149AE5FD970 /* LibraryUseCases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryUseCases.swift; sourceTree = "<group>"; };
+		B1CE99A88A09AECFFE4D7EAA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B25048C6181CA17CC78C9711 /* LibraryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryRepository.swift; sourceTree = "<group>"; };
+		B57475ADD1823EDE70D475E5 /* BibleRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleRepository.swift; sourceTree = "<group>"; };
+		B5C0DFEE34271A003A9B403B /* AnalyticsKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsKit.swift; sourceTree = "<group>"; };
+		B6035E10A851592D14EB25EF /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		B7F65DA0176CF5CAADE65066 /* xcschememanagement.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = xcschememanagement.plist; sourceTree = "<group>"; };
+		BD34BC627969C8F948C6B22E /* build.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build.sh; sourceTree = "<group>"; };
+		BEFECBAAB78AA40AB3E186B2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		C2541C247CF1B18053BB586C /* PersistenceKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceKit.swift; sourceTree = "<group>"; };
+		C3D52018075893C367F56D0B /* AudioPlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerViewModel.swift; sourceTree = "<group>"; };
+		C3EF98A126AB40F812499CDD /* AudioService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioService.swift; sourceTree = "<group>"; };
+		C458D19663DEC0A3320F21EF /* Leavn.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Leavn.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C63E0D6DF15F773BBF482E63 /* AuthenticationModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationModuleTests.swift; sourceTree = "<group>"; };
+		C7772E8DF4EBB2E1A00BAD38 /* PersistenceKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceKitTests.swift; sourceTree = "<group>"; };
+		CB5062EE2E5C41E2939E3AF6 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		CCB2B450347CD461907C5BD9 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		CCE9B55ACC6C05633BC8148A /* AccessibilityGuide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AccessibilityGuide.md; sourceTree = "<group>"; };
+		CD4E91AE93F07BAC08875060 /* AuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationService.swift; sourceTree = "<group>"; };
+		CD55B6A2CA8040FC5736E9B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		CEC9147656FA2427A771867E /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
+		D031567427F9B9D29C5D170E /* AccessibleCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibleCard.swift; sourceTree = "<group>"; };
+		D1DED8C1A7C5F5DB7FCCD05E /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		D228756697AD7C1EB32633CB /* AccessibleLeavnButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibleLeavnButton.swift; sourceTree = "<group>"; };
+		D26661A9FC319C058FA69F9D /* DefaultSettingsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSettingsRepository.swift; sourceTree = "<group>"; };
+		D53240BA11B824F2FCC1D7C8 /* LeavnCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = LeavnCore; path = Core/LeavnCore; sourceTree = SOURCE_ROOT; };
+		D56F1BAD952F20BE3A0423EB /* DefaultAuthRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAuthRepository.swift; sourceTree = "<group>"; };
+		D8328F3C367628229F2B5C76 /* LeavnUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeavnUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		D9AE2736C71BD66C24C8D70B /* AccessibilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityTests.swift; sourceTree = "<group>"; };
+		DB282117309D653E08DFD568 /* AuthFormField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthFormField.swift; sourceTree = "<group>"; };
+		DD2E659B305F280F0C0FDBE8 /* check-app-store-readiness.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "check-app-store-readiness.sh"; sourceTree = "<group>"; };
+		E01E6F5197333FF584FDADC9 /* EnhancedColorTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedColorTheme.swift; sourceTree = "<group>"; };
+		E4944F6A054229B30E22C6A1 /* generate-project.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "generate-project.sh"; sourceTree = "<group>"; };
+		E84447B81E3841F900F07AAB /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
+		EB9A237EE4A2DD3EA5255A38 /* LibraryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViewModel.swift; sourceTree = "<group>"; };
+		EC7C94A621E9047CFB333F3A /* PersistenceKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceKitTests.swift; sourceTree = "<group>"; };
+		EFA861F25DF09E2B276EAFAD /* BibleCache.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BibleCache.xcdatamodel; sourceTree = "<group>"; };
+		F25F802FF27BB06692E631C6 /* LeavnCoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeavnCoreTests.swift; sourceTree = "<group>"; };
+		F48837856E6319296D9CE346 /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
+		F4CA34C5CF1B10DE3B4A5037 /* ViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelProtocol.swift; sourceTree = "<group>"; };
+		F53994085303D67411F25B2D /* DefaultLibraryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultLibraryRepository.swift; sourceTree = "<group>"; };
+		F91BF58A0211F5CE81E6D97D /* SearchBibleUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBibleUseCase.swift; sourceTree = "<group>"; };
+		F9904E8CECB311CB335A5E59 /* SettingsModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModels.swift; sourceTree = "<group>"; };
+		FB7F0464388BC5AD8D240D41 /* NetworkingKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingKitTests.swift; sourceTree = "<group>"; };
+		FBB5FA7BB43A576B26D47785 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		FC69DFD9BEC1F7EAD482481D /* fix-spm-issues.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "fix-spm-issues.sh"; sourceTree = "<group>"; };
+		FE0559ECBE344E25AA92A321 /* Leavn-watchOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Leavn-watchOS.entitlements"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		090E4B88C698027042835F3B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C93323F4FB5BF6A32D8E8110 /* LeavnCore in Frameworks */,
+				E0F617544446232945D88A21 /* LeavnServices in Frameworks */,
+				756BA01D600620DA0676D1B2 /* NetworkingKit in Frameworks */,
+				751445A4FE2011245B80B394 /* PersistenceKit in Frameworks */,
+				59BCABA8A811872F4F779286 /* AnalyticsKit in Frameworks */,
+				666D98599BDC1CA1A1D2F708 /* DesignSystem in Frameworks */,
+				039DF8269777C723D6D1BD2A /* LeavnBible in Frameworks */,
+				C714A225D705D477F5B1EEBA /* LeavnSearch in Frameworks */,
+				A285BCFDFD9B88A947CD8387 /* LeavnLibrary in Frameworks */,
+				8B0EE9239A5CFCA38CD20237 /* LeavnSettings in Frameworks */,
+				47F66D43B2A1CDF432F96DD9 /* LeavnCommunity in Frameworks */,
+				02DF974C9A0377010FAC8246 /* AuthenticationModule in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		40926E5D9BC413CD46EC4C95 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				167AA7A27D4825A34473C673 /* LeavnCore in Frameworks */,
+				B64A5D0A72512931E58A507A /* LeavnServices in Frameworks */,
+				F3D5A01E2752A78580397F5A /* NetworkingKit in Frameworks */,
+				3A2F294083F79B9B2231474B /* PersistenceKit in Frameworks */,
+				F4F4177467D2D1C1D137CF7D /* AnalyticsKit in Frameworks */,
+				17FD1595678C5DFD475A6C44 /* DesignSystem in Frameworks */,
+				0DE5B4583E2136B88D1EE303 /* LeavnBible in Frameworks */,
+				71E223B1E0AE9B55A36CF51A /* LeavnSearch in Frameworks */,
+				847A91458A8DB4EFEAE1A1BC /* LeavnLibrary in Frameworks */,
+				66153EB0CA0C400AB3C82270 /* LeavnSettings in Frameworks */,
+				5D90FA9A7415256AB467E34E /* LeavnCommunity in Frameworks */,
+				EE4D5CFEF37B2B44D90C4AE4 /* AuthenticationModule in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6042E7D8DFBB9535640D5A60 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				06615D5D4A3CB95E017CEB74 /* LeavnCore in Frameworks */,
+				49515DF10FE2660B523AA43F /* LeavnServices in Frameworks */,
+				5744FF670E0474C75D3B0913 /* NetworkingKit in Frameworks */,
+				7F139AA4A9523BACF3480B40 /* PersistenceKit in Frameworks */,
+				2C19DA7C3E0899F8E4265392 /* AnalyticsKit in Frameworks */,
+				213AB66ED36F88ABCE12821F /* DesignSystem in Frameworks */,
+				0417983C6565715F7429D531 /* LeavnBible in Frameworks */,
+				F677DB2483231E120BC974E1 /* LeavnSearch in Frameworks */,
+				1464C27DD618C4CBC434B967 /* LeavnLibrary in Frameworks */,
+				3E361D3F7458905D21EF0028 /* LeavnSettings in Frameworks */,
+				A92EDF08BE57AB5EF8E7A60A /* LeavnCommunity in Frameworks */,
+				E2D0EA99AFBD3DDBCAAA05B0 /* AuthenticationModule in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8ACAF899EF93E325E56D3FE9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A328AE076F88E6EE174CAE9 /* LeavnCore in Frameworks */,
+				FED8914656163EA36B718FB6 /* LeavnServices in Frameworks */,
+				A4F1323D4CF64A54C8664788 /* NetworkingKit in Frameworks */,
+				84B06458239F161D48974D5F /* PersistenceKit in Frameworks */,
+				37F7B3410A212A7D733CAB56 /* DesignSystem in Frameworks */,
+				C405D6552652DC9B11DDC66B /* LeavnBible in Frameworks */,
+				FBB85669BEC2A2F39DEA3E29 /* LeavnLibrary in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		00068B97CB65A81770FC25F8 /* DataSources */ = {
+			isa = PBXGroup;
+			children = (
+				0C6EF503BC6E1265BFACB059 /* AuthAPIClient.swift */,
+			);
+			path = DataSources;
+			sourceTree = "<group>";
+		};
+		009FAED803A90847B057334D /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				F48837856E6319296D9CE346 /* AppConfiguration.swift */,
+				0EE202DB16CADE153994ED86 /* Environment.xcconfig */,
+			);
+			path = Configuration;
+			sourceTree = "<group>";
+		};
+		05C9BD98BCE17E70FDF84F0C /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				EB9A237EE4A2DD3EA5255A38 /* LibraryViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		097395902A32D912C68FAD1E /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				AC6B9ED4E53BDDF35C62F0CF /* AccessibilityTheme.swift */,
+				E01E6F5197333FF584FDADC9 /* EnhancedColorTheme.swift */,
+				8D4B849A4AC50372736DB50F /* ThemeValidator.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		102B623297C05B7EAFE8C00E /* LeavnLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				65791231A1D6BF69E593DE0D /* Data */,
+				B44E977CD337D3D5F99483E8 /* Domain */,
+				E6D91298B1E11966388428C2 /* Presentation */,
+				E84447B81E3841F900F07AAB /* LibraryView.swift */,
+			);
+			path = LeavnLibrary;
+			sourceTree = "<group>";
+		};
+		133161B3CF3744672F88F711 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				CA72AEFCC1AB36A5EB4A0C5D /* Repositories */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		1498B92BE60CBA43ABFCE144 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				D010319F33DF9A03BF81D796 /* DesignSystemTests */,
+				25E0D73518F68D611B37BA4D /* LeavnCoreTests */,
+				31B1FFAEA55A1BB3F64526FE /* NetworkingKitTests */,
+				F27DE769C3C3C2C3995C5265 /* PersistenceKitTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		14E464DA3CBAF3D597010803 /* ErrorHandling */ = {
+			isa = PBXGroup;
+			children = (
+				7EEE341E7E97ABCF3AEBF99A /* ErrorRecoveryService.swift */,
+			);
+			path = ErrorHandling;
+			sourceTree = "<group>";
+		};
+		159E716D8C5593B0E1F90AA0 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				1A9E633640AAC74D3755B2C7 /* AuthenticationModule */,
+				601A60C81C3FA678475664FE /* LeavnBible */,
+				82B8E99BF5017F5E14E17C93 /* LeavnCommunity */,
+				102B623297C05B7EAFE8C00E /* LeavnLibrary */,
+				5E13D7DC0E68801EB861164C /* LeavnSearch */,
+				D9AFBB717AB721DF523D948D /* LeavnSettings */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		1A5CF62199945182DFD0DC14 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				CCB2B450347CD461907C5BD9 /* SettingsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		1A9E633640AAC74D3755B2C7 /* AuthenticationModule */ = {
+			isa = PBXGroup;
+			children = (
+				31C110D911078B989E4F751A /* Data */,
+				4D3F8AE803A77B43A059600D /* Domain */,
+				D01ED91FB850146805199151 /* Presentation */,
+				50BDA74BFFFE99473C20D1DE /* AuthView.swift */,
+			);
+			path = AuthenticationModule;
+			sourceTree = "<group>";
+		};
+		1C57A39D15D68AAC66E518A0 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				FAD5E2DB7EF74CE5FAB0F5A7 /* Components */,
+				563E809E7DFBCCBA73A00AA2 /* Documentation */,
+				8AB34233A38CEF98DFC186E0 /* Preview */,
+				097395902A32D912C68FAD1E /* Theme */,
+				CEC9147656FA2427A771867E /* DesignSystem.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		1D52E6A9729441B78BBD919F /* watchOS */ = {
+			isa = PBXGroup;
+			children = (
+				1D9869725F00CF54A35F43D4 /* ContentView.swift */,
+				B1CE99A88A09AECFFE4D7EAA /* Info.plist */,
+				FE0559ECBE344E25AA92A321 /* Leavn-watchOS.entitlements */,
+				87770F5AD37D68979FA7D90F /* LeavnApp.swift */,
+			);
+			path = watchOS;
+			sourceTree = "<group>";
+		};
+		21AF4C6AA53F1678B07DA7F4 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				F24017A7EE85070F9A6B7CD9 /* ViewModels */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		24041FEF12A4C9E756300E7A /* LeavnUITests */ = {
+			isa = PBXGroup;
+			children = (
+				4C27C39D2B1D6D2306C52438 /* LeavnUITests.swift */,
+				D8328F3C367628229F2B5C76 /* LeavnUITestsLaunchTests.swift */,
+			);
+			path = LeavnUITests;
+			sourceTree = "<group>";
+		};
+		25E0D73518F68D611B37BA4D /* LeavnCoreTests */ = {
+			isa = PBXGroup;
+			children = (
+				3331DE808FD6157A1DDF42ED /* AnalyticsKitTests */,
+				6828D3FF72901B64B9AEB9D7 /* NetworkingKitTests */,
+				499F3C7E677A68F83E8A8D2D /* PersistenceKitTests */,
+				F25F802FF27BB06692E631C6 /* LeavnCoreTests.swift */,
+			);
+			path = LeavnCoreTests;
+			sourceTree = "<group>";
+		};
+		2661E4BE30A3F93A93C654A3 /* wsig.xcuserdatad */ = {
+			isa = PBXGroup;
+			children = (
+				A8D06BCC850ABA9D7251CA67 /* xcschemes */,
+			);
+			path = wsig.xcuserdatad;
+			sourceTree = "<group>";
+		};
+		2AC32B3FC2571557D6E17FC9 /* LeavnCore */ = {
+			isa = PBXGroup;
+			children = (
+				D1DED8C1A7C5F5DB7FCCD05E /* Coordinator.swift */,
+				46BFA357A84E66029F0E7108 /* LeavnCore.swift */,
+				F4CA34C5CF1B10DE3B4A5037 /* ViewModelProtocol.swift */,
+			);
+			path = LeavnCore;
+			sourceTree = "<group>";
+		};
+		2C75627287C6605AAACB6029 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				31441BB05140E084C6FA6DC1 /* AuthenticationModuleTests */,
+				5EB14724856F1A6CF70F3E17 /* LeavnBibleTests */,
+				A6238A81614BCC12722FDE9D /* LeavnLibraryTests */,
+				8D5AEB6D580F8962800A3E2B /* LeavnSearchTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		2FBE350F75C7F07062BF09F8 /* checkouts */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = checkouts;
+			sourceTree = "<group>";
+		};
+		31441BB05140E084C6FA6DC1 /* AuthenticationModuleTests */ = {
+			isa = PBXGroup;
+			children = (
+				C63E0D6DF15F773BBF482E63 /* AuthenticationModuleTests.swift */,
+			);
+			path = AuthenticationModuleTests;
+			sourceTree = "<group>";
+		};
+		31B1FFAEA55A1BB3F64526FE /* NetworkingKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				FB7F0464388BC5AD8D240D41 /* NetworkingKitTests.swift */,
+			);
+			path = NetworkingKitTests;
+			sourceTree = "<group>";
+		};
+		31C110D911078B989E4F751A /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				00068B97CB65A81770FC25F8 /* DataSources */,
+				84A512331251FFFFCADF5C84 /* Repositories */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		3331DE808FD6157A1DDF42ED /* AnalyticsKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				414A9BA61A2964DBD40FA70B /* AnalyticsKitTests.swift */,
+			);
+			path = AnalyticsKitTests;
+			sourceTree = "<group>";
+		};
+		348EE25FB7ABA4382EB26BFE /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				E868268061D251383FBE1882 /* Models */,
+				8CF3B5F088031097BCA03C00 /* Repositories */,
+				626109466E794E37669ADF2C /* UseCases */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		3F0AED509B04236A1EF8BA3A /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				B09E569D741C3149AE5FD970 /* LibraryUseCases.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		499F3C7E677A68F83E8A8D2D /* PersistenceKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				EC7C94A621E9047CFB333F3A /* PersistenceKitTests.swift */,
+			);
+			path = PersistenceKitTests;
+			sourceTree = "<group>";
+		};
+		4A30EDDE2273CADEEDD23C5B /* .build */ = {
+			isa = PBXGroup;
+			children = (
+				D25AF3730D961E04E24F9BB9 /* artifacts */,
+				2FBE350F75C7F07062BF09F8 /* checkouts */,
+				A86A9813F29E0B66885F1A04 /* repositories */,
+			);
+			path = .build;
+			sourceTree = "<group>";
+		};
+		4D3F8AE803A77B43A059600D /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				F9CF4F2422693219E7FD2F48 /* Models */,
+				9E7FAC758BAB9F40E537CAB2 /* Repositories */,
+				6ABE4AC27487EEFDDBF6CA34 /* UseCases */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		555CA3FDABFCCA0360385B14 /* xcuserdata */ = {
+			isa = PBXGroup;
+			children = (
+				2661E4BE30A3F93A93C654A3 /* wsig.xcuserdatad */,
+			);
+			path = xcuserdata;
+			sourceTree = "<group>";
+		};
+		556A79CC8D2728D596F99908 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				DB282117309D653E08DFD568 /* AuthFormField.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		563E809E7DFBCCBA73A00AA2 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+				CCE9B55ACC6C05633BC8148A /* AccessibilityGuide.md */,
+			);
+			path = Documentation;
+			sourceTree = "<group>";
+		};
+		5769B5806A914CAAC8BEB231 /* visionOS */ = {
+			isa = PBXGroup;
+			children = (
+				101129FD8C8DFDEE61C92AC2 /* ContentView.swift */,
+				5D36EE18115544EF2189D41F /* Info.plist */,
+				A93DA4759F223E9E0D1C5DE7 /* Leavn-visionOS.entitlements */,
+				1EF8BB8130C4E3CE03F8ABD3 /* LeavnApp.swift */,
+			);
+			path = visionOS;
+			sourceTree = "<group>";
+		};
+		5A43F573E91D3D2471A4EBC3 /* xcschemes */ = {
+			isa = PBXGroup;
+			children = (
+				B7F65DA0176CF5CAADE65066 /* xcschememanagement.plist */,
+			);
+			path = xcschemes;
+			sourceTree = "<group>";
+		};
+		5B761A85794A890DC17CDEAB /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				B25048C6181CA17CC78C9711 /* LibraryRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		5E13D7DC0E68801EB861164C /* LeavnSearch */ = {
+			isa = PBXGroup;
+			children = (
+				81231E9912115CB3AF09C522 /* Data */,
+				348EE25FB7ABA4382EB26BFE /* Domain */,
+				9C47CD7445AB1E80B1C755A1 /* Presentation */,
+				757AAF35C5ADF6AC94CAC3FA /* SearchView.swift */,
+			);
+			path = LeavnSearch;
+			sourceTree = "<group>";
+		};
+		5EB14724856F1A6CF70F3E17 /* LeavnBibleTests */ = {
+			isa = PBXGroup;
+			children = (
+				AF91AFDE4675F51CD80899AF /* LeavnBibleTests.swift */,
+			);
+			path = LeavnBibleTests;
+			sourceTree = "<group>";
+		};
+		601A60C81C3FA678475664FE /* LeavnBible */ = {
+			isa = PBXGroup;
+			children = (
+				864D4675E07DDD8DFCB19DD0 /* Domain */,
+				21AF4C6AA53F1678B07DA7F4 /* Presentation */,
+				631344E6BF86A2916290B599 /* BibleView.swift */,
+			);
+			path = LeavnBible;
+			sourceTree = "<group>";
+		};
+		626109466E794E37669ADF2C /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				3AB7C4301A3CD684E9B4E180 /* SearchContentUseCase.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		63A42B54D1B9E75AC16E3F27 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				BD34BC627969C8F948C6B22E /* build.sh */,
+				DD2E659B305F280F0C0FDBE8 /* check-app-store-readiness.sh */,
+				9D8A8A3AA721CF60488EE048 /* ci_build.sh */,
+				1DF1C9F01AC03AE56E978431 /* clean-and-reset.sh */,
+				497E95C9604B2BA2DAEE91B7 /* emergency-project-fix.sh */,
+				8FE097EA75FDAC266049FFF2 /* fix-build-paths.sh */,
+				499CDE4A195392B9DD1675DD /* fix-module-resolution.sh */,
+				FC69DFD9BEC1F7EAD482481D /* fix-spm-issues.sh */,
+				4B2EE30AAC6D6A1B0ACA9AC7 /* full-build-test-cycle.sh */,
+				A1495EC7AFD92C6F5BA9518B /* generate-app-icons.sh */,
+				E4944F6A054229B30E22C6A1 /* generate-project.sh */,
+				02D7976D140A1060153B2FC3 /* remove-nvme-references.sh */,
+				1EFE770CD7F1FF3E1A3A3D40 /* resolve-packages.sh */,
+				5568794DAF0836DB58B862C6 /* run_tests.sh */,
+				3EF300D31DAD35D5DCD42B11 /* setup_development.sh */,
+				37D768F4D3F6084E3895182E /* setup-code-signing.sh */,
+				42856DFDEE181FC57262D60A /* storm-validation-cycle.sh */,
+				929D50A4B236958779D4E723 /* test_single_module.sh */,
+			);
+			path = Scripts;
+			sourceTree = "<group>";
+		};
+		65791231A1D6BF69E593DE0D /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				83A0521F175CB30DE0FD8E21 /* Repositories */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		6828D3FF72901B64B9AEB9D7 /* NetworkingKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				AFC01C1BD2B8D79E1306C9BC /* NetworkingKitTests.swift */,
+			);
+			path = NetworkingKitTests;
+			sourceTree = "<group>";
+		};
+		6ABE4AC27487EEFDDBF6CA34 /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				38EB775AC88FBD79EB080CC2 /* SignInUseCase.swift */,
+				2292D7652ACD39944ECCDB5E /* SignUpUseCase.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		73973B83541E7D6310CC9462 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				9733B6BCF02856B204EA060F /* AuthViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		771E57C09E91E65880EE02FF /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				009FAED803A90847B057334D /* Configuration */,
+				14E464DA3CBAF3D597010803 /* ErrorHandling */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		788589D3AD79542AF9B11D13 /* AnalyticsKit */ = {
+			isa = PBXGroup;
+			children = (
+				B5C0DFEE34271A003A9B403B /* AnalyticsKit.swift */,
+			);
+			path = AnalyticsKit;
+			sourceTree = "<group>";
+		};
+		7A09EDD833ED0971798AA044 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				BEFECBAAB78AA40AB3E186B2 /* ContentView.swift */,
+				CD55B6A2CA8040FC5736E9B3 /* Info.plist */,
+				9191BE38121F15A7471A57BD /* LaunchScreen.storyboard */,
+				0186C9C9AD109CC77121263D /* Leavn-iOS.entitlements */,
+				32FCE3D4130F93D8B1D5FC84 /* LeavnApp.swift */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
+		81231E9912115CB3AF09C522 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				F4848820F7E05E6A841F7566 /* Repositories */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		82B8E99BF5017F5E14E17C93 /* LeavnCommunity */ = {
+			isa = PBXGroup;
+			children = (
+				A7980972A8887796E9B121A9 /* CommunityView.swift */,
+			);
+			path = LeavnCommunity;
+			sourceTree = "<group>";
+		};
+		838A9A4948E14760427BECA3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F9904E8CECB311CB335A5E59 /* SettingsModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		83A0521F175CB30DE0FD8E21 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				F53994085303D67411F25B2D /* DefaultLibraryRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		84A512331251FFFFCADF5C84 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				D56F1BAD952F20BE3A0423EB /* DefaultAuthRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		864D4675E07DDD8DFCB19DD0 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				EADEC037221BD9E147B7AD3E /* Repositories */,
+				B00875297E30B6647C729C8A /* UseCases */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		8AB34233A38CEF98DFC186E0 /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				3A3DE5175C45185D6054371C /* AccessibilityPreviewHelpers.swift */,
+			);
+			path = Preview;
+			sourceTree = "<group>";
+		};
+		8C161AAEB846373AE00DE1AB /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				D53240BA11B824F2FCC1D7C8 /* LeavnCore */,
+				518D07981CDDA233B6D36591 /* LeavnModules */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		8CF3B5F088031097BCA03C00 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				590847817ED6CBC24C0B4286 /* SearchRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		8D5AEB6D580F8962800A3E2B /* LeavnSearchTests */ = {
+			isa = PBXGroup;
+			children = (
+				18A040DEBC19C515FE71EC7A /* LeavnSearchTests.swift */,
+			);
+			path = LeavnSearchTests;
+			sourceTree = "<group>";
+		};
+		8EF7B9B3BDC64CB33B372A43 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				CB5062EE2E5C41E2939E3AF6 /* SearchViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		95290CC2D34B86CB0D592724 /* xcode */ = {
+			isa = PBXGroup;
+			children = (
+				D29A61DC6DDD0E1C6BC79CCB /* xcuserdata */,
+			);
+			path = xcode;
+			sourceTree = "<group>";
+		};
+		95EE3356F8993D77FFAC9A9E /* LeavnServices */ = {
+			isa = PBXGroup;
+			children = (
+				C31042F3D8C10270CC00F93A /* Services */,
+				971E1B3DADC2355C13816986 /* BibleCache.xcdatamodeld */,
+				A568086E9BA53083FD2887BB /* DIContainer.swift */,
+			);
+			path = LeavnServices;
+			sourceTree = "<group>";
+		};
+		9C47CD7445AB1E80B1C755A1 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				8EF7B9B3BDC64CB33B372A43 /* ViewModels */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		9E7FAC758BAB9F40E537CAB2 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				773B812438F78C218D2DF986 /* AuthRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		A389816446B937AB44B92DCE /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				34128263169F8EF1DA1C34A0 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A3E9744410BD535BD1C11DE3 /* NetworkingKit */ = {
+			isa = PBXGroup;
+			children = (
+				B6035E10A851592D14EB25EF /* APIClient.swift */,
+				584D73FDE7F56BB4975221B4 /* NetworkingKit.swift */,
+			);
+			path = NetworkingKit;
+			sourceTree = "<group>";
+		};
+		A6238A81614BCC12722FDE9D /* LeavnLibraryTests */ = {
+			isa = PBXGroup;
+			children = (
+				6958FE4032B75E85826438B1 /* LeavnLibraryTests.swift */,
+			);
+			path = LeavnLibraryTests;
+			sourceTree = "<group>";
+		};
+		A7C440560B8E424CBE2E5B23 /* macOS */ = {
+			isa = PBXGroup;
+			children = (
+				9434E664817BC65A19B33B47 /* ContentView.swift */,
+				A61B9EC5F34FF4D76483F3D3 /* Info.plist */,
+				3CADF18849204A31A50FF735 /* Leavn-macOS.entitlements */,
+				50173D4EBBB6D94CF3132FB2 /* LeavnApp.swift */,
+			);
+			path = macOS;
+			sourceTree = "<group>";
+		};
+		A86A9813F29E0B66885F1A04 /* repositories */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = repositories;
+			sourceTree = "<group>";
+		};
+		A8D06BCC850ABA9D7251CA67 /* xcschemes */ = {
+			isa = PBXGroup;
+			children = (
+				0DC71C4444871FADD2CDE341 /* xcschememanagement.plist */,
+			);
+			path = xcschemes;
+			sourceTree = "<group>";
+		};
+		AC2F6F14B1ACD4883CF47853 /* LeavnCore */ = {
+			isa = PBXGroup;
+			children = (
+				4A30EDDE2273CADEEDD23C5B /* .build */,
+				B56F26488F9447671EB8BA40 /* .swiftpm */,
+				CB48391193210D9C7A64C482 /* Sources */,
+				1498B92BE60CBA43ABFCE144 /* Tests */,
+				21305ADC67ABECC9CAEE6EFB /* Package.swift */,
+			);
+			path = LeavnCore;
+			sourceTree = "<group>";
+		};
+		ADB51EBED5523131E97E4BB1 /* LeavnModules */ = {
+			isa = PBXGroup;
+			children = (
+				B6E77D46B59A676E7CFE2085 /* .swiftpm */,
+				159E716D8C5593B0E1F90AA0 /* Sources */,
+				2C75627287C6605AAACB6029 /* Tests */,
+				765124749E3A3147D5154D50 /* Package.swift */,
+			);
+			path = LeavnModules;
+			sourceTree = "<group>";
+		};
+		AE98AA38D7ADBB6E0FB59CDC /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				85AE480C70861E163FBA023C /* SettingsRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		B00875297E30B6647C729C8A /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				9C39A552B4473A4650126423 /* FetchVerseUseCase.swift */,
+				F91BF58A0211F5CE81E6D97D /* SearchBibleUseCase.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		B44E977CD337D3D5F99483E8 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				FD6AFFEACC64EDEEEED076AC /* Models */,
+				5B761A85794A890DC17CDEAB /* Repositories */,
+				3F0AED509B04236A1EF8BA3A /* UseCases */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		B56F26488F9447671EB8BA40 /* .swiftpm */ = {
+			isa = PBXGroup;
+			children = (
+				95290CC2D34B86CB0D592724 /* xcode */,
+			);
+			path = .swiftpm;
+			sourceTree = "<group>";
+		};
+		B6E77D46B59A676E7CFE2085 /* .swiftpm */ = {
+			isa = PBXGroup;
+			children = (
+				F439CFE2A430EB6FC5A29CBD /* xcode */,
+			);
+			path = .swiftpm;
+			sourceTree = "<group>";
+		};
+		B999FA275E842E6F218E5522 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				838A9A4948E14760427BECA3 /* Models */,
+				AE98AA38D7ADBB6E0FB59CDC /* Repositories */,
+				C6D5E975CFF4E10E57F5A4CE /* UseCases */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		C1A887189E1A53A09D18CF33 /* Platform */ = {
+			isa = PBXGroup;
+			children = (
+				7A09EDD833ED0971798AA044 /* iOS */,
+				A7C440560B8E424CBE2E5B23 /* macOS */,
+				5769B5806A914CAAC8BEB231 /* visionOS */,
+				1D52E6A9729441B78BBD919F /* watchOS */,
+			);
+			path = Platform;
+			sourceTree = "<group>";
+		};
+		C31042F3D8C10270CC00F93A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				C3D52018075893C367F56D0B /* AudioPlayerViewModel.swift */,
+				C3EF98A126AB40F812499CDD /* AudioService.swift */,
+				CD4E91AE93F07BAC08875060 /* AuthenticationService.swift */,
+				A0F13479362B053097D6B9C1 /* BibleBookCatalog.swift */,
+				07435FB388C483B2DA658410 /* BibleCacheManager.swift */,
+				36718CDA02DCCBD3535E5371 /* BibleService.swift */,
+				1C83EA4C474243709019563D /* BibleServiceConfiguration.swift */,
+				3A203D15D56E03EF6CEE2EF0 /* ElevenLabsService.swift */,
+				FBB5FA7BB43A576B26D47785 /* HapticManager.swift */,
+				2CE266C20E1C37A58349F945 /* VerseNarrationService.swift */,
+				2BA6D466BB85F1D7966D343C /* VoiceConfigurationService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		C5FB489E3C94AAE96B79A7C0 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				1A5CF62199945182DFD0DC14 /* ViewModels */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		C6D5E975CFF4E10E57F5A4CE /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				AB6A58A9495AD6F9BF854849 /* SettingsUseCases.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		CA72AEFCC1AB36A5EB4A0C5D /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				D26661A9FC319C058FA69F9D /* DefaultSettingsRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		CB48391193210D9C7A64C482 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				788589D3AD79542AF9B11D13 /* AnalyticsKit */,
+				1C57A39D15D68AAC66E518A0 /* DesignSystem */,
+				2AC32B3FC2571557D6E17FC9 /* LeavnCore */,
+				95EE3356F8993D77FFAC9A9E /* LeavnServices */,
+				A3E9744410BD535BD1C11DE3 /* NetworkingKit */,
+				FF4803481B89E25CF213E925 /* PersistenceKit */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		D010319F33DF9A03BF81D796 /* DesignSystemTests */ = {
+			isa = PBXGroup;
+			children = (
+				D9AE2736C71BD66C24C8D70B /* AccessibilityTests.swift */,
+			);
+			path = DesignSystemTests;
+			sourceTree = "<group>";
+		};
+		D01ED91FB850146805199151 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				73973B83541E7D6310CC9462 /* ViewModels */,
+				EE0CB7B50A3E263D8AC00FCE /* Views */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		D25AF3730D961E04E24F9BB9 /* artifacts */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = artifacts;
+			sourceTree = "<group>";
+		};
+		D29A61DC6DDD0E1C6BC79CCB /* xcuserdata */ = {
+			isa = PBXGroup;
+			children = (
+				F8E79F26E0233EED9A2C5289 /* wsig.xcuserdatad */,
+			);
+			path = xcuserdata;
+			sourceTree = "<group>";
+		};
+		D9AFBB717AB721DF523D948D /* LeavnSettings */ = {
+			isa = PBXGroup;
+			children = (
+				133161B3CF3744672F88F711 /* Data */,
+				B999FA275E842E6F218E5522 /* Domain */,
+				C5FB489E3C94AAE96B79A7C0 /* Presentation */,
+				3D7E4159718320544478CC14 /* SettingsView.swift */,
+			);
+			path = LeavnSettings;
+			sourceTree = "<group>";
+		};
+		DB837334BEFCEC4BA70E78DC /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				AC2F6F14B1ACD4883CF47853 /* LeavnCore */,
+				ADB51EBED5523131E97E4BB1 /* LeavnModules */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		E065151F56BB5312791BB656 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A58021751F1994A2B494B0D8 /* Leavn.app */,
+				28DEEA198A65B1F141D97481 /* Leavn.app */,
+				AB3CB336010423404A0AAF95 /* Leavn.app */,
+				9A183A50D8879EEBD7CFC76B /* Leavn.app */,
+				9FE22EEEF980EB172E98E8FC /* Leavn.xctest */,
+				C458D19663DEC0A3320F21EF /* Leavn.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E47E02216ACC3195D2D45371 = {
+			isa = PBXGroup;
+			children = (
+				DB837334BEFCEC4BA70E78DC /* Core */,
+				EE126EF9ABA3D329716AB303 /* Leavn */,
+				F28E0CF8D9B550306AEB51F8 /* LeavnTests */,
+				24041FEF12A4C9E756300E7A /* LeavnUITests */,
+				8C161AAEB846373AE00DE1AB /* Packages */,
+				A389816446B937AB44B92DCE /* Resources */,
+				63A42B54D1B9E75AC16E3F27 /* Scripts */,
+				E065151F56BB5312791BB656 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E6D91298B1E11966388428C2 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				05C9BD98BCE17E70FDF84F0C /* ViewModels */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		E868268061D251383FBE1882 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				0251B3C7AC9BE90DF27999F4 /* SearchModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		EADEC037221BD9E147B7AD3E /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				B57475ADD1823EDE70D475E5 /* BibleRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		EE0CB7B50A3E263D8AC00FCE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				556A79CC8D2728D596F99908 /* Components */,
+				15888824D14EA30028D25BAC /* SignInView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		EE126EF9ABA3D329716AB303 /* Leavn */ = {
+			isa = PBXGroup;
+			children = (
+				C1A887189E1A53A09D18CF33 /* Platform */,
+				771E57C09E91E65880EE02FF /* Sources */,
+			);
+			path = Leavn;
+			sourceTree = "<group>";
+		};
+		F24017A7EE85070F9A6B7CD9 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				983A8ADBD74256A3561D08D6 /* BibleViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F27DE769C3C3C2C3995C5265 /* PersistenceKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				C7772E8DF4EBB2E1A00BAD38 /* PersistenceKitTests.swift */,
+			);
+			path = PersistenceKitTests;
+			sourceTree = "<group>";
+		};
+		F28E0CF8D9B550306AEB51F8 /* LeavnTests */ = {
+			isa = PBXGroup;
+			children = (
+				74F0F24CE68B699D020D6893 /* LeavnTests.swift */,
+			);
+			path = LeavnTests;
+			sourceTree = "<group>";
+		};
+		F439CFE2A430EB6FC5A29CBD /* xcode */ = {
+			isa = PBXGroup;
+			children = (
+				555CA3FDABFCCA0360385B14 /* xcuserdata */,
+			);
+			path = xcode;
+			sourceTree = "<group>";
+		};
+		F4848820F7E05E6A841F7566 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				4B71736EA00F71564644E610 /* DefaultSearchRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		F8E79F26E0233EED9A2C5289 /* wsig.xcuserdatad */ = {
+			isa = PBXGroup;
+			children = (
+				5A43F573E91D3D2471A4EBC3 /* xcschemes */,
+			);
+			path = wsig.xcuserdatad;
+			sourceTree = "<group>";
+		};
+		F9CF4F2422693219E7FD2F48 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				029A89DA17BAC02A1F25401C /* AuthenticationModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		FAD5E2DB7EF74CE5FAB0F5A7 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				D031567427F9B9D29C5D170E /* AccessibleCard.swift */,
+				D228756697AD7C1EB32633CB /* AccessibleLeavnButton.swift */,
+				542841B4893371F0B0758621 /* AccessibleText.swift */,
+				A019D62CF98783F237CC4E35 /* LeavnButton.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		FD6AFFEACC64EDEEEED076AC /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3989F6E2214099DEADD2A658 /* LibraryModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		FF4803481B89E25CF213E925 /* PersistenceKit */ = {
+			isa = PBXGroup;
+			children = (
+				8488A4B7076EF8D00E07993E /* CoreDataStack.swift */,
+				C2541C247CF1B18053BB586C /* PersistenceKit.swift */,
+			);
+			path = PersistenceKit;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		11B5AE888447842ABDDD3A7F /* Leavn-watchOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1C9361213DEE41EC2847EE02 /* Build configuration list for PBXNativeTarget "Leavn-watchOS" */;
+			buildPhases = (
+				7648395C020C4789EA106035 /* Sources */,
+				8ACAF899EF93E325E56D3FE9 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Leavn-watchOS";
+			packageProductDependencies = (
+				7ADE1E40842C287FAE354C6C /* LeavnCore */,
+				5FE91EDB603DF238D31A9505 /* LeavnServices */,
+				D3EDA2C7D25C66AE64630FF8 /* NetworkingKit */,
+				CA00F4FA89BD2023CD665295 /* PersistenceKit */,
+				1862FA2AB81A6E4B07C1271F /* DesignSystem */,
+				44803FCA1B4A915C275C5412 /* LeavnBible */,
+				2126EEBD49B0DC1067703DFB /* LeavnLibrary */,
+			);
+			productName = "Leavn-watchOS";
+			productReference = 9A183A50D8879EEBD7CFC76B /* Leavn.app */;
+			productType = "com.apple.product-type.application";
+		};
+		44F57DE0DE6B1CF286369DD4 /* Leavn-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8228F153F804613587624754 /* Build configuration list for PBXNativeTarget "Leavn-macOS" */;
+			buildPhases = (
+				C8B16588E4787058C2D65497 /* Sources */,
+				6042E7D8DFBB9535640D5A60 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Leavn-macOS";
+			packageProductDependencies = (
+				58ECFC1FC782B644F166152F /* LeavnCore */,
+				BB87D4DD9BDFDF629DEAAEC3 /* LeavnServices */,
+				95E6FDCB356046264F02268E /* NetworkingKit */,
+				8A5FA282F3B0A67A66078721 /* PersistenceKit */,
+				342C8E0772947E8408B5BD8B /* AnalyticsKit */,
+				9609E6B151913EEF785138BE /* DesignSystem */,
+				9ABE0A0B08D37DEF90D91618 /* LeavnBible */,
+				50EF9EF822C9627CC701B425 /* LeavnSearch */,
+				FC76210E3685FD605C1A1D16 /* LeavnLibrary */,
+				DA28AFF18D4AC4B1A5563935 /* LeavnSettings */,
+				334826DE40DC70BB037CC8A4 /* LeavnCommunity */,
+				DA885BCF73F66A5A9ACD51C0 /* AuthenticationModule */,
+			);
+			productName = "Leavn-macOS";
+			productReference = 28DEEA198A65B1F141D97481 /* Leavn.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8E0E628A31CA559192D3C0DB /* LeavnUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CA4D403904C93F7D9FAB1B82 /* Build configuration list for PBXNativeTarget "LeavnUITests" */;
+			buildPhases = (
+				EB3E9B62C732E80C5131BEB3 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F017C997DAD92819541FA08A /* PBXTargetDependency */,
+			);
+			name = LeavnUITests;
+			packageProductDependencies = (
+			);
+			productName = LeavnUITests;
+			productReference = C458D19663DEC0A3320F21EF /* Leavn.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		9435BF63ECD23F56DDA17F29 /* LeavnTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 99AD49C471147A33D0C7134A /* Build configuration list for PBXNativeTarget "LeavnTests" */;
+			buildPhases = (
+				CC4997C27E7F6DEC4036EC79 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E994714CF092D0E438D480E8 /* PBXTargetDependency */,
+			);
+			name = LeavnTests;
+			packageProductDependencies = (
+			);
+			productName = LeavnTests;
+			productReference = 9FE22EEEF980EB172E98E8FC /* Leavn.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D2B8B28BF8EDE2C3A572D1CE /* Leavn-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D72EAF6BA4BF3BEF84A27684 /* Build configuration list for PBXNativeTarget "Leavn-iOS" */;
+			buildPhases = (
+				626440CB48004252DA980D87 /* Sources */,
+				3E96811C32EF9124F23BBB3F /* Resources */,
+				40926E5D9BC413CD46EC4C95 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Leavn-iOS";
+			packageProductDependencies = (
+				74F51B668038015C78CAD567 /* LeavnCore */,
+				4F9B3243DC529D67E4BEADBB /* LeavnServices */,
+				4A360E75BA73D586645F52EB /* NetworkingKit */,
+				1D07196E72A40F5D05899ADA /* PersistenceKit */,
+				92FAEC35CA214599D64C87A2 /* AnalyticsKit */,
+				5677BB3404E649098C1A45BC /* DesignSystem */,
+				5E60E898E271B0ED0091061C /* LeavnBible */,
+				8CFD3D8D6C24286FE8919E70 /* LeavnSearch */,
+				2E295AD17E93D2BEFEDA7F5D /* LeavnLibrary */,
+				B26EC880FAE481099CE2B053 /* LeavnSettings */,
+				FC7C106792E151F1406C0838 /* LeavnCommunity */,
+				05BAD5F48106E89A77C760C9 /* AuthenticationModule */,
+			);
+			productName = "Leavn-iOS";
+			productReference = A58021751F1994A2B494B0D8 /* Leavn.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D7B65CD08AC12D1F7A802E23 /* Leavn-visionOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 95F27D24C21D20E0333BC28C /* Build configuration list for PBXNativeTarget "Leavn-visionOS" */;
+			buildPhases = (
+				399DB1AEC6F2E5E5274F378E /* Sources */,
+				090E4B88C698027042835F3B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Leavn-visionOS";
+			packageProductDependencies = (
+				87B8DD0B8F2AAB30F022C061 /* LeavnCore */,
+				34BE001C5666AFC310BD1779 /* LeavnServices */,
+				35B8A8DB3FA517A19B10A1C0 /* NetworkingKit */,
+				1989AD66A3D7D806401EB0FE /* PersistenceKit */,
+				E6E7B586C287EDA96083BCDC /* AnalyticsKit */,
+				032F280865848EC599A8512E /* DesignSystem */,
+				D1E149BD5F8C4D639E2A195A /* LeavnBible */,
+				646AC529244BFE356F355805 /* LeavnSearch */,
+				9591EBC1E5A5670910E7A2E7 /* LeavnLibrary */,
+				D3A855E317D0215EBA6B0705 /* LeavnSettings */,
+				C006793551F6E68343F1BCE5 /* LeavnCommunity */,
+				778A3E0C9471959BAD203123 /* AuthenticationModule */,
+			);
+			productName = "Leavn-visionOS";
+			productReference = AB3CB336010423404A0AAF95 /* Leavn.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		80D3060FE8F0E244F5A393E9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					11B5AE888447842ABDDD3A7F = {
+						DevelopmentTeam = "$(DEVELOPMENT_TEAM)";
+						ProvisioningStyle = Automatic;
+					};
+					44F57DE0DE6B1CF286369DD4 = {
+						DevelopmentTeam = "$(DEVELOPMENT_TEAM)";
+						ProvisioningStyle = Automatic;
+					};
+					8E0E628A31CA559192D3C0DB = {
+						DevelopmentTeam = "$(DEVELOPMENT_TEAM)";
+						ProvisioningStyle = Automatic;
+						TestTargetID = D2B8B28BF8EDE2C3A572D1CE;
+					};
+					9435BF63ECD23F56DDA17F29 = {
+						DevelopmentTeam = "$(DEVELOPMENT_TEAM)";
+						ProvisioningStyle = Automatic;
+					};
+					D2B8B28BF8EDE2C3A572D1CE = {
+						ProvisioningStyle = Automatic;
+					};
+					D7B65CD08AC12D1F7A802E23 = {
+						DevelopmentTeam = "$(DEVELOPMENT_TEAM)";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = A42AD87AAC88EE682DBAFE2D /* Build configuration list for PBXProject "Leavn" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = E47E02216ACC3195D2D45371;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				317F6B113D438555170A9111 /* XCLocalSwiftPackageReference "Core/LeavnCore" */,
+				49483054024D68039438D24E /* XCLocalSwiftPackageReference "Core/LeavnModules" */,
+			);
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2B8B28BF8EDE2C3A572D1CE /* Leavn-iOS */,
+				44F57DE0DE6B1CF286369DD4 /* Leavn-macOS */,
+				D7B65CD08AC12D1F7A802E23 /* Leavn-visionOS */,
+				11B5AE888447842ABDDD3A7F /* Leavn-watchOS */,
+				9435BF63ECD23F56DDA17F29 /* LeavnTests */,
+				8E0E628A31CA559192D3C0DB /* LeavnUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3E96811C32EF9124F23BBB3F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EB84E5011EE29E82E183CE2B /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		399DB1AEC6F2E5E5274F378E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				565F4F3D644E848DCE32D8B3 /* AppConfiguration.swift in Sources */,
+				ABCE6C8EEAD61EF70677D071 /* ContentView.swift in Sources */,
+				FAC5D892B29350FD6F6B835A /* ErrorRecoveryService.swift in Sources */,
+				36620664E4896EA5A3D33F4A /* LeavnApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		626440CB48004252DA980D87 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				95C685F1F109F42314991DE1 /* AppConfiguration.swift in Sources */,
+				7B6C58F6ABC1BAA34873CB4C /* ContentView.swift in Sources */,
+				7B85CC12C19AD405B5AB7D70 /* ErrorRecoveryService.swift in Sources */,
+				68395DB958D85051AFD651BF /* LeavnApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7648395C020C4789EA106035 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3199018A8416C09DDAE70BB4 /* AppConfiguration.swift in Sources */,
+				D387EE6A0F4F884FF2DDE480 /* ContentView.swift in Sources */,
+				C60127BD30A0EF9FD9339E63 /* ErrorRecoveryService.swift in Sources */,
+				4303F226AA2790680EE0AA32 /* LeavnApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C8B16588E4787058C2D65497 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F2FADC1DDC2BAC116EA95DE0 /* AppConfiguration.swift in Sources */,
+				F257DDF52928F38C1273FEEA /* ContentView.swift in Sources */,
+				9EEAAF8609FC1283A16ED72A /* ErrorRecoveryService.swift in Sources */,
+				44951A15D682291D11650D3D /* LeavnApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC4997C27E7F6DEC4036EC79 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B51093C7F7DA7F541A19A5AC /* LeavnTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EB3E9B62C732E80C5131BEB3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AD1EBF25090655CADF7418C9 /* LeavnUITests.swift in Sources */,
+				414D472BF2824F8411B99BBD /* LeavnUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E994714CF092D0E438D480E8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2B8B28BF8EDE2C3A572D1CE /* Leavn-iOS */;
+			targetProxy = CD82D5BD392D8801DE71051C /* PBXContainerItemProxy */;
+		};
+		F017C997DAD92819541FA08A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2B8B28BF8EDE2C3A572D1CE /* Leavn-iOS */;
+			targetProxy = 07452BC6E7E1274571808318 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		08214FF792F356033CF7A465 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				DEAD_CODE_STRIPPING = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.leavn.uitests;
+				TEST_TARGET_NAME = "Leavn-iOS";
+			};
+			name = Release;
+		};
+		1779E7D7811C013710F8E10A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				DEAD_CODE_STRIPPING = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.leavn.tests;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Leavn-iOS.app/Leavn-iOS";
+			};
+			name = Debug;
+		};
+		3D45808BFA5D2919BC95CF56 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = "Leavn/Platform/watchOS/Leavn-watchOS.entitlements";
+				DEAD_CODE_STRIPPING = YES;
+				INFOPLIST_FILE = Leavn/Platform/watchOS/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.leavn.watchos;
+				REGISTER_APP_GROUPS = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		5562C6896E01778CC98393FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = "Leavn/Platform/macOS/Leavn-macOS.entitlements";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = Leavn/Platform/macOS/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.leavn.macos;
+				REGISTER_APP_GROUPS = YES;
+			};
+			name = Debug;
+		};
+		673A93D0AD4D3276AEB5D8B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				DEAD_CODE_STRIPPING = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.leavn.uitests;
+				TEST_TARGET_NAME = "Leavn-iOS";
+			};
+			name = Debug;
+		};
+		75DABF624F310D1D466A2A5E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
+				ENABLE_PREVIEWS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0.0;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = Leavn;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_VERSION = 6.2;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+				XROS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		8B8086B1C1B50E806E0A4D8C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = "Leavn/Platform/iOS/Leavn-iOS.entitlements";
+				DEAD_CODE_STRIPPING = YES;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
+				DEVELOPMENT_TEAM = 49HAGQE8FB;
+				INFOPLIST_FILE = Leavn/Platform/iOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Leavn: Modern Bible Study";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.reference";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.leavn.ios;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9834FBC99E7010CFFD40C05A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = "Leavn/Platform/visionOS/Leavn-visionOS.entitlements";
+				DEAD_CODE_STRIPPING = YES;
+				INFOPLIST_FILE = Leavn/Platform/visionOS/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.leavn.visionos;
+				REGISTER_APP_GROUPS = YES;
+				TARGETED_DEVICE_FAMILY = 7;
+				XROS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		A51EFBACAC9373ABB14748B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = "Leavn/Platform/macOS/Leavn-macOS.entitlements";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = Leavn/Platform/macOS/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.leavn.macos;
+				REGISTER_APP_GROUPS = YES;
+			};
+			name = Release;
+		};
+		AB490CF54C60CA5F1B642B71 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
+				ENABLE_PREVIEWS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_NAME = Leavn;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.2;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+				XROS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
+		B0D86C3C167D1D595BD4F38E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = "Leavn/Platform/iOS/Leavn-iOS.entitlements";
+				DEAD_CODE_STRIPPING = YES;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
+				DEVELOPMENT_TEAM = 49HAGQE8FB;
+				INFOPLIST_FILE = Leavn/Platform/iOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Leavn: Modern Bible Study";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.reference";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.leavn.ios;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		BA2938821AD11FB78E5D74C9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				DEAD_CODE_STRIPPING = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.leavn.tests;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Leavn-iOS.app/Leavn-iOS";
+			};
+			name = Release;
+		};
+		BF0F75865CE862E7DB4C91EB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = "Leavn/Platform/watchOS/Leavn-watchOS.entitlements";
+				DEAD_CODE_STRIPPING = YES;
+				INFOPLIST_FILE = Leavn/Platform/watchOS/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.leavn.watchos;
+				REGISTER_APP_GROUPS = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+		D452545394E0172D54515EB9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = "Leavn/Platform/visionOS/Leavn-visionOS.entitlements";
+				DEAD_CODE_STRIPPING = YES;
+				INFOPLIST_FILE = Leavn/Platform/visionOS/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.leavn.visionos;
+				REGISTER_APP_GROUPS = YES;
+				TARGETED_DEVICE_FAMILY = 7;
+				XROS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1C9361213DEE41EC2847EE02 /* Build configuration list for PBXNativeTarget "Leavn-watchOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D45808BFA5D2919BC95CF56 /* Debug */,
+				BF0F75865CE862E7DB4C91EB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8228F153F804613587624754 /* Build configuration list for PBXNativeTarget "Leavn-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5562C6896E01778CC98393FA /* Debug */,
+				A51EFBACAC9373ABB14748B6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		95F27D24C21D20E0333BC28C /* Build configuration list for PBXNativeTarget "Leavn-visionOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9834FBC99E7010CFFD40C05A /* Debug */,
+				D452545394E0172D54515EB9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		99AD49C471147A33D0C7134A /* Build configuration list for PBXNativeTarget "LeavnTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1779E7D7811C013710F8E10A /* Debug */,
+				BA2938821AD11FB78E5D74C9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A42AD87AAC88EE682DBAFE2D /* Build configuration list for PBXProject "Leavn" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75DABF624F310D1D466A2A5E /* Debug */,
+				AB490CF54C60CA5F1B642B71 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CA4D403904C93F7D9FAB1B82 /* Build configuration list for PBXNativeTarget "LeavnUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				673A93D0AD4D3276AEB5D8B7 /* Debug */,
+				08214FF792F356033CF7A465 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D72EAF6BA4BF3BEF84A27684 /* Build configuration list for PBXNativeTarget "Leavn-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8B8086B1C1B50E806E0A4D8C /* Debug */,
+				B0D86C3C167D1D595BD4F38E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		317F6B113D438555170A9111 /* XCLocalSwiftPackageReference "Core/LeavnCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Core/LeavnCore;
+		};
+		49483054024D68039438D24E /* XCLocalSwiftPackageReference "Core/LeavnModules" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Core/LeavnModules;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		032F280865848EC599A8512E /* DesignSystem */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DesignSystem;
+		};
+		05BAD5F48106E89A77C760C9 /* AuthenticationModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AuthenticationModule;
+		};
+		1862FA2AB81A6E4B07C1271F /* DesignSystem */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DesignSystem;
+		};
+		1989AD66A3D7D806401EB0FE /* PersistenceKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PersistenceKit;
+		};
+		1D07196E72A40F5D05899ADA /* PersistenceKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PersistenceKit;
+		};
+		2126EEBD49B0DC1067703DFB /* LeavnLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnLibrary;
+		};
+		2E295AD17E93D2BEFEDA7F5D /* LeavnLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnLibrary;
+		};
+		334826DE40DC70BB037CC8A4 /* LeavnCommunity */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnCommunity;
+		};
+		342C8E0772947E8408B5BD8B /* AnalyticsKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AnalyticsKit;
+		};
+		34BE001C5666AFC310BD1779 /* LeavnServices */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnServices;
+		};
+		35B8A8DB3FA517A19B10A1C0 /* NetworkingKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NetworkingKit;
+		};
+		44803FCA1B4A915C275C5412 /* LeavnBible */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnBible;
+		};
+		4A360E75BA73D586645F52EB /* NetworkingKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NetworkingKit;
+		};
+		4F9B3243DC529D67E4BEADBB /* LeavnServices */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnServices;
+		};
+		50EF9EF822C9627CC701B425 /* LeavnSearch */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnSearch;
+		};
+		5677BB3404E649098C1A45BC /* DesignSystem */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DesignSystem;
+		};
+		58ECFC1FC782B644F166152F /* LeavnCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnCore;
+		};
+		5E60E898E271B0ED0091061C /* LeavnBible */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnBible;
+		};
+		5FE91EDB603DF238D31A9505 /* LeavnServices */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnServices;
+		};
+		646AC529244BFE356F355805 /* LeavnSearch */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnSearch;
+		};
+		74F51B668038015C78CAD567 /* LeavnCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnCore;
+		};
+		778A3E0C9471959BAD203123 /* AuthenticationModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AuthenticationModule;
+		};
+		7ADE1E40842C287FAE354C6C /* LeavnCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnCore;
+		};
+		87B8DD0B8F2AAB30F022C061 /* LeavnCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnCore;
+		};
+		8A5FA282F3B0A67A66078721 /* PersistenceKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PersistenceKit;
+		};
+		8CFD3D8D6C24286FE8919E70 /* LeavnSearch */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnSearch;
+		};
+		92FAEC35CA214599D64C87A2 /* AnalyticsKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AnalyticsKit;
+		};
+		9591EBC1E5A5670910E7A2E7 /* LeavnLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnLibrary;
+		};
+		95E6FDCB356046264F02268E /* NetworkingKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NetworkingKit;
+		};
+		9609E6B151913EEF785138BE /* DesignSystem */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DesignSystem;
+		};
+		9ABE0A0B08D37DEF90D91618 /* LeavnBible */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnBible;
+		};
+		B26EC880FAE481099CE2B053 /* LeavnSettings */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnSettings;
+		};
+		BB87D4DD9BDFDF629DEAAEC3 /* LeavnServices */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnServices;
+		};
+		C006793551F6E68343F1BCE5 /* LeavnCommunity */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnCommunity;
+		};
+		CA00F4FA89BD2023CD665295 /* PersistenceKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PersistenceKit;
+		};
+		D1E149BD5F8C4D639E2A195A /* LeavnBible */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnBible;
+		};
+		D3A855E317D0215EBA6B0705 /* LeavnSettings */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnSettings;
+		};
+		D3EDA2C7D25C66AE64630FF8 /* NetworkingKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NetworkingKit;
+		};
+		DA28AFF18D4AC4B1A5563935 /* LeavnSettings */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnSettings;
+		};
+		DA885BCF73F66A5A9ACD51C0 /* AuthenticationModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AuthenticationModule;
+		};
+		E6E7B586C287EDA96083BCDC /* AnalyticsKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AnalyticsKit;
+		};
+		FC76210E3685FD605C1A1D16 /* LeavnLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnLibrary;
+		};
+		FC7C106792E151F1406C0838 /* LeavnCommunity */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LeavnCommunity;
+		};
+/* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		971E1B3DADC2355C13816986 /* BibleCache.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				EFA861F25DF09E2B276EAFAD /* BibleCache.xcdatamodel */,
+			);
+			currentVersion = EFA861F25DF09E2B276EAFAD /* BibleCache.xcdatamodel */;
+			path = BibleCache.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 80D3060FE8F0E244F5A393E9 /* Project object */;
+}

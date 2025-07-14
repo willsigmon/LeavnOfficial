@@ -1,77 +1,83 @@
 #!/bin/bash
 
-# NVME Reference Removal Script
-# Permanently removes all NVME references from the project
+# Remove NVME References Script
+# This script removes any hardcoded NVME or external drive references
 
-set -e
+set -euo pipefail
 
-echo "🧹 NVME Reference Removal Script"
-echo "================================"
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
-PROJECT_ROOT="/Users/wsig/GitHub Builds/LeavnOfficial"
-cd "$PROJECT_ROOT"
+echo -e "${GREEN}[FIX]${NC} Removing NVME and external drive references..."
 
-# Function to print colored output
-print_step() {
-    echo -e "\n\033[1;34m➜ $1\033[0m"
-}
-
-print_success() {
-    echo -e "\033[1;32m✓ $1\033[0m"
-}
-
-# Step 1: Remove old build scripts that reference NVME
-print_step "Step 1: Cleaning up old build scripts..."
-OLD_SCRIPTS=(
-    "Scripts/build-nvme.sh"
-    "Scripts/fix-spm-nvme.sh"
+# Patterns to search for and remove
+PATTERNS=(
+    "/Volumes/nvme"
+    "/Volumes/NVME"
+    "/Volumes/[^/]*/GitHub"
+    "file:///Volumes/"
 )
-for script in "${OLD_SCRIPTS[@]}"; do
-    if [ -f "$script" ]; then
-        rm "$script"
-        print_success "Removed $script"
+
+# File types to check
+FILE_TYPES=(
+    "*.pbxproj"
+    "*.xcscheme"
+    "*.plist"
+    "*.xcworkspacedata"
+    "*.swift"
+    "Package.swift"
+    "Package.resolved"
+)
+
+# Function to clean file
+clean_file() {
+    local file=$1
+    local modified=false
+    
+    for pattern in "${PATTERNS[@]}"; do
+        if grep -q "$pattern" "$file" 2>/dev/null; then
+            echo -e "${YELLOW}[CLEAN]${NC} Removing references in: $file"
+            
+            # Backup file
+            cp "$file" "$file.backup"
+            
+            # Replace absolute paths with relative ones
+            sed -i '' "s|$pattern[^\"']*|.|g" "$file" 2>/dev/null || true
+            modified=true
+        fi
+    done
+    
+    if [ "$modified" = true ]; then
+        echo "  ✓ Cleaned $file"
     fi
+}
+
+# Search and clean files
+for file_type in "${FILE_TYPES[@]}"; do
+    echo "Checking $file_type files..."
+    find . -name "$file_type" -type f | while read -r file; do
+        # Skip backup files and derived data
+        if [[ ! "$file" =~ \.backup$ ]] && [[ ! "$file" =~ DerivedData ]]; then
+            clean_file "$file"
+        fi
+    done
 done
 
-# Step 2: Reset Xcode defaults
-print_step "Step 2: Resetting Xcode defaults..."
-/usr/bin/defaults delete com.apple.dt.Xcode IDECustomDerivedDataLocation 2>/dev/null || true
-/usr/bin/defaults delete com.apple.dt.Xcode IDECustomBuildProductsPath 2>/dev/null || true
-/usr/bin/defaults delete com.apple.dt.Xcode IDECustomIntermediatesPath 2>/dev/null || true
-print_success "Xcode defaults reset to standard locations"
-
-# Step 3: Clean up any NVME artifacts on disk
-print_step "Step 3: Removing NVME artifacts..."
-if [ -d "/Volumes/NVME/XcodeFiles" ]; then
-    echo "Found NVME directory. Remove manually if needed: /Volumes/NVME/XcodeFiles"
-fi
-if [ -d "/Volumes/NVME/Xcode Files" ]; then
-    echo "Found NVME directory with spaces. Remove manually if needed: /Volumes/NVME/Xcode Files"
+# Special handling for Xcode project files
+if [ -d "Leavn.xcodeproj" ]; then
+    echo "Cleaning Xcode project settings..."
+    
+    # Remove workspace settings that might contain paths
+    rm -rf Leavn.xcodeproj/project.xcworkspace/xcuserdata
+    rm -rf Leavn.xcodeproj/xcuserdata
 fi
 
-# Step 4: Create project-local directories
-print_step "Step 4: Creating project-local build directories..."
-mkdir -p "$PROJECT_ROOT/build"
-mkdir -p "$PROJECT_ROOT/DerivedData"
-print_success "Created local build directories"
+# Clean any xcworkspace files
+find . -name "*.xcworkspace" -type d | while read -r workspace; do
+    echo "Cleaning workspace: $workspace"
+    rm -rf "$workspace/xcuserdata"
+done
 
-# Step 5: Update .gitignore
-print_step "Step 5: Updating .gitignore..."
-if ! grep -q "^build/$" .gitignore 2>/dev/null; then
-    echo "build/" >> .gitignore
-fi
-if ! grep -q "^DerivedData/$" .gitignore 2>/dev/null; then
-    echo "DerivedData/" >> .gitignore
-fi
-print_success ".gitignore updated"
-
-print_success "NVME reference removal complete!"
-echo ""
-echo "✅ All NVME references have been removed"
-echo "✅ Build artifacts will now be generated in:"
-echo "   - $PROJECT_ROOT/build"
-echo "   - $PROJECT_ROOT/DerivedData"
-echo ""
-echo "Next steps:"
-echo "1. Use Scripts/build-project-root.sh for builds"
-echo "2. Or build directly in Xcode (will use default locations)"
+echo -e "${GREEN}✅ NVME references removed${NC}"

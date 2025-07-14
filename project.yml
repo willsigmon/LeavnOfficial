@@ -1,177 +1,102 @@
 name: Leavn
 options:
   bundleIdPrefix: com.leavn
+  deploymentTarget:
+    iOS: "18.0"
+  developmentLanguage: en
+  xcodeVersion: "16.0"
   createIntermediateGroups: true
+  groupSortPosition: top
   generateEmptyDirectories: true
 
-settings:
-  base:
-    SWIFT_VERSION: 6.2
-    ALWAYS_SEARCH_USER_PATHS: NO
-    MARKETING_VERSION: 1.0.0
-    CURRENT_PROJECT_VERSION: 1
+fileGroups:
+  - Core
+  - Leavn
+  - LeavnTests
+  - Resources
+  - Scripts
 
 packages:
   LeavnCore:
-    path: local/LeavnCore
+    path: Core/LeavnCore
   LeavnModules:
-    path: local/LeavnModules
+    path: Core/LeavnModules
+    
+settings:
+  base:
+    SWIFT_VERSION: "6.2"
+    ENABLE_PREVIEWS: "YES"
+    DEVELOPMENT_TEAM: "$(DEVELOPMENT_TEAM)"
+    CODE_SIGN_STYLE: Automatic
+    CODE_SIGN_IDENTITY: "Apple Development"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    PRODUCT_NAME: "Leavn"
 
 targets:
-  # iOS App - Optimized for iPhone 16 Pro Max
   Leavn:
     type: application
     platform: iOS
-    deploymentTarget:
-      iOS: 17.0
+    deploymentTarget: "18.0"
     sources:
-      - path: Leavn
-        excludes:
-          - "Platform/macOS/**"
-          - "Platform/visionOS/**"
-          - "Platform/watchOS/**"
-          - "Platform/tvOS/**"
-    settings:
-      base:
-        SDKROOT: iphoneos
-        SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
-        TARGETED_DEVICE_FAMILY: "1,2"  # iPhone and iPad
-        IPHONEOS_DEPLOYMENT_TARGET: "17.0"
-        PRODUCT_BUNDLE_IDENTIFIER: com.leavn.app
-        PRODUCT_NAME: Leavn
-        PRODUCT_DISPLAY_NAME: Leavn
-        INFOPLIST_FILE: Leavn/Info.plist
-        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        CODE_SIGN_ENTITLEMENTS: Leavn/Leavn.entitlements
-        ENABLE_PREVIEWS: YES
-        SWIFT_STRICT_CONCURRENCY: complete
-        SUPPORTS_MACCATALYST: YES
-        DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER: NO
-        PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]: com.leavn.app.catalyst
-        CODE_SIGN_STYLE: Automatic
-        ENABLE_HARDENED_RUNTIME: YES
-        ENABLE_APP_SANDBOX: YES
-        # Generic Optimizations (previously iPhone 16 Pro Max Optimizations)
-        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: YES # Good practice for all devices
-        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
-        ASSETCATALOG_COMPILER_OPTIMIZATION: space
-        # Advanced Display Support & Compilation Settings
-        SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
-        SWIFT_OPTIMIZATION_LEVEL: -Onone
-        GCC_OPTIMIZATION_LEVEL: "0"
-        SWIFT_COMPILATION_MODE: wholemodule
-        DEAD_CODE_STRIPPING: YES
-        # Metal Performance Shaders for GPU acceleration
-        MTL_ENABLE_DEBUG_INFO: NO # Keep NO for release, can be YES for debug if needed
-        MTL_FAST_MATH: YES # Generally good, monitor for precision issues if any
-    info:
-      path: Leavn/Info.plist
-      properties:
-        CFBundleDisplayName: Leavn
-        CFBundleName: Leavn
-        CFBundleShortVersionString: 1.0.0
-        CFBundleVersion: 1
-        LSRequiresIPhoneOS: true
-        UIRequiredDeviceCapabilities: ["arm64", "metal"] # Updated armv7 to arm64
-        UISupportedInterfaceOrientations:
-          - UIInterfaceOrientationPortrait
-          - UIInterfaceOrientationLandscapeLeft
-          - UIInterfaceOrientationLandscapeRight
-        UISupportedInterfaceOrientations~ipad:
-          - UIInterfaceOrientationPortrait
-          - UIInterfaceOrientationPortraitUpsideDown
-          - UIInterfaceOrientationLandscapeLeft
-          - UIInterfaceOrientationLandscapeRight
-        UILaunchStoryboardName: LaunchScreen
-        # General UI Features (previously iPhone 16 Pro Max Specific Features)
-        UIStatusBarStyle: UIStatusBarStyleDefault
-        UIViewControllerBasedStatusBarAppearance: true
-        UIUserInterfaceStyle: Automatic
-        # Privacy Usage Descriptions
-        NSCameraUsageDescription: "Leavn uses the camera to scan Bible verse references and create study content."
-        NSMicrophoneUsageDescription: "Leavn uses the microphone for voice notes and prayer recordings."
-        NSLocationWhenInUseUsageDescription: "Leavn uses location to find nearby churches and Bible study groups."
-        NSUserTrackingUsageDescription: "This helps us provide personalized Bible study recommendations."
-        # Background Modes for Sync
-        UIBackgroundModes:
-          - background-processing
-          - background-fetch
-          - remote-notification
-        # App Transport Security
-        NSAppTransportSecurity:
-          NSAllowsArbitraryLoads: false
-          NSExceptionDomains:
-            bible-api.com:
-              NSExceptionAllowsInsecureHTTPLoads: false
-              NSExceptionMinimumTLSVersion: TLSv1.2
-        # CloudKit
-        NSUbiquitousContainers:
-          iCloud.com.leavn.app:
-            NSUbiquitousContainerName: "Leavn Bible Study"
-            NSUbiquitousContainerSupportedFolderLevels: Any
+      - path: Leavn/Platform/iOS
+      - path: Leavn/Sources
+      - path: Shared
     resources:
-      - Leavn/Assets.xcassets
+      - path: Resources/Assets.xcassets
     dependencies:
       - package: LeavnCore
-        product: LeavnCore
-      - package: LeavnCore
-        product: DesignSystem
-      - package: LeavnCore
-        product: LeavnServices
+        products:
+          - LeavnCore
+          - LeavnServices
+          - NetworkingKit
+          - PersistenceKit
+          - AnalyticsKit
+          - DesignSystem
       - package: LeavnModules
-        product: LeavnBible
-      - package: LeavnModules
-        product: LeavnSearch
-      - package: LeavnModules
-        product: LeavnLibrary
-      - package: LeavnModules
-        product: LeavnSettings
-      - package: LeavnModules
-        product: LeavnCommunity
-      - package: LeavnModules
-        product: AuthenticationModule
-  DailyVerseWidget:
-    type: app-extension
+        products:
+          - LeavnBible
+          - LeavnSearch
+          - LeavnLibrary
+          - LeavnSettings
+          - LeavnCommunity
+          - AuthenticationModule
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.leavn.app
+        INFOPLIST_FILE: Leavn/Platform/iOS/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Leavn/Platform/iOS/Leavn-iOS.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "1,2"
+        IPHONEOS_DEPLOYMENT_TARGET: "18.0"
+        SUPPORTS_MACCATALYST: "NO"
+    scheme:
+      testTargets:
+        - LeavnTests
+      gatherCoverageData: true
+
+  LeavnTests:
+    type: bundle.unit-test
     platform: iOS
     sources:
-      - Widgets
-    deploymentTarget:
-      iOS: 17.0
+      - LeavnTests
+    dependencies:
+      - target: Leavn
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.leavn.DailyVerseWidget
-        SKIP_INSTALL: YES
-        TARGETED_DEVICE_FAMILY: 1
-        GENERATE_INFOPLIST_FILE: YES
-    infoPlist:
-      CFBundleDevelopmentRegion: en
-      CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
-      CFBundleShortVersionString: 1.0
-      CFBundleVersion: 1
-      NSExtension:
-        NSExtensionPointIdentifier: com.apple.widgetkit-extension
-    dependencies:
-      - package: LeavnCore
-        product: LeavnServices
+        PRODUCT_BUNDLE_IDENTIFIER: com.leavn.tests
 
 schemes:
   Leavn:
     build:
       targets:
         Leavn: all
+    test:
+      targets:
+        - LeavnTests
+      gatherCoverageData: true
     run:
       config: Debug
-      commandLineArguments:
-        "-com.apple.CoreData.SQLDebug": "1"
-        "-com.apple.CoreData.Logging.stderr": "1"
-      environmentVariables:
-        OS_ACTIVITY_MODE: disable
-        CFNETWORK_DIAGNOSTICS: "3"
-    test:
-      config: Debug
-      gatherCoverageData: true
-      coverageTargets:
-        - Leavn
     profile:
       config: Release
     analyze:

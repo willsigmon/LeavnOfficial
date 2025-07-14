@@ -1,57 +1,40 @@
 #!/bin/bash
-# Module Resolution Fix Script
-# Resolves "Unable to find module dependency: 'LeavnServices'" errors
 
-echo "🔧 Module Resolution Fix Protocol Starting..."
+# Fix Module Resolution Script
+# This script fixes Swift module resolution issues
 
-# Step 1: Clean all build artifacts
-echo "1️⃣ Cleaning build artifacts..."
-rm -rf ~/Library/Developer/Xcode/DerivedData/Leavn-*
-rm -rf build/
-rm -rf DerivedData/
-rm -rf .build/
+set -euo pipefail
 
-# Step 2: Remove any NVME references
-echo "2️⃣ Removing NVME path references..."
-if [ -d "/Volumes/NVME/Xcode Files" ]; then
-    rm -rf "/Volumes/NVME/Xcode Files"
-fi
-if [ -d "/Volumes/NVME/XcodeFiles" ]; then
-    rm -rf "/Volumes/NVME/XcodeFiles"
-fi
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
-# Step 3: Reset Swift Package Manager
-echo "3️⃣ Resetting Swift Package Manager..."
+echo -e "${GREEN}[FIX]${NC} Fixing module resolution issues..."
+
+# Clean module cache
+echo "Cleaning Swift module cache..."
+rm -rf ~/Library/Developer/Xcode/DerivedData/ModuleCache
 rm -rf ~/Library/Caches/org.swift.swiftpm
-rm -rf .swiftpm
 
-# Step 4: Clean workspace
-echo "4️⃣ Cleaning Xcode workspace..."
-if command -v xcodebuild >/dev/null 2>&1; then
-    xcodebuild clean -project Leavn.xcodeproj -scheme Leavn -quiet || true
-else
-    echo "   ⚠️  xcodebuild not found - clean manually in Xcode"
+# Reset Package.resolved files
+echo "Resetting Package.resolved files..."
+find . -name "Package.resolved" -type f -delete
+
+# Resolve packages
+echo "Resolving Swift packages..."
+cd Core/LeavnCore
+swift package resolve
+cd ../..
+
+cd Core/LeavnModules
+swift package resolve
+cd ../..
+
+# Clear build folder
+echo "Clearing build artifacts..."
+if [ -d "build" ]; then
+    rm -rf build
 fi
 
-# Step 5: Resolve packages
-echo "5️⃣ Resolving Swift packages..."
-if command -v swift >/dev/null 2>&1; then
-    cd local/LeavnCore && swift package resolve && cd ../..
-    cd local/LeavnModules && swift package resolve && cd ../..
-else
-    echo "   ⚠️  Swift CLI not found - resolve packages manually in Xcode"
-fi
-
-echo "✅ Module Resolution Fix Complete!"
-echo ""
-echo "📋 Next Steps:"
-echo "1. Open Xcode"
-echo "2. File → Packages → Reset Package Caches"
-echo "3. File → Packages → Resolve Package Versions"
-echo "4. Product → Clean Build Folder (Shift+Cmd+K)"
-echo "5. Product → Build (Cmd+B)"
-echo ""
-echo "If errors persist:"
-echo "- Check that all import statements match module names exactly"
-echo "- Verify package dependencies in Package.swift files"
-echo "- Ensure no typos in module names"
+echo -e "${GREEN}✅ Module resolution fixes applied${NC}"

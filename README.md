@@ -1,163 +1,248 @@
-# Leavn - Bible Study App
+# Leavn - Modern Leave Management System
 
-A modern, multi-platform Bible study application built with SwiftUI and Swift 6.
+A comprehensive, multi-platform leave management application built with SwiftUI for iOS, iPadOS, macOS, watchOS, and visionOS.
 
-## 📱 Features
+## Project Overview
 
-- **Universal App**: Runs on iOS, iPadOS, macOS, watchOS, and visionOS
-- **Bible Reading**: Access multiple translations with offline support
-- **Study Tools**: Notes, highlights, bookmarks, and cross-references
-- **Prayer Journal**: Track prayers and devotionals
-- **AI Insights**: Get contextual insights and explanations
-- **CloudKit Sync**: Seamless sync across all devices
-- **Sign in with Apple**: Secure authentication
+Leavn is a modern leave management system designed to streamline the process of requesting, approving, and tracking employee time off. Built with SwiftUI and leveraging the latest Apple technologies, it provides a seamless experience across all Apple platforms.
 
-## 🏗️ Project Structure
+### Key Features
+- 📱 Universal app supporting iPhone, iPad, Mac, Apple Watch, and Vision Pro
+- ☁️ CloudKit sync for seamless data synchronization across devices
+- 🔔 Push notifications for leave status updates
+- 📊 Comprehensive leave analytics and reporting
+- 🎨 Beautiful, native UI following Apple's Human Interface Guidelines
+- 🌙 Full dark mode support
+- ♿ Complete accessibility support with VoiceOver
 
-```
-Leavn/
-├── Leavn/                    # Main app target
-│   ├── App/                   # App lifecycle
-│   ├── Views/                 # App-specific views
-│   └── Platform/              # Platform-specific code
-│
-├── Packages/                  # Local Swift packages
-│   └── LeavnCore/
-│       └── Sources/
-│           ├── LeavnCore/     # Core utilities & models
-│           ├── LeavnServices/ # Service layer
-│           └── DesignSystem/  # Shared UI components
-│
-├── Modules/                   # Feature modules
-│   ├── Bible/
-│   ├── Prayer/
-│   ├── Study/
-│   └── Settings/
-│
-├── Configurations/            # Build configurations
-├── Tests/                     # Test suites
-└── Leavn.xcworkspace        # Use this to open the project
-```
-
-## 🚀 Getting Started
+## Setup Instructions
 
 ### Prerequisites
+- Xcode 26 beta or later (iOS 26 SDK)
+- macOS 26 or later
+- Swift 6.2 with Swift 6 language mode
+- Apple Developer account (for device testing and CloudKit)
+- Swift Package Manager (SPM)
 
-- Xcode 16.0+
-- macOS 15.0+
-- Apple Developer Account (for device testing)
+### Installation
 
-### Setup
-
-1. Clone the repository:
+1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/Leavn.git
-   cd Leavn
+   git clone https://github.com/yourusername/LeavnOfficial.git
+   cd LeavnOfficial
    ```
 
-2. Install development tools:
+2. **Open in Xcode**
    ```bash
-   make setup
+   open Leavn.xcodeproj
    ```
 
-3. Open in Xcode:
+3. **Configure Signing & Capabilities**
+   - Select the project in Xcode
+   - Go to "Signing & Capabilities" tab
+   - Select your development team
+   - Ensure automatic signing is enabled
+
+4. **Configure CloudKit**
+   - Enable CloudKit capability
+   - Create a new CloudKit container or select existing
+   - Configure record types in CloudKit Dashboard
+
+5. **Install Dependencies** (if using CocoaPods)
    ```bash
-   make open
+   pod install
+   open Leavn.xcworkspace
    ```
 
-4. Build and run:
-   - Select your target device
+6. **Build and Run**
+   - Select your target device/simulator
    - Press ⌘R to build and run
 
-## 🛠️ Development
+### Environment Configuration
 
-### Common Commands
+Create a `Config.xcconfig` file in the project root:
+```
+// Development
+API_BASE_URL = https://api-dev.leavn.com
+CLOUDKIT_CONTAINER = iCloud.com.yourcompany.leavn.dev
 
-```bash
-make help      # Show all available commands
-make build     # Build the project
-make test      # Run tests
-make lint      # Run SwiftLint
-make format    # Format code with swift-format
-make clean     # Clean build artifacts
+// Production
+// API_BASE_URL = https://api.leavn.com
+// CLOUDKIT_CONTAINER = iCloud.com.yourcompany.leavn
 ```
 
-### Code Quality
+## Architecture Overview
 
-- **SwiftLint**: Enforces Swift style and conventions
-- **Swift Format**: Automatic code formatting
-- **Strict Concurrency**: Full Swift 6 concurrency checking
-
-### Build Configurations
-
-- **Debug**: Fast builds with debugging enabled
-- **Release**: Optimized builds for distribution
-
-### Adding New Features
-
-1. Create a new module in `Modules/`
-2. Add the module to `project.yml`
-3. Run `make generate` to update Xcode project
-4. Import `LeavnCore` and `DesignSystem` as needed
-
-## 📦 Architecture
-
-### Core Packages
-
-- **LeavnCore**: Shared models, utilities, and protocols
-- **LeavnServices**: Service layer with API clients and data management
-- **DesignSystem**: Reusable UI components and theming
-
-### Key Technologies
-
-- **SwiftUI**: Modern declarative UI
-- **Swift 6**: Latest language features and concurrency
-- **CloudKit**: Cross-device synchronization
-- **Sign in with Apple**: Secure authentication
-- **Combine**: Reactive programming
-
-## 🧪 Testing
-
-Run all tests:
-```bash
-make test
+### Project Structure
+```
+Leavn/
+├── Sources/
+│   ├── Models/
+│   │   ├── Leave.swift
+│   │   ├── Employee.swift
+│   │   └── Department.swift
+│   ├── Services/
+│   │   ├── CloudKitService.swift
+│   │   ├── NotificationService.swift
+│   │   └── AuthenticationService.swift
+│   ├── Utilities/
+│   │   ├── DateFormatter+Extensions.swift
+│   │   └── Color+Theme.swift
+│   └── Views/
+│       ├── Shared/
+│       │   ├── Components/
+│       │   └── Modifiers/
+│       ├── iOS/
+│       │   ├── Dashboard/
+│       │   ├── LeaveRequest/
+│       │   └── Settings/
+│       ├── macOS/
+│       │   ├── Sidebar/
+│       │   └── DetailView/
+│       ├── watchOS/
+│       │   ├── ComplicationController.swift
+│       │   └── NotificationView.swift
+│       └── visionOS/
+│           ├── ImmersiveView.swift
+│           └── VolumeView.swift
+├── Resources/
+│   ├── Assets.xcassets
+│   ├── Localizable.strings
+│   └── Info.plist
+└── Tests/
+    ├── Unit/
+    ├── UI/
+    └── Integration/
 ```
 
-Test coverage is gathered automatically and can be viewed in Xcode.
+### Architecture Pattern
+- **MVVM** (Model-View-ViewModel) with SwiftUI
+- **Repository Pattern** for data access
+- **Dependency Injection** for testability
+- **Combine** for reactive programming
+- **Swift Concurrency** (async/await) for asynchronous operations
 
-## 📱 Supported Platforms
+### Data Flow
+1. **Views** observe ViewModels via `@StateObject` or `@ObservedObject`
+2. **ViewModels** interact with Services/Repositories
+3. **Services** handle business logic and external communications
+4. **CloudKit** provides data persistence and sync
+5. **Combine** publishers notify of data changes
 
-- iOS 18.0+
-- iPadOS 18.0+
-- macOS 15.0+
-- watchOS 11.0+
-- visionOS 2.0+
+## Platform Support Details
 
-## 🔧 Troubleshooting
+### iOS/iPadOS (15.0+)
+- Adaptive layouts with size classes
+- Split view support on iPad
+- Widgets for quick leave balance view
+- Siri Shortcuts for common actions
+- Apple Watch companion app
 
-### Module Import Errors
+### macOS (11.0+)
+- Native Mac app with AppKit integration where needed
+- Menu bar app for quick access
+- Keyboard shortcuts for power users
+- Touch Bar support (where available)
 
-1. Clean build folder: ⌘⇧K
-2. Reset package cache: File → Packages → Reset Package Caches
-3. Rebuild: ⌘B
+### watchOS (8.0+)
+- Complications showing leave balance
+- Quick leave request from watch
+- Notification handling
+- Health integration for sick leave tracking
 
-### Xcode Not Recognizing Packages
+### visionOS (1.0+)
+- Immersive leave calendar view
+- Spatial team availability visualization
+- Hand gesture controls
+- Shared space collaboration features
 
-1. Close Xcode
-2. Run `make clean`
-3. Run `make open`
+## Development Guidelines
 
-## 📝 License
+### Code Style
+- Follow Swift API Design Guidelines
+- Use SwiftLint for code consistency
+- Meaningful variable and function names
+- Comprehensive documentation for public APIs
 
-Copyright © 2024. All rights reserved.
+### Git Workflow
+- Feature branches: `feature/description`
+- Bug fixes: `bugfix/description`
+- Hotfixes: `hotfix/description`
+- Commit messages: Present tense, descriptive
 
-## 🤝 Contributing
+### Testing Requirements
+- Minimum 80% code coverage
+- Unit tests for all ViewModels and Services
+- UI tests for critical user flows
+- Performance tests for data operations
+
+### SwiftUI Best Practices
+- Prefer `@StateObject` for owned objects
+- Use `@EnvironmentObject` sparingly
+- Extract reusable views into components
+- Leverage ViewModifiers for common styling
+
+### Performance Considerations
+- Lazy load data where appropriate
+- Use `List` with identifiable items
+- Implement proper image caching
+- Profile with Instruments regularly
+
+## Key Technologies
+
+- **SwiftUI** - Declarative UI framework
+- **CloudKit** - Data persistence and sync
+- **Combine** - Reactive programming
+- **Core Data** - Local data caching
+- **Push Notifications** - Real-time updates
+- **WidgetKit** - Home screen widgets
+- **WatchKit** - Apple Watch support
+- **RealityKit** - visionOS 3D content
+
+## Contributing
 
 1. Fork the repository
 2. Create your feature branch
-3. Run tests and linting
-4. Submit a pull request
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+### Pull Request Guidelines
+- Clear description of changes
+- Screenshots for UI changes
+- Test coverage for new features
+- No merge conflicts
+- Passes all CI checks
+
+## Troubleshooting
+
+### Common Issues
+
+**Build Errors**
+- Clean build folder: ⌥⌘K
+- Delete derived data
+- Reset package caches: File → Packages → Reset Package Caches
+
+**CloudKit Sync Issues**
+- Verify CloudKit entitlements
+- Check network connectivity
+- Review CloudKit Dashboard for errors
+
+**Preview Crashes**
+- Simplify preview code
+- Check for missing mock data
+- Use `.constant()` bindings in previews
+
+## License
+
+This project is proprietary software. All rights reserved.
+
+## Contact
+
+- Project Lead: [your-email@example.com]
+- Technical Support: [support@leavn.com]
+- Documentation: [docs.leavn.com]
 
 ---
 
-Built with ❤️ using SwiftUI and Swift 6
+Built with ❤️ using SwiftUI

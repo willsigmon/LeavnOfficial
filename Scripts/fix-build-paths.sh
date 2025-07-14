@@ -1,37 +1,55 @@
 #!/bin/bash
-export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
 
 # Fix Build Paths Script
-# Removes NVME references and sets proper build paths
+# This script fixes build path issues in the Xcode project
 
-PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+set -euo pipefail
 
-echo "🔧 Fixing build paths in $PROJECT_DIR"
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
-# Clean all build artifacts
-echo "🧹 Cleaning build artifacts..."
-rm -rf ~/Library/Developer/Xcode/DerivedData/*
-rm -rf "$PROJECT_DIR/build"
-rm -rf "$PROJECT_DIR/.build"
-rm -rf "/Volumes/NVME/Xcode Files"
+echo -e "${GREEN}[FIX]${NC} Fixing build paths..."
 
-# Set proper build locations
-echo "📁 Setting build locations..."
-defaults write com.apple.dt.Xcode IDECustomBuildLocationType Relative
-defaults write com.apple.dt.Xcode IDECustomBuildProductsPath "build/Products"
-defaults write com.apple.dt.Xcode IDECustomBuildIntermediatesPath "build/Intermediates"
+# Clean DerivedData
+echo "Cleaning DerivedData..."
+rm -rf ~/Library/Developer/Xcode/DerivedData/Leavn-*
 
-# Reset package cache
-echo "📦 Resetting package cache..."
-rm -rf ~/Library/Caches/org.swift.swiftpm
+# Remove local DerivedData if exists
+if [ -d "DerivedData" ]; then
+    echo "Removing local DerivedData..."
+    rm -rf DerivedData
+fi
 
-# Clean the project
-echo "🏗️ Cleaning project..."
-cd "$PROJECT_DIR"
-xcodebuild clean -scheme Leavn -quiet || true
+# Fix relative paths in pbxproj if it exists
+if [ -f "Leavn.xcodeproj/project.pbxproj" ]; then
+    echo "Checking project file for absolute paths..."
+    
+    # Backup project file
+    cp Leavn.xcodeproj/project.pbxproj Leavn.xcodeproj/project.pbxproj.backup
+    
+    # Remove absolute paths that might cause issues
+    sed -i '' 's|/Users/[^/]*/|~/|g' Leavn.xcodeproj/project.pbxproj 2>/dev/null || true
+    
+    # Remove any hardcoded derived data paths
+    sed -i '' 's|/Library/Developer/Xcode/DerivedData/[^/]*||g' Leavn.xcodeproj/project.pbxproj 2>/dev/null || true
+fi
 
-# Resolve packages
-echo "📚 Resolving packages..."
-xcodebuild -resolvePackageDependencies
+# Create standard directory structure
+echo "Ensuring standard directory structure..."
+mkdir -p Core/LeavnCore/Sources
+mkdir -p Core/LeavnCore/Tests
+mkdir -p Core/LeavnModules/Sources
+mkdir -p Core/LeavnModules/Tests
+mkdir -p Scripts
+mkdir -p Resources
 
-echo "✅ Build paths fixed! Try building again."
+# Fix xcscheme files
+echo "Checking scheme files..."
+find . -name "*.xcscheme" -type f | while read -r scheme; do
+    # Remove absolute paths from schemes
+    sed -i '' 's|/Users/[^/]*/|~/|g' "$scheme" 2>/dev/null || true
+done
+
+echo -e "${GREEN}✅ Build paths fixed${NC}"
