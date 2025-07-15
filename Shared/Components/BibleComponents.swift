@@ -118,220 +118,9 @@ public struct BibleVerseCard: View {
     }
 }
 
-// MARK: - Reading Plan Card
-public struct ReadingPlanCard: View {
-    let plan: ReadingPlan
-    let onTap: () -> Void
-    let onContinue: (() -> Void)?
-    
-    public struct ReadingPlan {
-        public let id: UUID
-        public let title: String
-        public let description: String
-        public let currentDay: Int
-        public let totalDays: Int
-        public let isCompleted: Bool
-        public let todaysReading: [String]
-        
-        public var progress: Double {
-            guard totalDays > 0 else { return 0 }
-            return Double(currentDay) / Double(totalDays)
-        }
-        
-        public init(
-            id: UUID = UUID(),
-            title: String,
-            description: String,
-            currentDay: Int,
-            totalDays: Int,
-            isCompleted: Bool = false,
-            todaysReading: [String] = []
-        ) {
-            self.id = id
-            self.title = title
-            self.description = description
-            self.currentDay = currentDay
-            self.totalDays = totalDays
-            self.isCompleted = isCompleted
-            self.todaysReading = todaysReading
-        }
-    }
-    
-    public init(
-        plan: ReadingPlan,
-        onTap: @escaping () -> Void,
-        onContinue: (() -> Void)? = nil
-    ) {
-        self.plan = plan
-        self.onTap = onTap
-        self.onContinue = onContinue
-    }
-    
-    public var body: some View {
-        BaseCard(
-            style: .elevated,
-            shadowStyle: .medium,
-            tapAction: onTap
-        ) {
-            VStack(alignment: .leading, spacing: 16) {
-                // Header
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(plan.title)
-                            .font(.headline)
-                            .foregroundColor(.primary)
-                        
-                        Text(plan.description)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                            .lineLimit(2)
-                    }
-                    
-                    Spacer()
-                    
-                    if plan.isCompleted {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.green)
-                            .font(.title2)
-                    }
-                }
-                
-                // Progress
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("Day \(plan.currentDay) of \(plan.totalDays)")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                        
-                        Spacer()
-                        
-                        Text("\(Int(plan.progress * 100))%")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                    }
-                    
-                    ProgressView(value: plan.progress)
-                        .tint(.accentColor)
-                }
-                
-                // Today's Reading
-                if !plan.todaysReading.isEmpty && !plan.isCompleted {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Today's Reading")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                        
-                        ForEach(plan.todaysReading, id: \.self) { reading in
-                            Text(reading)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                }
-                
-                // Actions
-                HStack(spacing: 12) {
-                    if !plan.isCompleted, let onContinue = onContinue {
-                        BaseActionButton(
-                            title: "Continue Reading",
-                            style: .primary,
-                            size: .medium,
-                            action: onContinue
-                        )
-                    }
-                    
-                    BaseActionButton(
-                        title: "View Plan",
-                        style: .secondary,
-                        size: .medium,
-                        action: onTap
-                    )
-                }
-            }
-        }
-    }
-}
+// MARK: - Reading Plan Card (moved to ReadingPlanCard.swift)
 
-// MARK: - Life Situation Card
-public struct LifeSituationCard: View {
-    let situation: LifeSituation
-    let onTap: () -> Void
-    
-    public struct LifeSituation {
-        public let id: UUID
-        public let title: String
-        public let description: String
-        public let icon: String
-        public let accentColor: Color
-        public let verseCount: Int
-        
-        public init(
-            id: UUID = UUID(),
-            title: String,
-            description: String,
-            icon: String,
-            accentColor: Color = .accentColor,
-            verseCount: Int = 0
-        ) {
-            self.id = id
-            self.title = title
-            self.description = description
-            self.icon = icon
-            self.accentColor = accentColor
-            self.verseCount = verseCount
-        }
-    }
-    
-    public init(
-        situation: LifeSituation,
-        onTap: @escaping () -> Void
-    ) {
-        self.situation = situation
-        self.onTap = onTap
-    }
-    
-    public var body: some View {
-        BaseCard(
-            style: .elevated,
-            shadowStyle: .light,
-            tapAction: onTap
-        ) {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Image(systemName: situation.icon)
-                        .font(.title2)
-                        .foregroundColor(situation.accentColor)
-                        .frame(width: 44, height: 44)
-                        .background(situation.accentColor.opacity(0.1))
-                        .cornerRadius(12)
-                    
-                    Spacer()
-                    
-                    Image(systemName: "chevron.right")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(situation.title)
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                    
-                    Text(situation.description)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .lineLimit(2)
-                }
-                
-                if situation.verseCount > 0 {
-                    Text("\(situation.verseCount) verses")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            }
-        }
-    }
-}
+// MARK: - Life Situation Card (moved to LifeSituationsHomeSection.swift)
 
 // MARK: - Book Selection Card
 public struct BookSelectionCard: View {
@@ -509,11 +298,11 @@ struct BibleComponents_Previews: PreviewProvider {
                 BibleVerseCard(
                     verse: BibleVerse(
                         id: "john-3-16",
-                        reference: "John 3:16",
-                        text: "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.",
-                        book: "John",
+                        bookId: "JOH",
+                        bookName: "John",
                         chapter: 3,
                         verse: 16,
+                        text: "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.",
                         translation: "NIV"
                     ),
                     isHighlighted: true,
@@ -524,17 +313,9 @@ struct BibleComponents_Previews: PreviewProvider {
                     onNote: {}
                 )
                 
-                ReadingPlanCard(
-                    plan: ReadingPlanCard.ReadingPlan(
-                        title: "One Year Bible",
-                        description: "Read through the entire Bible in 365 days",
-                        currentDay: 127,
-                        totalDays: 365,
-                        todaysReading: ["Genesis 8-10", "Matthew 4", "Psalm 15"]
-                    ),
-                    onTap: {},
-                    onContinue: {}
-                )
+                // ReadingPlanCard preview moved to ReadingPlanCard.swift
+                Text("Reading Plan Card Preview - See ReadingPlanCard.swift")
+                    .foregroundColor(.secondary)
                 
                 LifeSituationCard(
                     situation: LifeSituationCard.LifeSituation(

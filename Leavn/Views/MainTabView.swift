@@ -1,4 +1,7 @@
 import SwiftUI
+import LeavnSearch
+import LeavnLibrary
+import LeavnCommunity
 
 struct MainTabView: View {
     @State private var selectedTab = 0
@@ -22,12 +25,13 @@ struct MainTabView: View {
         ))
         
         _searchViewModel = StateObject(wrappedValue: SearchViewModel(
-            searchRepository: container.searchRepository,
+            searchService: container.searchService,
+            bibleService: container.bibleService,
             analyticsService: container.analyticsService
         ))
         
         _libraryViewModel = StateObject(wrappedValue: LibraryViewModel(
-            libraryRepository: container.libraryRepository,
+            libraryService: container.libraryService,
             analyticsService: container.analyticsService
         ))
         
@@ -37,7 +41,6 @@ struct MainTabView: View {
         ))
         
         _settingsViewModel = StateObject(wrappedValue: SettingsViewModel(
-            settingsRepository: container.settingsRepository,
             userDataManager: container.userDataManager,
             analyticsService: container.analyticsService
         ))

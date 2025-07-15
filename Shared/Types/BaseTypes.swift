@@ -47,68 +47,11 @@ open class BaseViewModel: ObservableObject {
     }
 }
 
-// MARK: - Basic Search Types
-public struct BibleSearchResult: Codable, Identifiable, Hashable {
-    public let id: String
-    public let verse: BibleVerse
-    public let relevance: Double
-    
-    public init(id: String, verse: BibleVerse, relevance: Double) {
-        self.id = id
-        self.verse = verse
-        self.relevance = relevance
-    }
-}
+// MARK: - Basic Search Types (Moved to BibleTypes.swift)
 
-public struct SearchQuery: Codable, Identifiable, Hashable {
-    public let id: String
-    public let text: String
-    public let timestamp: Date
-    
-    public init(id: String = UUID().uuidString, text: String, timestamp: Date = Date()) {
-        self.id = id
-        self.text = text
-        self.timestamp = timestamp
-    }
-}
+// MARK: - Library Types (Moved to BibleTypes.swift)
 
-// MARK: - Library Types
-public struct LibraryItem: Codable, Identifiable, Hashable {
-    public let id: String
-    public let title: String
-    public let type: LibraryItemType
-    public let content: String
-    public let dateAdded: Date
-    
-    public init(id: String, title: String, type: LibraryItemType, content: String, dateAdded: Date = Date()) {
-        self.id = id
-        self.title = title
-        self.type = type
-        self.content = content
-        self.dateAdded = dateAdded
-    }
-}
-
-public enum LibraryItemType: String, Codable, CaseIterable {
-    case bookmark = "Bookmark"
-    case note = "Note"
-    case favorite = "Favorite"
-    case devotion = "Devotion"
-}
-
-public struct LibraryCollection: Codable, Identifiable, Hashable {
-    public let id: String
-    public let name: String
-    public let items: [LibraryItem]
-    public let dateCreated: Date
-    
-    public init(id: String, name: String, items: [LibraryItem], dateCreated: Date = Date()) {
-        self.id = id
-        self.name = name
-        self.items = items
-        self.dateCreated = dateCreated
-    }
-}
+// LibraryCollection moved to BibleTypes.swift with LibraryItem
 
 public struct LibraryStatistics: Codable {
     public let totalItems: Int
@@ -131,113 +74,29 @@ public enum LibraryFilter: String, CaseIterable {
     case favorites = "Favorites"
 }
 
-public struct LibrarySearchResult: Codable, Identifiable, Hashable {
-    public let id: String
-    public let item: LibraryItem
-    public let relevance: Double
-    
-    public init(id: String, item: LibraryItem, relevance: Double) {
-        self.id = id
-        self.item = item
-        self.relevance = relevance
-    }
-}
 
-// MARK: - Community Types
-public struct CommunityPost: Codable, Identifiable, Hashable {
-    public let id: String
-    public let title: String
-    public let content: String
-    public let author: String
-    public let dateCreated: Date
-    public let likes: Int
-    
-    public init(id: String, title: String, content: String, author: String, dateCreated: Date = Date(), likes: Int = 0) {
-        self.id = id
-        self.title = title
-        self.content = content
-        self.author = author
-        self.dateCreated = dateCreated
-        self.likes = likes
-    }
-}
-
-public struct CommunityGroup: Codable, Identifiable, Hashable {
-    public let id: String
-    public let name: String
-    public let description: String
-    public let memberCount: Int
-    
-    public init(id: String, name: String, description: String, memberCount: Int) {
-        self.id = id
-        self.name = name
-        self.description = description
-        self.memberCount = memberCount
-    }
-}
+// MARK: - Community Types (Moved to BibleTypes.swift)
 
 // MARK: - Audio Types (moved to BibleTypes.swift)
 
-public struct BiblePassage: Codable, Identifiable, Hashable {
-    public let id: String
-    public let reference: String
-    public let text: String
-    public let verses: [BibleVerse]
-    
-    public init(id: String, reference: String, text: String, verses: [BibleVerse]) {
-        self.id = id
-        self.reference = reference
-        self.text = text
-        self.verses = verses
-    }
-}
+// MARK: - Additional Audio Types (moved to BibleTypes.swift)
 
-// MARK: - Additional Audio Types
-public struct AudioPlayerState: Codable {
+// Audio Player UI State (different from AudioPlayerState enum in BibleTypes.swift)
+public struct AudioPlayerUIState: Codable {
     public let isPlaying: Bool
-    public let currentChapter: AudioChapter?
-    public let progress: Double
-    public let volume: Double
-    public let speed: Double
+    public let currentTime: Double
+    public let duration: Double
+    public let playbackSpeed: PlaybackSpeed
+    public let isDownloaded: Bool
+    public let isLoading: Bool
     
-    public init(isPlaying: Bool = false, currentChapter: AudioChapter? = nil, progress: Double = 0.0, volume: Double = 1.0, speed: Double = 1.0) {
+    public init(isPlaying: Bool = false, currentTime: Double = 0.0, duration: Double = 0.0, playbackSpeed: PlaybackSpeed = .normal, isDownloaded: Bool = false, isLoading: Bool = false) {
         self.isPlaying = isPlaying
-        self.currentChapter = currentChapter
-        self.progress = progress
-        self.volume = volume
-        self.speed = speed
-    }
-}
-
-public struct ChapterInfo: Codable, Identifiable, Hashable {
-    public let id: String
-    public let book: String
-    public let chapter: Int
-    public let title: String
-    public let duration: TimeInterval
-    
-    public init(id: String, book: String, chapter: Int, title: String, duration: TimeInterval) {
-        self.id = id
-        self.book = book
-        self.chapter = chapter
-        self.title = title
+        self.currentTime = currentTime
         self.duration = duration
-    }
-}
-
-public enum PlaybackSpeed: String, CaseIterable, Codable {
-    case slow = "0.5x"
-    case normal = "1.0x"
-    case fast = "1.5x"
-    case faster = "2.0x"
-    
-    public var value: Double {
-        switch self {
-        case .slow: return 0.5
-        case .normal: return 1.0
-        case .fast: return 1.5
-        case .faster: return 2.0
-        }
+        self.playbackSpeed = playbackSpeed
+        self.isDownloaded = isDownloaded
+        self.isLoading = isLoading
     }
 }
 

@@ -73,8 +73,7 @@ public final class AppConfiguration: @unchecked Sendable {
             bibleComAPIKey: APIKeys.bibleCom,
             elevenLabsAPIKey: APIKeys.elevenLabs,
             audioNarrationEnabled: true,
-            offlineModeEnabled: true,
-            hapticFeedbackEnabled: true
+            offlineModeEnabled: true
         )
         
         ServiceLocator.shared.configure(with: configuration)

@@ -122,13 +122,13 @@ public struct BookmarkRow: View {
         .padding(.horizontal, 16)
         .contentShape(Rectangle())
         .onTapGesture {
-            hapticManager.triggerFeedback(.light)
+            hapticManager.triggerFeedback()
             onTap()
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             if let onDelete = onDelete {
                 Button("Delete", role: .destructive) {
-                    hapticManager.triggerFeedback(.warning)
+                    hapticManager.triggerFeedback()
                     onDelete()
                 }
             }
@@ -150,7 +150,7 @@ public struct CompactBookmarkRow: View {
     
     public var body: some View {
         Button(action: { 
-            hapticManager.triggerFeedback(.light)
+            hapticManager.triggerFeedback()
             onTap() 
         }) {
             HStack(spacing: 8) {
@@ -198,7 +198,7 @@ public struct BookmarkCategoryHeader: View {
     
     public var body: some View {
         Button(action: { 
-            hapticManager.triggerFeedback(.light)
+            hapticManager.triggerFeedback()
             onToggle() 
         }) {
             HStack {

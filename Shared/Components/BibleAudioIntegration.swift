@@ -3,14 +3,13 @@ import SwiftUI
 /// Example of how to integrate the ElevenLabs audio narration into a Bible reading view
 public struct BibleAudioIntegrationView: View {
     @StateObject private var viewModel: AudioPlayerViewModel
-    @StateObject private var voiceConfigService: any VoiceConfigurationService
-    @State private var showVoiceSelection = false
+    // Simplified for now - these services need proper implementation
     @State private var showDownloadManager = false
     @State private var isAudioExpanded = false
     
     private let bibleService: BibleService
     private let audioService: any AudioService
-    private let elevenLabsService: ElevenLabsService
+    private let elevenLabsService: ElevenLabsServiceProtocol
     private let cacheManager: AudioCacheManager
     
     public init() {
@@ -18,7 +17,7 @@ public struct BibleAudioIntegrationView: View {
         let networkService = DefaultNetworkService(configuration: LeavnConfiguration.current)
         
         // Initialize ElevenLabs with API key
-        let elevenLabsService = DefaultElevenLabsService(
+        let elevenLabsService: ElevenLabsServiceProtocol = DefaultElevenLabsService(
             networkService: networkService,
             apiKey: ProcessInfo.processInfo.environment["ELEVENLABS_API_KEY"] ?? ""
         )
@@ -150,30 +149,30 @@ public struct BibleAudioIntegrationView: View {
         return [
             BibleVerse(
                 id: "1",
-                reference: "\(chapter.book) \(chapter.chapter):1",
-                text: "In the beginning was the Word, and the Word was with God, and the Word was God.",
-                translation: chapter.translation,
-                book: chapter.book,
+                bookId: chapter.bookId,
+                bookName: chapter.bookName,
                 chapter: chapter.chapter,
-                verse: 1
+                verse: 1,
+                text: "In the beginning was the Word, and the Word was with God, and the Word was God.",
+                translation: "ESV"
             ),
             BibleVerse(
                 id: "2",
-                reference: "\(chapter.book) \(chapter.chapter):2",
-                text: "The same was in the beginning with God.",
-                translation: chapter.translation,
-                book: chapter.book,
+                bookId: chapter.bookId,
+                bookName: chapter.bookName,
                 chapter: chapter.chapter,
-                verse: 2
+                verse: 2,
+                text: "The same was in the beginning with God.",
+                translation: "ESV"
             ),
             BibleVerse(
                 id: "3",
-                reference: "\(chapter.book) \(chapter.chapter):3",
-                text: "All things were made by him; and without him was not any thing made that was made.",
-                translation: chapter.translation,
-                book: chapter.book,
+                bookId: chapter.bookId,
+                bookName: chapter.bookName,
                 chapter: chapter.chapter,
-                verse: 3
+                verse: 3,
+                text: "All things were made by him; and without him was not any thing made that was made.",
+                translation: "ESV"
             )
         ]
     }

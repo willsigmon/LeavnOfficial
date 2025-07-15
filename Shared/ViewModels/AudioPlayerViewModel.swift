@@ -3,7 +3,7 @@ import SwiftUI
 import Combine
 
 @MainActor
-class AudioPlayerViewModel: BaseViewModel {
+public class AudioPlayerViewModel: BaseViewModel {
     @Published var isPlaying = false
     @Published var currentVerse: BibleVerse?
     @Published var playbackProgress: Double = 0.0
@@ -12,7 +12,7 @@ class AudioPlayerViewModel: BaseViewModel {
     
     private let analyticsService: AnalyticsServiceProtocol
     
-    init(analyticsService: AnalyticsServiceProtocol? = nil) {
+    public init(analyticsService: AnalyticsServiceProtocol? = nil) {
         let container = DIContainer.shared
         self.analyticsService = analyticsService ?? container.analyticsService
         

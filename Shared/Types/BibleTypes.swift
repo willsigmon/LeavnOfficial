@@ -220,7 +220,7 @@ public struct CommunityGroup: Codable, Identifiable, Hashable {
 }
 
 // MARK: - Audio Types
-public struct AudioChapter: Codable, Identifiable, Hashable {
+public struct AudioChapter: Codable, Identifiable, Hashable, Sendable {
     public let id: String
     public let bookId: String
     public let chapterNumber: Int
@@ -239,7 +239,7 @@ public struct AudioChapter: Codable, Identifiable, Hashable {
 }
 
 // MARK: - Voice Configuration Types
-public struct Voice: Codable, Identifiable, Hashable {
+public struct Voice: Codable, Identifiable, Hashable, Sendable {
     public let id: String
     public let name: String
     public let language: String
@@ -253,7 +253,7 @@ public struct Voice: Codable, Identifiable, Hashable {
     }
 }
 
-public struct VoicePreferences: Codable, Hashable {
+public struct VoicePreferences: Codable, Hashable, Sendable {
     public let selectedVoice: Voice
     public let speed: Double
     public let pitch: Double

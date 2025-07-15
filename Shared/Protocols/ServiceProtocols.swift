@@ -21,6 +21,7 @@ public protocol UserDataManagerProtocol {
     func saveBookmark(_ verse: BibleVerse)
     func removeBookmark(_ verse: BibleVerse)
     func getBookmarks() -> [BibleVerse]
+    func clearAllData() async throws
 }
 
 // MARK: - Analytics Service Protocol
@@ -54,6 +55,12 @@ public protocol CommunityServiceProtocol {
     func createPost(_ post: CommunityPost) async throws
     func getGroups() async throws -> [CommunityGroup]
     func joinGroup(_ group: CommunityGroup) async throws
+    func getFeedPosts(limit: Int) async throws -> [CommunityPost]
+    func createPost(content: String, groupId: String?) async throws -> CommunityPost
+    func likePost(postId: String) async throws
+    func getUserGroups() async throws -> [CommunityGroup]
+    func joinGroup(groupId: String) async throws
+    func leaveGroup(groupId: String) async throws
 }
 
 // MARK: - Audio Service Protocol

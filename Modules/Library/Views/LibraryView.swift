@@ -109,7 +109,11 @@ struct LibraryItemWrapper: LibraryItemProtocol {
 }
 
 public struct LibraryView: View {
-    @StateObject private var viewModel = LibraryViewModel()
+    @StateObject private var viewModel: LibraryViewModel
+    
+    public init(viewModel: LibraryViewModel) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
+    }
     @State private var selectedCategory: LibraryCategory = .bookmarks
     @State private var showAddCollection = false
     @State private var selectedItem: LibraryItemWrapper?
@@ -138,7 +142,6 @@ public struct LibraryView: View {
         }
     }
     
-    public init() {}
     
     public var body: some View {
         NavigationView {
@@ -751,5 +754,7 @@ struct LibraryItemDetailView: View {
 }
 
 #Preview {
-    LibraryView()
+    LibraryView(viewModel: LibraryViewModel(
+        libraryService: DIContainer.shared.libraryService
+    ))
 }

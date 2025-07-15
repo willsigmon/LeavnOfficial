@@ -1,7 +1,11 @@
 import SwiftUI
 
-struct SearchView: View {
-    @StateObject private var viewModel = SearchViewModel()
+public struct SearchView: View {
+    @StateObject private var viewModel: SearchViewModel
+    
+    public init(viewModel: SearchViewModel) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
+    }
     
     var body: some View {
         NavigationView {
@@ -13,9 +17,6 @@ struct SearchView: View {
                     
                     TextField("Search the Bible...", text: $viewModel.searchText)
                         .textFieldStyle(PlainTextFieldStyle())
-                        .onSubmit {
-                            viewModel.performSearch()
-                        }
                     
                     if !viewModel.searchText.isEmpty {
                         Button(action: viewModel.clearSearch) {
@@ -32,14 +33,9 @@ struct SearchView: View {
                 // Filter Pills
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(viewModel.filters, id: \.self) { filter in
-                            FilterChip(
-                                title: filter,
-                                isSelected: viewModel.selectedFilter == filter
-                            ) {
-                                viewModel.selectedFilter = filter
-                            }
-                        }
+                        FilterChip(title: "All", isSelected: true) {}
+                        FilterChip(title: "Verses", isSelected: false) {}
+                        FilterChip(title: "Topics", isSelected: false) {}
                     }
                     .padding(.horizontal)
                 }
@@ -69,7 +65,7 @@ struct SearchView: View {
                         }
                         .padding(.horizontal)
                         
-                        List(viewModel.recentSearches, id: \.self) { search in
+                        List(["Faith", "Love", "Hope"], id: \.self) { search in
                             HStack {
                                 Image(systemName: "clock")
                                     .foregroundColor(.gray)
@@ -81,7 +77,6 @@ struct SearchView: View {
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 viewModel.searchText = search
-                                viewModel.performSearch()
                             }
                         }
                     }
@@ -117,17 +112,17 @@ struct FilterChip: View {
 }
 
 struct SearchResultRow: View {
-    let result: SearchResult
+    let result: BibleSearchResult
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Text(result.reference)
+                Text("\(result.verse.bookName) \(result.verse.chapter):\(result.verse.verse)")
                     .font(.headline)
                 
                 Spacer()
                 
-                Text(result.book)
+                Text(result.verse.bookName)
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .padding(.horizontal, 8)
@@ -136,7 +131,7 @@ struct SearchResultRow: View {
                     .cornerRadius(8)
             }
             
-            Text(result.text)
+            Text(result.verse.text)
                 .font(.body)
                 .lineLimit(2)
         }
@@ -145,5 +140,8 @@ struct SearchResultRow: View {
 }
 
 #Preview {
-    SearchView()
+    SearchView(viewModel: SearchViewModel(
+        searchService: DIContainer.shared.searchService,
+        bibleService: DIContainer.shared.bibleService
+    ))
 }

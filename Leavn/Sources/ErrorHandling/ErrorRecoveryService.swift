@@ -15,6 +15,14 @@ public enum LeavnError: LocalizedError, Equatable {
     case systemError(String)
     case unknown(String)
     
+    // Additional error cases
+    case unauthorized(String)
+    case serverError(String)
+    case localStorageError(String)
+    case notFound(String)
+    case validationError(String)
+    case invalidInput(String)
+    
     public var errorDescription: String? {
         switch self {
         case .networkError(let message):
@@ -37,6 +45,18 @@ public enum LeavnError: LocalizedError, Equatable {
             return "System error: \(message)"
         case .unknown(let message):
             return "Unknown error: \(message)"
+        case .unauthorized(let message):
+            return "Unauthorized: \(message)"
+        case .serverError(let message):
+            return "Server error: \(message)"
+        case .localStorageError(let message):
+            return "Local storage error: \(message)"
+        case .notFound(let message):
+            return "Not found: \(message)"
+        case .validationError(let message):
+            return "Validation error: \(message)"
+        case .invalidInput(let message):
+            return "Invalid input: \(message)"
         }
     }
 }
@@ -134,19 +154,28 @@ public final class DefaultErrorRecoveryService: ErrorRecoveryService {
         case .networkError:
             return .retry(maxAttempts: 3, delay: 2.0)
             
+        case .bibleServiceError, .audioServiceError, .searchServiceError, .libraryServiceError, .communityServiceError:
+            return .retry(maxAttempts: 2, delay: 1.0)
+            
+        case .userDataError, .localStorageError:
+            return .clearCacheAndRetry
+            
+        case .configurationError, .systemError:
+            return .contactSupport
+            
         case .unauthorized:
             return .authenticate
             
         case .serverError:
-            return .retry(maxAttempts: 2, delay: 5.0)
+            return .retry(maxAttempts: 2, delay: 3.0)
             
-        case .localStorageError:
-            return .clearCacheAndRetry
+        case .notFound:
+            return .contactSupport
             
-        case .notFound, .validationError, .invalidInput:
-            return .ignore
+        case .validationError, .invalidInput:
+            return .contactSupport
             
-        default:
+        case .unknown:
             return .contactSupport
         }
     }
@@ -222,8 +251,8 @@ struct ErrorRecoveryModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .onChange(of: error) { _, newError in
-                if let error = newError {
-                    handleError(error)
+                if let _ = newError {
+                    handleError(newError)
                 }
             }
             .alert("Error", isPresented: $showingError) {

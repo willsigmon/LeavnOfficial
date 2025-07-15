@@ -13,7 +13,7 @@ public struct AudioPlayerView: View {
     @ObservedObject private var viewModel: AudioPlayerViewModel
     
     // Legacy support for direct state injection
-    private let legacyAudioState: AudioPlayerState?
+    private let legacyAudioState: AudioPlayerUIState?
     private let legacyCurrentChapter: ChapterInfo?
     private let legacyOnPlayPause: (() -> Void)?
     private let legacyOnPrevious: (() -> Void)?
@@ -22,18 +22,22 @@ public struct AudioPlayerView: View {
     private let legacyOnSpeedChange: ((PlaybackSpeed) -> Void)?
     
     // Computed properties that work with both approaches
-    private var audioState: AudioPlayerState {
-        legacyAudioState ?? viewModel.audioState
+    private var audioState: AudioPlayerUIState {
+        legacyAudioState ?? AudioPlayerUIState(
+            isPlaying: viewModel.isPlaying,
+            currentTime: viewModel.playbackProgress,
+            duration: 100.0, // Default duration
+            playbackSpeed: PlaybackSpeed(rawValue: viewModel.playbackSpeed) ?? .normal,
+            isDownloaded: false,
+            isLoading: viewModel.isLoading
+        )
     }
     
     private var currentChapter: ChapterInfo? {
-        legacyCurrentChapter ?? viewModel.currentChapter
+        legacyCurrentChapter
     }
     
-    // Use the types from AudioPlayerViewModel for consistency
-    public typealias AudioPlayerState = LeavnServices.AudioPlayerState
-    public typealias ChapterInfo = LeavnServices.ChapterInfo
-    public typealias PlaybackSpeed = LeavnServices.PlaybackSpeed
+    // Use the types from BibleTypes.swift for consistency
     
     @State private var isDragging = false
     @State private var dragValue: Double = 0
@@ -54,7 +58,7 @@ public struct AudioPlayerView: View {
     
     /// Legacy initializer for backward compatibility
     public init(
-        audioState: AudioPlayerState,
+        audioState: AudioPlayerUIState,
         currentChapter: ChapterInfo,
         onPlayPause: @escaping () -> Void,
         onPrevious: @escaping () -> Void,
@@ -63,13 +67,7 @@ public struct AudioPlayerView: View {
         onSpeedChange: @escaping (PlaybackSpeed) -> Void
     ) {
         // Create a dummy view model for legacy mode
-        self.viewModel = AudioPlayerViewModel(
-            audioService: DummyAudioService(),
-            bibleService: DummyBibleService(),
-            voiceConfigService: DummyVoiceConfigService(),
-            elevenLabsService: DummyElevenLabsService(),
-            cacheManager: DummyCacheManager()
-        )
+        self.viewModel = AudioPlayerViewModel(analyticsService: nil)
         
         self.legacyAudioState = audioState
         self.legacyCurrentChapter = currentChapter
@@ -86,7 +84,7 @@ public struct AudioPlayerView: View {
             if let chapter = currentChapter {
                 VStack(spacing: 4) {
                     HStack {
-                        Text("\(chapter.book) \(chapter.chapter)")
+                        Text("\(chapter.bookName) \(chapter.chapter)")
                             .font(.headline)
                             .foregroundColor(.primary)
                         
@@ -102,7 +100,7 @@ public struct AudioPlayerView: View {
                     }
                     
                     HStack(spacing: 8) {
-                        Text(chapter.narrator)
+                        Text("Audio Available")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                         
@@ -118,8 +116,8 @@ public struct AudioPlayerView: View {
                             Image(systemName: "arrow.down.circle.fill")
                                 .foregroundColor(.green)
                                 .font(.caption)
-                        } else if viewModel.isDownloading {
-                            ProgressView(value: viewModel.downloadProgress)
+                        } else if viewModel.isLoading {
+                            ProgressView()
                                 .progressViewStyle(CircularProgressViewStyle(tint: Color("BookmarkBlue")))
                                 .scaleEffect(0.6)
                                 .frame(width: 16, height: 16)
@@ -283,17 +281,12 @@ public struct AudioPlayerView: View {
                 Spacer()
                 
                 // Download button
-                if !audioState.isDownloaded && !viewModel.isDownloading {
+                if !audioState.isDownloaded {
                     Button(action: {
                         hapticManager.triggerFeedback(.light)
                         if let chapter = currentChapter {
-                            Task {
-                                await viewModel.downloadChapter(
-                                    book: chapter.book,
-                                    chapter: chapter.chapter,
-                                    translation: chapter.translation
-                                )
-                            }
+                            // Download functionality not implemented
+                            print("Download chapter: \(chapter.bookName) \(chapter.chapter)")
                         }
                     }) {
                         Image(systemName: "arrow.down.circle")
@@ -329,15 +322,15 @@ public struct AudioPlayerView: View {
 
 // MARK: - Compact Audio Player for Apple Watch
 public struct CompactAudioPlayerView: View {
-    let audioState: AudioPlayerView.AudioPlayerState
-    let currentChapter: AudioPlayerView.ChapterInfo
+    let audioState: AudioPlayerUIState
+    let currentChapter: ChapterInfo
     let onPlayPause: () -> Void
     
     @Environment(\.hapticManager) private var hapticManager
     
     public init(
-        audioState: AudioPlayerView.AudioPlayerState,
-        currentChapter: AudioPlayerView.ChapterInfo,
+        audioState: AudioPlayerUIState,
+        currentChapter: ChapterInfo,
         onPlayPause: @escaping () -> Void
     ) {
         self.audioState = audioState
@@ -348,7 +341,7 @@ public struct CompactAudioPlayerView: View {
     public var body: some View {
         VStack(spacing: 8) {
             // Chapter info
-            Text("\(currentChapter.book) \(currentChapter.chapter)")
+            Text("\(currentChapter.bookName) \(currentChapter.chapter)")
                 .font(.caption)
                 .fontWeight(.medium)
                 .foregroundColor(.primary)
@@ -390,14 +383,14 @@ public struct CompactAudioPlayerView: View {
 
 // MARK: - Mini Audio Player (for overlays)
 public struct MiniAudioPlayerView: View {
-    let audioState: AudioPlayerView.AudioPlayerState
-    let currentChapter: AudioPlayerView.ChapterInfo
+    let audioState: AudioPlayerUIState
+    let currentChapter: ChapterInfo
     let onPlayPause: () -> Void
     let onExpand: () -> Void
     
     public init(
-        audioState: AudioPlayerView.AudioPlayerState,
-        currentChapter: AudioPlayerView.ChapterInfo,
+        audioState: AudioPlayerUIState,
+        currentChapter: ChapterInfo,
         onPlayPause: @escaping () -> Void,
         onExpand: @escaping () -> Void
     ) {
@@ -463,7 +456,7 @@ public struct MiniAudioPlayerView: View {
 @MainActor
 private final class DummyAudioService: AudioServiceProtocol {
     func getAudioChapter(book: String, chapter: Int) async throws -> AudioChapter {
-        return AudioChapter(id: "\(book)_\(chapter)", bookId: book, bookName: book, chapter: chapter, audioUrl: "", duration: 0)
+        return AudioChapter(id: "\(book)_\(chapter)", bookId: book, chapterNumber: chapter, audioURL: URL(string: "https://example.com/audio/\(book)_\(chapter).mp3")!, duration: 0, narratorName: "Default Narrator")
     }
     
     func playAudio(chapter: AudioChapter) async throws {}
@@ -540,7 +533,7 @@ struct AudioPlayerView_Previews: PreviewProvider {
         VStack(spacing: 20) {
             // Legacy mode preview
             AudioPlayerView(
-                viewModel: AudioPlayerViewModel(), audioState: AudioPlayerState(
+                audioState: AudioPlayerUIState(
                     isPlaying: true,
                     currentTime: 125,
                     duration: 847,
@@ -548,10 +541,12 @@ struct AudioPlayerView_Previews: PreviewProvider {
                     isDownloaded: true
                 ),
                 currentChapter: ChapterInfo(
-                    book: "Psalms",
+                    id: "psalms_23",
+                    bookId: "PSA",
+                    bookName: "Psalms",
                     chapter: 23,
-                    narrator: "David Suchet",
-                    translation: "NIV"
+                    verseCount: 6,
+                    audioURL: URL(string: "https://example.com/psalms23.mp3")
                 ),
                 onPlayPause: {},
                 onPrevious: {},
@@ -561,32 +556,36 @@ struct AudioPlayerView_Previews: PreviewProvider {
             )
             
             CompactAudioPlayerView(
-                audioState: AudioPlayerState(
+                audioState: AudioPlayerUIState(
                     isPlaying: false,
                     currentTime: 0,
                     duration: 543,
                     isDownloaded: false
                 ),
                 currentChapter: ChapterInfo(
-                    book: "John",
+                    id: "john_3",
+                    bookId: "JOH",
+                    bookName: "John",
                     chapter: 3,
-                    narrator: "Max McLean",
-                    translation: "ESV"
+                    verseCount: 36,
+                    audioURL: URL(string: "https://example.com/john3.mp3")
                 ),
                 onPlayPause: {}
             )
             
             MiniAudioPlayerView(
-                audioState: AudioPlayerState(
+                audioState: AudioPlayerUIState(
                     isPlaying: true,
                     currentTime: 67,
                     duration: 234
                 ),
                 currentChapter: ChapterInfo(
-                    book: "Romans",
+                    id: "romans_8",
+                    bookId: "ROM",
+                    bookName: "Romans",
                     chapter: 8,
-                    narrator: "Johnny Cash",
-                    translation: "NIV"
+                    verseCount: 39,
+                    audioURL: URL(string: "https://example.com/romans8.mp3")
                 ),
                 onPlayPause: {},
                 onExpand: {}
