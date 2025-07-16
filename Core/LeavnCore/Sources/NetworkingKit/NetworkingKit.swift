@@ -10,15 +10,7 @@ public protocol NetworkService {
     func download(_ endpoint: Endpoint) async throws -> URL
 }
 
-// HTTPMethod is defined in ServiceProtocols.swift
-
-// MARK: - Parameter Encoding
-public enum ParameterEncoding {
-    case url
-    case json
-}
-
-// Endpoint is defined in LeavnCore/ServiceProtocols.swift
+// HTTPMethod, ParameterEncoding, and Endpoint are defined in LeavnCore/ServiceProtocols.swift
 
 // MARK: - Network Service Implementation
 public final class DefaultNetworkService: NetworkService {

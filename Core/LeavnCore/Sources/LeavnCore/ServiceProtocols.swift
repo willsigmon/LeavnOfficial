@@ -163,13 +163,20 @@ public struct ServiceEndpoint: @unchecked Sendable {
     public let method: HTTPMethod
     public let parameters: [String: Any]?
     public let headers: [String: String]?
+    public let encoding: ParameterEncoding
     
-    public init(path: String, method: HTTPMethod = .get, parameters: [String: Any]? = nil, headers: [String: String]? = nil) {
+    public init(path: String, method: HTTPMethod = .get, parameters: [String: Any]? = nil, headers: [String: String]? = nil, encoding: ParameterEncoding = .url) {
         self.path = path
         self.method = method
         self.parameters = parameters
         self.headers = headers
+        self.encoding = encoding
     }
+}
+
+public enum ParameterEncoding {
+    case url
+    case json
 }
 
 public enum HTTPMethod: String, Sendable {
