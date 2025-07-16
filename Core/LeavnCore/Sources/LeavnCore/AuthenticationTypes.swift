@@ -36,7 +36,7 @@ public struct AuthUser: Codable, Identifiable {
     
     /// Convert to simplified User type for general use
     public var asUser: User {
-        User(id: id, email: email, displayName: displayName, createdAt: createdAt)
+        User(id: id, email: email, name: displayName ?? email, createdAt: createdAt)
     }
 }
 

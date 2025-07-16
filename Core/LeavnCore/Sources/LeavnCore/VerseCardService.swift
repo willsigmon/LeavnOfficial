@@ -1,12 +1,17 @@
 import Foundation
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#endif
 import CoreImage
 import CoreImage.CIFilterBuiltins
 
 // MARK: - Verse Card Service Protocol
 /// Generates beautiful shareable verse card images
 public protocol VerseCardServiceProtocol {
+    #if canImport(UIKit)
     func generateCard(for verse: BibleVerse, template: VerseCardTemplate, customization: VerseCardCustomization?) async throws -> UIImage
+    #endif
     func generateCardData(for verse: BibleVerse, template: VerseCardTemplate, customization: VerseCardCustomization?) async throws -> Data
     func getAvailableTemplates() -> [VerseCardTemplate]
     func getRecommendedTemplate(for occasion: VerseCardOccasion) -> VerseCardTemplate
@@ -41,13 +46,13 @@ public enum VerseCardTemplate: String, CaseIterable, Identifiable, Sendable {
     public var defaultColors: [Color] {
         switch self {
         case .minimalist: return [.white, .black]
-        case .gradient: return [Color(hex: "#667eea"), Color(hex: "#764ba2")]
-        case .nature: return [Color(hex: "#134e4a"), Color(hex: "#14b8a6")]
-        case .geometric: return [Color(hex: "#f59e0b"), Color(hex: "#ef4444")]
-        case .watercolor: return [Color(hex: "#fbbf24"), Color(hex: "#a78bfa")]
-        case .vintage: return [Color(hex: "#92400e"), Color(hex: "#fef3c7")]
-        case .modern: return [Color(hex: "#1e40af"), Color(hex: "#60a5fa")]
-        case .elegant: return [Color(hex: "#1f2937"), Color(hex: "#d1d5db")]
+        case .gradient: return [Color("#667eea"), Color("#764ba2")]
+        case .nature: return [Color("#134e4a"), Color("#14b8a6")]
+        case .geometric: return [Color("#f59e0b"), Color("#ef4444")]
+        case .watercolor: return [Color("#fbbf24"), Color("#a78bfa")]
+        case .vintage: return [Color("#92400e"), Color("#fef3c7")]
+        case .modern: return [Color("#1e40af"), Color("#60a5fa")]
+        case .elegant: return [Color("#1f2937"), Color("#d1d5db")]
         }
     }
 }
@@ -97,6 +102,7 @@ public struct VerseCardCustomization: Sendable {
 }
 
 // MARK: - Verse Card Service Implementation
+#if canImport(UIKit)
 public final class VerseCardService: VerseCardServiceProtocol {
     private let imageSize = CGSize(width: 1080, height: 1080) // Instagram square format
     private let storySize = CGSize(width: 1080, height: 1920) // Instagram story format
@@ -296,7 +302,7 @@ public final class VerseCardService: VerseCardServiceProtocol {
             switch template {
             case .minimalist, .vintage: return .black
             case .gradient, .nature, .modern, .elegant: return .white
-            case .geometric, .watercolor: return UIColor(Color(hex: "#1f2937"))
+            case .geometric, .watercolor: return UIColor(Color("#1f2937"))
             }
         }()
         
@@ -343,7 +349,7 @@ public final class VerseCardService: VerseCardServiceProtocol {
         
         // Leavn logo/text at bottom
         let brandingText = "Shared from Leavn"
-        let brandingFont = UIFont.systemFont(ofSize: 16, weight: .medium)
+        let brandingFont = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
@@ -368,7 +374,7 @@ public final class VerseCardService: VerseCardServiceProtocol {
         
         // App Store link hint
         let linkText = "Download on the App Store"
-        let linkFont = UIFont.systemFont(ofSize: 12, weight: .regular)
+        let linkFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         let linkAttributes: [NSAttributedString.Key: Any] = [
             .font: linkFont,
             .foregroundColor: UIColor.white.withAlphaComponent(watermarkOpacity * 0.8),
@@ -380,6 +386,7 @@ public final class VerseCardService: VerseCardServiceProtocol {
         linkString.draw(in: linkRect)
     }
 }
+#endif
 
 // MARK: - Error Types
 public enum VerseCardError: LocalizedError {

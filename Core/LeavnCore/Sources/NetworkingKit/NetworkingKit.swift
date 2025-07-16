@@ -1,4 +1,5 @@
 import Foundation
+import LeavnCore
 
 // MARK: - Network Service Protocol
 public protocol NetworkService {
@@ -17,28 +18,7 @@ public enum ParameterEncoding {
     case json
 }
 
-// MARK: - Endpoint Definition
-public struct Endpoint {
-    public let path: String
-    public let method: HTTPMethod
-    public let parameters: [String: Any]?
-    public let headers: [String: String]?
-    public let encoding: ParameterEncoding
-    
-    public init(
-        path: String,
-        method: HTTPMethod = .get,
-        parameters: [String: Any]? = nil,
-        headers: [String: String]? = nil,
-        encoding: ParameterEncoding = .url
-    ) {
-        self.path = path
-        self.method = method
-        self.parameters = parameters
-        self.headers = headers
-        self.encoding = encoding
-    }
-}
+// Endpoint is defined in LeavnCore/ServiceProtocols.swift
 
 // MARK: - Network Service Implementation
 public final class DefaultNetworkService: NetworkService {

@@ -96,27 +96,52 @@ public enum TheologicalPerspective: String, CaseIterable, Identifiable, Codable 
     
     public var color: Color {
         switch self {
-        case .reformed: return Color(hex: "4A5568")
-        case .catholic: return Color(hex: "9B2C2C")
-        case .orthodox: return Color(hex: "744210")
-        case .evangelical: return Color(hex: "2B6CB0")
-        case .charismatic: return Color(hex: "D69E2E")
-        case .mainline: return Color(hex: "38A169")
-        case .nonDenominational: return Color(hex: "5A67D8")
-        case .messianic: return Color(hex: "9F7AEA")
-        case .anglican: return Color(hex: "6B46C1")
-        case .lutheran: return Color(hex: "1E40AF")
-        case .baptist: return Color(hex: "0891B2")
-        case .pentecostal: return Color(hex: "DC2626")
-        case .presbyterian: return Color(hex: "7C2D12")
-        case .methodist: return Color(hex: "059669")
-        case .adventist: return Color(hex: "4338CA")
-        case .quaker: return Color(hex: "71717A")
+        case .reformed: return Color("4A5568")
+        case .catholic: return Color("9B2C2C")
+        case .orthodox: return Color("744210")
+        case .evangelical: return Color("2B6CB0")
+        case .charismatic: return Color("D69E2E")
+        case .mainline: return Color("38A169")
+        case .nonDenominational: return Color("5A67D8")
+        case .messianic: return Color("9F7AEA")
+        case .anglican: return Color("6B46C1")
+        case .lutheran: return Color("1E40AF")
+        case .baptist: return Color("0891B2")
+        case .pentecostal: return Color("DC2626")
+        case .presbyterian: return Color("7C2D12")
+        case .methodist: return Color("059669")
+        case .adventist: return Color("4338CA")
+        case .quaker: return Color("71717A")
         }
     }
 }
 
 // MARK: - Color extension for hex support
+extension Color {
+    init(_ hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let a, r, g, b: UInt64
+        switch hex.count {
+        case 3: // RGB (12-bit)
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8: // ARGB (32-bit)
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            (a, r, g, b) = (255, 0, 0, 0)
+        }
+        self.init(
+            .sRGB,
+            red: Double(r) / 255,
+            green: Double(g) / 255,
+            blue: Double(b) / 255,
+            opacity: Double(a) / 255
+        )
+    }
+}
 // Color(hex:) initializer is now defined in Color+Theme.swift to avoid duplication
 
 

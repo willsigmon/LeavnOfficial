@@ -139,7 +139,7 @@ extension LeavnError {
         switch self {
         case .networkError:
             return "Network Error"
-        case .authenticationError:
+        case .unauthorized:
             return "Authentication Error"
         case .notFound:
             return "Not Found"
@@ -147,12 +147,16 @@ extension LeavnError {
             return "Invalid Input"
         case .serverError:
             return "Server Error"
-        case .cacheError:
-            return "Cache Error"
-        case .parsingError:
+        case .localStorageError:
+            return "Storage Error"
+        case .decodingError:
             return "Data Error"
         case .notImplemented:
             return "Not Available"
+        case .validationError:
+            return "Validation Error"
+        case .systemError:
+            return "System Error"
         case .unknown:
             return "Error"
         }
@@ -166,8 +170,8 @@ extension LeavnError {
             }
             return "Please check your internet connection and try again."
             
-        case .authenticationError(let message):
-            return message
+        case .unauthorized:
+            return "Please sign in to continue."
             
         case .notFound:
             return "The requested content could not be found."
@@ -178,38 +182,51 @@ extension LeavnError {
         case .serverError(let code):
             return "Server error (\(code)). Please try again later."
             
-        case .cacheError(let message):
-            return "Cache error: \(message)"
+        case .localStorageError(let error):
+            return "Storage error: \(error.localizedDescription)"
             
-        case .parsingError:
-            return "Unable to process the response. Please try again."
+        case .decodingError(let error):
+            return "Unable to process the response: \(error.localizedDescription)"
             
         case .notImplemented(let feature):
             return "\(feature) is not yet available."
             
-        case .unknown(let message):
+        case .validationError(let message):
             return message
+            
+        case .systemError(let message):
+            return "System error: \(message)"
+            
+        case .unknown:
+            return "An unknown error occurred. Please try again."
         }
     }
 }
 
 // MARK: - View Extensions
 public extension View {
-    func errorAlert(from viewModel: BaseViewModel) -> some View {
-        self.alert(item: viewModel.$errorAlert) { alert in
-            if let secondaryButton = alert.secondaryButton {
-                return Alert(
-                    title: Text(alert.title),
-                    message: Text(alert.message),
-                    primaryButton: .default(Text(alert.primaryButton), action: alert.primaryAction),
-                    secondaryButton: .cancel(Text(secondaryButton), action: alert.secondaryAction)
-                )
+    func errorAlert<VM: BaseViewModel>(from viewModel: VM) -> some View {
+        self.alert(isPresented: Binding(
+            get: { viewModel.errorAlert != nil },
+            set: { if !$0 { viewModel.errorAlert = nil } }
+        )) {
+            if let alert = viewModel.errorAlert {
+                if let secondaryButton = alert.secondaryButton {
+                    return Alert(
+                        title: Text(alert.title),
+                        message: Text(alert.message),
+                        primaryButton: .default(Text(alert.primaryButton), action: alert.primaryAction),
+                        secondaryButton: .cancel(Text(secondaryButton), action: alert.secondaryAction)
+                    )
+                } else {
+                    return Alert(
+                        title: Text(alert.title),
+                        message: Text(alert.message),
+                        dismissButton: .default(Text(alert.primaryButton), action: alert.primaryAction)
+                    )
+                }
             } else {
-                return Alert(
-                    title: Text(alert.title),
-                    message: Text(alert.message),
-                    dismissButton: .default(Text(alert.primaryButton), action: alert.primaryAction)
-                )
+                return Alert(title: Text("Error"))
             }
         }
     }

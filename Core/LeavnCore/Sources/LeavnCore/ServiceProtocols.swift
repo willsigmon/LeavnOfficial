@@ -156,6 +156,8 @@ public protocol LifeSituationRepositoryProtocol {
 }
 
 // MARK: - Supporting Types
+public typealias Endpoint = ServiceEndpoint
+
 public struct ServiceEndpoint: @unchecked Sendable {
     public let path: String
     public let method: HTTPMethod
@@ -296,6 +298,76 @@ public struct SettingsBackup: Codable, Sendable {
         self.settings = settings
         self.createdAt = createdAt
         self.version = version
+    }
+}
+
+// MARK: - Additional Types
+public struct BibleTranslation: Codable, Identifiable, Sendable {
+    public let id: String
+    public let name: String
+    public let abbreviation: String
+    public let language: String
+    
+    public init(id: String, name: String, abbreviation: String, language: String = "en") {
+        self.id = id
+        self.name = name
+        self.abbreviation = abbreviation
+        self.language = language
+    }
+}
+
+public struct VoiceConfiguration: Codable, Sendable {
+    public let voiceId: String
+    public let speed: Double
+    public let pitch: Double
+    
+    public init(voiceId: String, speed: Double = 1.0, pitch: Double = 1.0) {
+        self.voiceId = voiceId
+        self.speed = speed
+        self.pitch = pitch
+    }
+}
+
+public struct ElevenLabsVoice: Codable, Identifiable, Sendable {
+    public let id: String
+    public let name: String
+    public let category: String?
+    
+    public init(id: String, name: String, category: String? = nil) {
+        self.id = id
+        self.name = name
+        self.category = category
+    }
+}
+
+public protocol AnalyticsProvider {
+    func track(event: String, properties: [String: Any]?)
+    func identify(userId: String, traits: [String: Any]?)
+    func reset()
+}
+
+// MARK: - Search Types
+public struct BibleSearchResult: Identifiable, Sendable {
+    public let id: String
+    public let verse: BibleVerse
+    public let relevance: Double
+    
+    public init(id: String = UUID().uuidString, verse: BibleVerse, relevance: Double) {
+        self.id = id
+        self.verse = verse
+        self.relevance = relevance
+    }
+}
+
+public struct SearchQuery: Codable, Identifiable, Sendable {
+    public let id: String
+    public let query: String
+    public let timestamp: Date
+    
+    public init(id: String = UUID().uuidString, query: String, timestamp: Date = Date()) {
+        self.id = id
+        self.query = query
+        self.timestamp = timestamp
     }
 }
 

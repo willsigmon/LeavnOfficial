@@ -1,4 +1,5 @@
 import Foundation
+import LeavnCore
 
 // MARK: - API Client Protocol
 public protocol APIClient {

@@ -2,7 +2,7 @@ import Foundation
 
 // MARK: - AsyncChannel
 /// A channel for sending values to an async stream
-public final class AsyncChannel<Element> {
+public final class AsyncChannel<Element: Sendable>: @unchecked Sendable {
     private let continuation: AsyncStream<Element>.Continuation
     public let stream: AsyncStream<Element>
     
