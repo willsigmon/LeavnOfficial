@@ -1,5 +1,67 @@
 import Foundation
 
+// MARK: - Leavn Configuration
+public struct LeavnConfiguration: Sendable {
+    public let apiKey: String?
+    public let environment: Environment
+    public let esvAPIKey: String?
+    public let bibleComAPIKey: String?
+    public let elevenLabsAPIKey: String?
+    public let audioNarrationEnabled: Bool
+    public let offlineModeEnabled: Bool
+    public let hapticFeedbackEnabled: Bool
+    
+    public enum Environment: String, Sendable {
+        case development
+        case staging
+        case production
+    }
+    
+    public init(
+        apiKey: String? = nil,
+        environment: Environment = .production,
+        esvAPIKey: String? = nil,
+        bibleComAPIKey: String? = nil,
+        elevenLabsAPIKey: String? = nil,
+        audioNarrationEnabled: Bool = true,
+        offlineModeEnabled: Bool = true,
+        hapticFeedbackEnabled: Bool = true
+    ) {
+        self.apiKey = apiKey
+        self.environment = environment
+        self.esvAPIKey = esvAPIKey
+        self.bibleComAPIKey = bibleComAPIKey
+        self.elevenLabsAPIKey = elevenLabsAPIKey
+        self.audioNarrationEnabled = audioNarrationEnabled
+        self.offlineModeEnabled = offlineModeEnabled
+        self.hapticFeedbackEnabled = hapticFeedbackEnabled
+    }
+    
+    public static let `default` = LeavnConfiguration()
+}
+
+// MARK: - Cache Configuration
+public struct CacheConfiguration: Sendable {
+    public let maxAge: TimeInterval
+    public let maxSize: Int
+    public let diskCacheEnabled: Bool
+    public let memoryCacheEnabled: Bool
+    
+    public init(
+        maxAge: TimeInterval = 3600, // 1 hour
+        maxSize: Int = 50 * 1024 * 1024, // 50MB
+        diskCacheEnabled: Bool = true,
+        memoryCacheEnabled: Bool = true
+    ) {
+        self.maxAge = maxAge
+        self.maxSize = maxSize
+        self.diskCacheEnabled = diskCacheEnabled
+        self.memoryCacheEnabled = memoryCacheEnabled
+    }
+    
+    public static let `default` = CacheConfiguration()
+}
+
 // MARK: - Feature Flags
 public struct FeatureFlags: Sendable {
     public let enableOfflineMode: Bool

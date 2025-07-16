@@ -34,7 +34,7 @@ public final class CoreDataStack {
     public func performBackgroundTask<T>(_ block: @escaping (NSManagedObjectContext) async throws -> T) async throws -> T {
         return try await withCheckedThrowingContinuation { continuation in
             persistentContainer.performBackgroundTask { context in
-                Task {
+                Task { @Sendable in
                     do {
                         let result = try await block(context)
                         continuation.resume(returning: result)

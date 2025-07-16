@@ -1,5 +1,4 @@
 import Foundation
-import LeavnCore
 
 // MARK: - Network Service Protocol
 public protocol NetworkService {
@@ -57,6 +56,8 @@ public final class DefaultNetworkService: NetworkService {
             case .json:
                 request.httpBody = try JSONSerialization.data(withJSONObject: parameters)
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            case .custom(encoding: let encoding):
+                request.httpBody = encoding(parameters)
             }
         }
         

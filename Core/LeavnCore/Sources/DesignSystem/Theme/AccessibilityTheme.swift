@@ -5,7 +5,7 @@ import UIKit
 #endif
 
 // MARK: - Color Extension for Hex Support
-// Color hex initializer is now defined in Shared/Extensions/Color+Theme.swift
+// Color hex initializer is now defined in Extensions/Color+Extensions.swift
 
 // MARK: - Accessibility Theme Manager
 @MainActor
@@ -49,64 +49,74 @@ public class AccessibilityThemeManager: ObservableObject {
 }
 
 // MARK: - WCAG Compliant Color Palette
-@MainActor
-public struct WCAGColors {
-    private let themeManager = AccessibilityThemeManager.shared
-    
-    // MARK: - Primary Colors with WCAG AA Compliance
-    public var primary: Color {
-        if themeManager.isHighContrastEnabled {
-            return themeManager.colorScheme == .dark ? Color(hex: "#4DA6FF") : Color(hex: "#0066CC")
-        }
-        return themeManager.colorScheme == .dark ? Color(hex: "#3399FF") : Color(hex: "#007AFF")
+public struct WCAGColors: Sendable {
+    @MainActor
+    private var themeManager: AccessibilityThemeManager {
+        AccessibilityThemeManager.shared
     }
     
+    // MARK: - Primary Colors with WCAG AA Compliance
+    @MainActor
+    public var primary: Color {
+        if themeManager.isHighContrastEnabled {
+            return themeManager.colorScheme == .dark ? Color( "#4DA6FF") : Color( "#0066CC")
+        }
+        return themeManager.colorScheme == .dark ? Color( "#3399FF") : Color( "#007AFF")
+    }
+    
+    @MainActor
     public var primaryOnBackground: Color {
         // Ensures 4.5:1 contrast ratio for normal text
         if themeManager.isHighContrastEnabled {
-            return themeManager.colorScheme == .dark ? Color(hex: "#66B3FF") : Color(hex: "#004C99")
+            return themeManager.colorScheme == .dark ? Color( "#66B3FF") : Color( "#004C99")
         }
-        return themeManager.colorScheme == .dark ? Color(hex: "#4DA6FF") : Color(hex: "#0066CC")
+        return themeManager.colorScheme == .dark ? Color( "#4DA6FF") : Color( "#0066CC")
     }
     
     // MARK: - Secondary Colors
+    @MainActor
     public var secondary: Color {
         if themeManager.isHighContrastEnabled {
-            return themeManager.colorScheme == .dark ? Color(hex: "#FFB366") : Color(hex: "#CC6600")
+            return themeManager.colorScheme == .dark ? Color( "#FFB366") : Color( "#CC6600")
         }
-        return themeManager.colorScheme == .dark ? Color(hex: "#FF9F40") : Color(hex: "#FF8C00")
+        return themeManager.colorScheme == .dark ? Color( "#FF9F40") : Color( "#FF8C00")
     }
     
     // MARK: - Semantic Colors
+    @MainActor
     public var success: Color {
         if themeManager.isHighContrastEnabled {
-            return themeManager.colorScheme == .dark ? Color(hex: "#4DCC4D") : Color(hex: "#008000")
+            return themeManager.colorScheme == .dark ? Color( "#4DCC4D") : Color( "#008000")
         }
-        return themeManager.colorScheme == .dark ? Color(hex: "#34C759") : Color(hex: "#32A852")
+        return themeManager.colorScheme == .dark ? Color( "#34C759") : Color( "#32A852")
     }
     
+    @MainActor
     public var warning: Color {
         if themeManager.isHighContrastEnabled {
-            return themeManager.colorScheme == .dark ? Color(hex: "#FFD633") : Color(hex: "#CC8800")
+            return themeManager.colorScheme == .dark ? Color( "#FFD633") : Color( "#CC8800")
         }
-        return themeManager.colorScheme == .dark ? Color(hex: "#FFCC00") : Color(hex: "#FFA500")
+        return themeManager.colorScheme == .dark ? Color( "#FFCC00") : Color( "#FFA500")
     }
     
+    @MainActor
     public var error: Color {
         if themeManager.isHighContrastEnabled {
-            return themeManager.colorScheme == .dark ? Color(hex: "#FF6666") : Color(hex: "#CC0000")
+            return themeManager.colorScheme == .dark ? Color( "#FF6666") : Color( "#CC0000")
         }
-        return themeManager.colorScheme == .dark ? Color(hex: "#FF453A") : Color(hex: "#E74444")
+        return themeManager.colorScheme == .dark ? Color( "#FF453A") : Color( "#E74444")
     }
     
+    @MainActor
     public var info: Color {
         if themeManager.isHighContrastEnabled {
-            return themeManager.colorScheme == .dark ? Color(hex: "#66B3FF") : Color(hex: "#0066CC")
+            return themeManager.colorScheme == .dark ? Color( "#66B3FF") : Color( "#0066CC")
         }
-        return themeManager.colorScheme == .dark ? Color(hex: "#4DA6FF") : Color(hex: "#007AFF")
+        return themeManager.colorScheme == .dark ? Color( "#4DA6FF") : Color( "#007AFF")
     }
     
     // MARK: - Text Colors with Proper Contrast
+    @MainActor
     public var primaryText: Color {
         if themeManager.isHighContrastEnabled {
             return themeManager.colorScheme == .dark ? .white : .black
@@ -118,9 +128,10 @@ public struct WCAGColors {
         #endif
     }
     
+    @MainActor
     public var secondaryText: Color {
         if themeManager.isHighContrastEnabled {
-            return themeManager.colorScheme == .dark ? Color(hex: "#E6E6E6") : Color(hex: "#1A1A1A")
+            return themeManager.colorScheme == .dark ? Color( "#E6E6E6") : Color( "#1A1A1A")
         }
         #if canImport(UIKit)
         return Color(UIColor.secondaryLabel)
@@ -129,9 +140,10 @@ public struct WCAGColors {
         #endif
     }
     
+    @MainActor
     public var tertiaryText: Color {
         if themeManager.isHighContrastEnabled {
-            return themeManager.colorScheme == .dark ? Color(hex: "#CCCCCC") : Color(hex: "#333333")
+            return themeManager.colorScheme == .dark ? Color( "#CCCCCC") : Color( "#333333")
         }
         #if canImport(UIKit)
         return Color(UIColor.tertiaryLabel)
@@ -140,15 +152,17 @@ public struct WCAGColors {
         #endif
     }
     
+    @MainActor
     public var disabledText: Color {
         // Ensures 3:1 contrast ratio for disabled elements
         if themeManager.isHighContrastEnabled {
-            return themeManager.colorScheme == .dark ? Color(hex: "#999999") : Color(hex: "#666666")
+            return themeManager.colorScheme == .dark ? Color( "#999999") : Color( "#666666")
         }
-        return themeManager.colorScheme == .dark ? Color(hex: "#8E8E93") : Color(hex: "#8E8E93")
+        return themeManager.colorScheme == .dark ? Color( "#8E8E93") : Color( "#8E8E93")
     }
     
     // MARK: - Background Colors
+    @MainActor
     public var background: Color {
         if themeManager.isHighContrastEnabled {
             return themeManager.colorScheme == .dark ? .black : .white
@@ -160,9 +174,10 @@ public struct WCAGColors {
         #endif
     }
     
+    @MainActor
     public var secondaryBackground: Color {
         if themeManager.isHighContrastEnabled {
-            return themeManager.colorScheme == .dark ? Color(hex: "#1A1A1A") : Color(hex: "#F2F2F2")
+            return themeManager.colorScheme == .dark ? Color( "#1A1A1A") : Color( "#F2F2F2")
         }
         #if canImport(UIKit)
         return Color(UIColor.secondarySystemBackground)
@@ -171,9 +186,10 @@ public struct WCAGColors {
         #endif
     }
     
+    @MainActor
     public var tertiaryBackground: Color {
         if themeManager.isHighContrastEnabled {
-            return themeManager.colorScheme == .dark ? Color(hex: "#262626") : Color(hex: "#E6E6E6")
+            return themeManager.colorScheme == .dark ? Color( "#262626") : Color( "#E6E6E6")
         }
         #if canImport(UIKit)
         return Color(UIColor.tertiarySystemBackground)
@@ -183,26 +199,30 @@ public struct WCAGColors {
     }
     
     // MARK: - Interactive Element Colors
+    @MainActor
     public var buttonBackground: Color {
         primary
     }
     
+    @MainActor
     public var buttonText: Color {
         // Always ensures proper contrast on button backgrounds
         .white
     }
     
+    @MainActor
     public var linkColor: Color {
         if themeManager.isHighContrastEnabled {
-            return themeManager.colorScheme == .dark ? Color(hex: "#66B3FF") : Color(hex: "#0044CC")
+            return themeManager.colorScheme == .dark ? Color( "#66B3FF") : Color( "#0044CC")
         }
         return primary
     }
     
     // MARK: - Border and Separator Colors
+    @MainActor
     public var separator: Color {
         if themeManager.isHighContrastEnabled {
-            return themeManager.colorScheme == .dark ? Color(hex: "#4D4D4D") : Color(hex: "#B3B3B3")
+            return themeManager.colorScheme == .dark ? Color( "#4D4D4D") : Color( "#B3B3B3")
         }
         #if canImport(UIKit)
         return Color(UIColor.separator)
@@ -211,16 +231,17 @@ public struct WCAGColors {
         #endif
     }
     
+    @MainActor
     public var border: Color {
         if themeManager.isHighContrastEnabled {
-            return themeManager.colorScheme == .dark ? Color(hex: "#666666") : Color(hex: "#999999")
+            return themeManager.colorScheme == .dark ? Color( "#666666") : Color( "#999999")
         }
-        return themeManager.colorScheme == .dark ? Color(hex: "#3C3C3E") : Color(hex: "#D1D1D6")
+        return themeManager.colorScheme == .dark ? Color( "#3C3C3E") : Color( "#D1D1D6")
     }
 }
 
 // MARK: - Dynamic Type Scaling
-public struct ScaledFont: ViewModifier {
+public struct ScaledFont: ViewModifier, Sendable {
     @Environment(\.sizeCategory) var sizeCategory
     
     let style: Font.TextStyle
@@ -241,7 +262,7 @@ public extension View {
 }
 
 // MARK: - Contrast Checker
-public struct ContrastChecker {
+public struct ContrastChecker: Sendable {
     public static func checkContrast(foreground: Color, background: Color) -> ContrastResult {
         let fgLuminance = luminance(of: foreground)
         let bgLuminance = luminance(of: background)
@@ -285,7 +306,7 @@ public struct ContrastChecker {
     }
 }
 
-public struct ContrastResult {
+public struct ContrastResult: Sendable {
     public let ratio: Double
     public let passesAA: Bool
     public let passesAAA: Bool
@@ -298,13 +319,13 @@ public struct ContrastResult {
 }
 
 // MARK: - High Contrast Mode Support
+@MainActor
 public struct HighContrastModifier: ViewModifier {
     @ObservedObject private var themeManager = AccessibilityThemeManager.shared
     
     public func body(content: Content) -> some View {
         content
-            .environment(\.colorSchemeContrast, 
-                         themeManager.isHighContrastEnabled ? .increased : .standard)
+            .environment(\.accessibilityDifferentiateWithoutColor, themeManager.isHighContrastEnabled)
     }
 }
 
@@ -315,6 +336,7 @@ public extension View {
 }
 
 // MARK: - Focus Indicator for Accessibility
+@MainActor
 public struct AccessibleFocusModifier: ViewModifier {
     @FocusState private var isFocused: Bool
     @ObservedObject private var themeManager = AccessibilityThemeManager.shared

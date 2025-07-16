@@ -25,7 +25,7 @@ public extension Storage {
 }
 
 // MARK: - In-Memory Storage
-public final class InMemoryStorage: Storage {
+public final class InMemoryStorage: Storage, @unchecked Sendable {
     private var storage: [String: Data] = [:]
     private let queue = DispatchQueue(label: "com.leavn.inmemory.storage", attributes: .concurrent)
     
@@ -33,8 +33,11 @@ public final class InMemoryStorage: Storage {
     
     public func save<T: Codable>(_ object: T, forKey key: String) async throws {
         let data = try JSONEncoder().encode(object)
-        queue.async(flags: .barrier) {
-            self.storage[key] = data
+        await withCheckedContinuation { continuation in
+            queue.async(flags: .barrier) {
+                self.storage[key] = data
+                continuation.resume()
+            }
         }
     }
     
@@ -46,8 +49,11 @@ public final class InMemoryStorage: Storage {
     }
     
     public func remove(forKey key: String) async throws {
-        queue.async(flags: .barrier) {
-            self.storage.removeValue(forKey: key)
+        await withCheckedContinuation { continuation in
+            queue.async(flags: .barrier) {
+                self.storage.removeValue(forKey: key)
+                continuation.resume()
+            }
         }
     }
     
@@ -58,8 +64,11 @@ public final class InMemoryStorage: Storage {
     }
     
     public func clear() async throws {
-        queue.async(flags: .barrier) {
-            self.storage.removeAll()
+        await withCheckedContinuation { continuation in
+            queue.async(flags: .barrier) {
+                self.storage.removeAll()
+                continuation.resume()
+            }
         }
     }
 }
