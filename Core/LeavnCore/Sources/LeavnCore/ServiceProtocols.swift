@@ -22,11 +22,7 @@ public protocol AnalyticsServiceProtocol {
 }
 
 /// Analytics provider interface for pluggable analytics backends
-public protocol AnalyticsProvider {
-    func track(event: String, properties: [String: Any]?)
-    func identify(userId: String, traits: [String: Any]?)
-    func reset()
-}
+// AnalyticsProvider is now defined in AnalyticsKit/AnalyticsKit.swift
 
 // MARK: - Bible Service Protocol
 /// Manages Bible content retrieval and caching
@@ -216,45 +212,11 @@ public struct BibleVerse: Codable, Identifiable, Sendable {
     }
 }
 
-public struct BibleTranslation: Codable, Identifiable, Sendable {
-    public let id: String
-    public let name: String
-    public let abbreviation: String
-    public let language: String
-    
-    public init(id: String, name: String, abbreviation: String, language: String) {
-        self.id = id
-        self.name = name
-        self.abbreviation = abbreviation
-        self.language = language
-    }
-}
+// BibleTranslation is now defined in BibleService.swift
 
-public struct VoiceConfiguration: Codable, Sendable {
-    public let voiceId: String
-    public let modelId: String?
-    public let stability: Double
-    public let similarityBoost: Double
-    
-    public init(voiceId: String, modelId: String? = nil, stability: Double = 0.5, similarityBoost: Double = 0.5) {
-        self.voiceId = voiceId
-        self.modelId = modelId
-        self.stability = stability
-        self.similarityBoost = similarityBoost
-    }
-}
+// VoiceConfiguration is now defined in BibleTypes.swift to avoid duplication
 
-public struct ElevenLabsVoice: Codable, Identifiable, Sendable {
-    public let id: String
-    public let name: String
-    public let category: String
-    
-    public init(id: String, name: String, category: String) {
-        self.id = id
-        self.name = name
-        self.category = category
-    }
-}
+// ElevenLabsVoice is defined in ElevenLabsService.swift
 
 public struct ElevenLabsModel: Codable, Identifiable, Sendable {
     public let id: String
@@ -272,17 +234,7 @@ public struct ElevenLabsModel: Codable, Identifiable, Sendable {
 
 // LibraryStatistics is now defined in LibraryTypes.swift
 
-public struct BibleSearchResult: Identifiable, Sendable {
-    public let id: String
-    public let verse: BibleVerse
-    public let relevance: Double
-    
-    public init(id: String = UUID().uuidString, verse: BibleVerse, relevance: Double) {
-        self.id = id
-        self.verse = verse
-        self.relevance = relevance
-    }
-}
+// BibleSearchResult is now defined in BibleTypes.swift to avoid duplication
 
 // LibrarySearchResult needs LibraryItem from LibraryTypes.swift
 public struct LibrarySearchResult: Identifiable, Sendable {
@@ -297,19 +249,7 @@ public struct LibrarySearchResult: Identifiable, Sendable {
     }
 }
 
-public struct SearchQuery: Codable, Identifiable, Sendable {
-    public let id: String
-    public let query: String
-    public let timestamp: Date
-    public let resultCount: Int
-    
-    public init(id: String = UUID().uuidString, query: String, timestamp: Date = Date(), resultCount: Int) {
-        self.id = id
-        self.query = query
-        self.timestamp = timestamp
-        self.resultCount = resultCount
-    }
-}
+// SearchQuery is now defined in BibleTypes.swift to avoid duplication
 
 public struct RelatedContent: Codable, Identifiable, Sendable {
     public let id: String
@@ -325,33 +265,9 @@ public struct RelatedContent: Codable, Identifiable, Sendable {
     }
 }
 
-// MARK: - Settings Types
-public struct AppSettings: Codable, Sendable {
-    public let theme: Theme
-    public let fontSize: FontSize
-    public let notificationsEnabled: Bool
-    public let offlineModeEnabled: Bool
-    
-    public init(
-        theme: Theme = .system,
-        fontSize: FontSize = .medium,
-        notificationsEnabled: Bool = true,
-        offlineModeEnabled: Bool = true
-    ) {
-        self.theme = theme
-        self.fontSize = fontSize
-        self.notificationsEnabled = notificationsEnabled
-        self.offlineModeEnabled = offlineModeEnabled
-    }
-}
+// AppSettings is defined in SettingsModels.swift
 
-public enum Theme: String, Codable, CaseIterable, Sendable {
-    case light, dark, system
-}
-
-public enum FontSize: String, Codable, CaseIterable, Sendable {
-    case small, medium, large, extraLarge
-}
+// Theme and FontSize are defined in SettingsModels.swift
 
 public struct SettingsChangeEvent: @unchecked Sendable {
     public let setting: String

@@ -4,7 +4,7 @@ import Combine
 
 // MARK: - Settings View Model
 @MainActor
-public final class SettingsViewModel: BaseViewModel<SettingsViewState, SettingsViewEvent> {
+public final class SettingsViewModel: StatefulViewModel<SettingsViewState, SettingsViewEvent> {
     
     // Use Cases
     private let getAppSettingsUseCase: GetAppSettingsUseCase

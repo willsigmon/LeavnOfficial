@@ -56,21 +56,7 @@ public final class MockAnalyticsService: AnalyticsServiceProtocol {
 }
 
 // MARK: - Console Analytics Provider
-public final class ConsoleAnalyticsProvider: AnalyticsProvider {
-    public init() {}
-    
-    public func track(event: String, properties: [String: Any]?) {
-        print("[Analytics] \(event): \(properties ?? [:])")
-    }
-    
-    public func identify(userId: String, traits: [String: Any]?) {
-        print("[Analytics] User \(userId): \(traits ?? [:])")
-    }
-    
-    public func reset() {
-        print("[Analytics] Reset")
-    }
-}
+// ConsoleAnalyticsProvider is now defined in AnalyticsKit.swift to avoid duplication
 
 // MARK: - Mock Bible Service
 public final class MockBibleService: BibleServiceProtocol {

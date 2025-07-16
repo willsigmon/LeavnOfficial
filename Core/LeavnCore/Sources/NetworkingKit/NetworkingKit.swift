@@ -9,14 +9,7 @@ public protocol NetworkService {
     func download(_ endpoint: Endpoint) async throws -> URL
 }
 
-// MARK: - HTTP Method
-public enum HTTPMethod: String {
-    case get = "GET"
-    case post = "POST"
-    case put = "PUT"
-    case patch = "PATCH"
-    case delete = "DELETE"
-}
+// HTTPMethod is defined in ServiceProtocols.swift
 
 // MARK: - Parameter Encoding
 public enum ParameterEncoding {

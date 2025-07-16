@@ -148,47 +148,50 @@ public struct AccessibleLeavnButton: View {
     }
     
     private var foregroundColor: Color {
+        let currentColorScheme = colorScheme
         switch style {
         case .primary:
             return .white
         case .secondary:
-            return Color.LeavnColors.primary.current
+            return Color.LeavnColors.primary.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled)
         case .tertiary:
-            return Color.LeavnColors.primary.current
+            return Color.LeavnColors.primary.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled)
         case .destructive:
             return .white
         }
     }
     
     private var backgroundColor: Color {
+        let currentColorScheme = colorScheme
         if !isEnabled {
-            return Color.LeavnBackgroundColors.tertiary.current
+            return Color.LeavnBackgroundColors.tertiary.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled)
         }
         
         switch style {
         case .primary:
-            return Color.LeavnColors.primary.current
+            return Color.LeavnColors.primary.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled)
         case .secondary:
-            return Color.LeavnColors.primary.current.opacity(0.1)
+            return Color.LeavnColors.primary.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled).opacity(0.1)
         case .tertiary:
             return .clear
         case .destructive:
-            return Color.LeavnColors.error.current
+            return Color.LeavnColors.error.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled)
         }
     }
     
     private var borderColor: Color {
+        let currentColorScheme = colorScheme
         if !isEnabled {
-            return Color.LeavnBorderColors.separator.current
+            return Color.LeavnBorderColors.separator.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled)
         }
         
         switch style {
         case .primary, .destructive:
             return .clear
         case .secondary:
-            return Color.LeavnColors.primary.current.opacity(0.2)
+            return Color.LeavnColors.primary.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled).opacity(0.2)
         case .tertiary:
-            return Color.LeavnColors.primary.current
+            return Color.LeavnColors.primary.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled)
         }
     }
     
@@ -204,9 +207,10 @@ public struct AccessibleLeavnButton: View {
     }
     
     private var focusIndicatorColor: Color {
-        themeManager.isHighContrastEnabled
-            ? Color.LeavnColors.accent.current
-            : Color.LeavnColors.primary.current
+        let currentColorScheme = colorScheme
+        return themeManager.isHighContrastEnabled
+            ? Color.LeavnColors.accent.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+            : Color.LeavnColors.primary.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled)
     }
     
     private var focusIndicatorWidth: CGFloat {
@@ -265,6 +269,7 @@ public struct AccessibleIconButton: View {
     let accessibilityHint: String?
     let action: () -> Void
     
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.sizeCategory) private var sizeCategory
     @ObservedObject private var themeManager = AccessibilityThemeManager.shared
     @FocusState private var isFocused: Bool
@@ -344,33 +349,36 @@ public struct AccessibleIconButton: View {
     }
     
     private var foregroundColor: Color {
+        let currentColorScheme = colorScheme
         switch style {
         case .primary:
             return .white
         case .secondary, .tertiary:
-            return Color.LeavnColors.primary.current
+            return Color.LeavnColors.primary.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled)
         case .destructive:
             return .white
         }
     }
     
     private var backgroundColor: Color {
+        let currentColorScheme = colorScheme
         switch style {
         case .primary:
-            return Color.LeavnColors.primary.current
+            return Color.LeavnColors.primary.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled)
         case .secondary:
-            return Color.LeavnColors.primary.current.opacity(0.1)
+            return Color.LeavnColors.primary.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled).opacity(0.1)
         case .tertiary:
             return .clear
         case .destructive:
-            return Color.LeavnColors.error.current
+            return Color.LeavnColors.error.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled)
         }
     }
     
     private var focusIndicatorColor: Color {
-        themeManager.isHighContrastEnabled
-            ? Color.LeavnColors.accent.current
-            : Color.LeavnColors.primary.current
+        let currentColorScheme = colorScheme
+        return themeManager.isHighContrastEnabled
+            ? Color.LeavnColors.accent.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled)
+            : Color.LeavnColors.primary.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled)
     }
     
     private var focusIndicatorWidth: CGFloat {

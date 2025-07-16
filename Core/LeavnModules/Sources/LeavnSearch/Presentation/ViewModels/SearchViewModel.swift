@@ -2,14 +2,12 @@ import Foundation
 import SwiftUI
 import Combine
 
-import Factory
-
 @MainActor
-public final class SearchViewModel: BaseViewModel<SearchViewState, SearchViewEvent> {
-    @Injected(\.networkService) private var networkService
-    @Injected(\.analyticsService) private var analyticsService
-    @Injected(\.userDefaultsStorage) private var localStorage
-    @Injected(\.cacheStorage) private var cacheStorage
+public final class SearchViewModel: StatefulViewModel<SearchViewState, SearchViewEvent> {
+    private let networkService: NetworkServiceProtocol
+    private let analyticsService: AnalyticsServiceProtocol
+    private let localStorage: UserDataManagerProtocol
+    private let searchService: SearchServiceProtocol
     
     private let searchRepository: SearchRepository
     private let searchContentUseCase: SearchContentUseCase
@@ -22,10 +20,15 @@ public final class SearchViewModel: BaseViewModel<SearchViewState, SearchViewEve
     private var suggestionsTask: Task<Void, Never>?
     
     public override init(initialState: SearchViewState = .init()) {
+        let container = DIContainer.shared
+        self.networkService = container.networkService
+        self.analyticsService = container.analyticsService
+        self.localStorage = container.userDataManager
+        self.searchService = container.searchService
+        
         self.searchRepository = DefaultSearchRepository(
-            networkService: networkService,
-            localStorage: localStorage,
-            cacheStorage: cacheStorage
+            searchService: searchService,
+            localStorage: localStorage
         )
         
         self.searchContentUseCase = SearchContentUseCase(

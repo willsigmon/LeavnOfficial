@@ -3,9 +3,9 @@ import AVFoundation
 
 // MARK: - Type Aliases for Legacy Code
 typealias LeavnServices = DIContainer
-typealias AudioService = AudioServiceProtocol
+// AudioService is now a protocol in LeavnServices
 typealias BibleService = BibleServiceProtocol
-typealias VoiceConfigurationService = VoiceConfigurationServiceProtocol
+// VoiceConfigurationService is defined in VoiceConfigurationService.swift
 
 /// Audio player component for Bible narration with ElevenLabs integration
 /// Works across all platforms with adaptive controls

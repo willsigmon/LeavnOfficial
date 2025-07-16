@@ -369,37 +369,6 @@ public struct AudioPlayerState {
 }
 
 /// Chapter information for UI display
-public struct ChapterInfo {
-    public let book: String
-    public let chapter: Int
-    public let narrator: String
-    public let translation: String
-    
-    public init(book: String, chapter: Int, narrator: String, translation: String) {
-        self.book = book
-        self.chapter = chapter
-        self.narrator = narrator
-        self.translation = translation
-    }
-}
+// ChapterInfo is now defined in BibleTypes.swift to avoid duplication
 
-/// Playback speed options
-public enum PlaybackSpeed: Float, CaseIterable {
-    case half = 0.5
-    case threeQuarters = 0.75
-    case normal = 1.0
-    case oneAndQuarter = 1.25
-    case oneAndHalf = 1.5
-    case double = 2.0
-    
-    public var title: String {
-        switch self {
-        case .half: return "0.5×"
-        case .threeQuarters: return "0.75×"
-        case .normal: return "1×"
-        case .oneAndQuarter: return "1.25×"
-        case .oneAndHalf: return "1.5×"
-        case .double: return "2×"
-        }
-    }
-}
+// PlaybackSpeed is now defined in BibleTypes.swift to avoid duplication

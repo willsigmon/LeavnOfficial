@@ -2,187 +2,23 @@ import Foundation
 import CoreData
 
 // MARK: - Bible Service Protocol
-public protocol BibleService {
-    func fetchVerse(reference: String, translation: String?) async throws -> BibleVerse
-    func fetchChapter(book: String, chapter: Int, translation: String?) async throws -> BibleChapter
-    func fetchTranslations() async throws -> [BibleTranslation]
-    func search(query: String, translation: String?) async throws -> [BibleSearchResult]
-    func getBooks(includeApocrypha: Bool) async throws -> [BibleBook]
-    func fetchPassage(reference: String, translation: String?) async throws -> BiblePassage
-}
+// BibleService protocol is now defined as BibleServiceProtocol in ServiceProtocols.swift to avoid duplication
 
 // MARK: - Bible Models
-public struct BibleVerse: Codable, Identifiable {
-    public let id: String
-    public let reference: String
-    public let text: String
-    public let translation: String
-    public let book: String
-    public let chapter: Int
-    public let verse: Int
-    
-    public init(
-        id: String,
-        reference: String,
-        text: String,
-        translation: String,
-        book: String,
-        chapter: Int,
-        verse: Int
-    ) {
-        self.id = id
-        self.reference = reference
-        self.text = text
-        self.translation = translation
-        self.book = book
-        self.chapter = chapter
-        self.verse = verse
-    }
-}
+// BibleVerse is now defined in ServiceProtocols.swift
 
-public struct BibleChapter: Codable {
-    public let book: String
-    public let chapter: Int
-    public let verses: [BibleVerse]
-    public let translation: String
-    
-    public init(book: String, chapter: Int, verses: [BibleVerse], translation: String) {
-        self.book = book
-        self.chapter = chapter
-        self.verses = verses
-        self.translation = translation
-    }
-}
+// BibleChapter is now defined in ServiceProtocols.swift
 
-public struct BibleTranslation: Codable, Identifiable {
-    public let id: String
-    public let name: String
-    public let abbreviation: String
-    public let language: String
-    public let description: String?
-    public let includesApocrypha: Bool
-    public let apiSource: APISource
-    
-    public enum APISource: String, Codable {
-        case esv = "esv"
-        case bibleCom = "bible_com"
-        case local = "local"
-    }
-    
-    public init(
-        id: String,
-        name: String,
-        abbreviation: String,
-        language: String,
-        description: String? = nil,
-        includesApocrypha: Bool = false,
-        apiSource: APISource = .local
-    ) {
-        self.id = id
-        self.name = name
-        self.abbreviation = abbreviation
-        self.language = language
-        self.description = description
-        self.includesApocrypha = includesApocrypha
-        self.apiSource = apiSource
-    }
-}
+// BibleTranslation is now defined in BibleTypes.swift to avoid duplication
 
-public struct BibleBook: Codable, Identifiable, Sendable, Sendable {
-    public let id: String
-    public let name: String
-    public let abbreviation: String
-    public let testament: Testament
-    public let bookNumber: Int
-    public let chapterCount: Int
-    public let isApocrypha: Bool
-    public let category: BookCategory
-    
-    public enum Testament: String, Codable {
-        case oldTestament = "old"
-        case newTestament = "new"
-        case apocrypha = "apocrypha"
-    }
-    
-    public enum BookCategory: String, Codable {
-        case law, history, wisdom, prophets, gospels, epistles, apocalyptic
-        case deuterocanonical // For Apocrypha
-    }
-    
-    public init(
-        id: String,
-        name: String,
-        abbreviation: String,
-        testament: Testament,
-        bookNumber: Int,
-        chapterCount: Int,
-        isApocrypha: Bool = false,
-        category: BookCategory
-    ) {
-        self.id = id
-        self.name = name
-        self.abbreviation = abbreviation
-        self.testament = testament
-        self.bookNumber = bookNumber
-        self.chapterCount = chapterCount
-        self.isApocrypha = isApocrypha
-        self.category = category
-    }
-}
+// BibleBook is now defined in BibleTypes.swift to avoid duplication
 
-public struct BiblePassage: Codable {
-    public let reference: String
-    public let canonical: String
-    public let parsed: [[Int]]
-    public let passage_meta: [PassageMeta]
-    public let passages: [String]
-    
-    public struct PassageMeta: Codable {
-        public let canonical: String
-        public let chapter_start: [Int]
-        public let chapter_end: [Int]
-        public let prev_verse: Int?
-        public let next_verse: Int?
-        public let prev_chapter: [Int]?
-        public let next_chapter: [Int]?
-    }
-    
-    public init(
-        reference: String,
-        canonical: String,
-        parsed: [[Int]],
-        passage_meta: [PassageMeta],
-        passages: [String]
-    ) {
-        self.reference = reference
-        self.canonical = canonical
-        self.parsed = parsed
-        self.passage_meta = passage_meta
-        self.passages = passages
-    }
-}
+// BiblePassage is now defined in BibleTypes.swift to avoid duplication
 
-public struct BibleSearchResult: Codable, Identifiable {
-    public let id: String
-    public let verse: BibleVerse
-    public let highlights: [Range<String.Index>]
-    public let relevanceScore: Double
-    
-    public init(
-        id: String,
-        verse: BibleVerse,
-        highlights: [Range<String.Index>] = [],
-        relevanceScore: Double = 1.0
-    ) {
-        self.id = id
-        self.verse = verse
-        self.highlights = highlights
-        self.relevanceScore = relevanceScore
-    }
-}
+// BibleSearchResult is now defined in BibleTypes.swift to avoid duplication
 
 // MARK: - Bible Service Implementation
-public final class DefaultBibleService: BibleService {
+public final class DefaultBibleService: BibleServiceProtocol {
     private let networkService: NetworkService
     private let esvClient: ESVAPIClient
     private let bibleComClient: BibleComAPIClient

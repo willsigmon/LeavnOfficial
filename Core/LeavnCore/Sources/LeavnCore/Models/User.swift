@@ -29,70 +29,7 @@ public struct User: Codable, Identifiable {
     }
 }
 
-// MARK: - Auth User Model
-public struct AuthUser: Codable {
-    public let id: String
-    public let email: String
-    public var displayName: String?
-    public var photoURL: String?
-    public var isEmailVerified: Bool
-    public var authProvider: AuthProvider
-    public let createdAt: Date
-    
-    public init(
-        id: String,
-        email: String,
-        displayName: String? = nil,
-        photoURL: String? = nil,
-        isEmailVerified: Bool = false,
-        authProvider: AuthProvider = .email,
-        createdAt: Date = Date()
-    ) {
-        self.id = id
-        self.email = email
-        self.displayName = displayName
-        self.photoURL = photoURL
-        self.isEmailVerified = isEmailVerified
-        self.authProvider = authProvider
-        self.createdAt = createdAt
-    }
-}
-
-// MARK: - Auth Provider
-public enum AuthProvider: String, Codable {
-    case email
-    case apple
-    case google
-    case passkey
-}
+// AuthUser and AuthProvider are defined in AuthenticationTypes.swift
 
 // MARK: - Voice Configuration
-public struct VoiceConfiguration: Codable {
-    public let id: String
-    public let name: String
-    public var speed: Double
-    public var pitch: Double
-    public var volume: Double
-    
-    public init(
-        id: String,
-        name: String,
-        speed: Double = 1.0,
-        pitch: Double = 1.0,
-        volume: Double = 1.0
-    ) {
-        self.id = id
-        self.name = name
-        self.speed = speed
-        self.pitch = pitch
-        self.volume = volume
-    }
-    
-    public static let defaultVoice = VoiceConfiguration(
-        id: "default",
-        name: "Default Voice",
-        speed: 1.0,
-        pitch: 1.0,
-        volume: 1.0
-    )
-}
+// VoiceConfiguration is now defined in BibleTypes.swift to avoid duplication

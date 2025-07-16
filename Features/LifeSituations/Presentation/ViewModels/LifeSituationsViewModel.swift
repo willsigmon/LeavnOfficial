@@ -5,7 +5,7 @@ import Combine
 // import Factory - Removed external dependency
 
 @MainActor
-public final class LifeSituationsViewModel: BaseViewModel<LifeSituationsViewState, LifeSituationsViewEvent> {
+public final class LifeSituationsViewModel: StatefulViewModel<LifeSituationsViewState, LifeSituationsViewEvent> {
     // TODO: Restore when Factory is available
     // @Injected(\.networkService) private var networkService
     // @Injected(\.analyticsService) private var analyticsService

@@ -11,9 +11,9 @@ public protocol ViewModel: ObservableObject {
     func send(_ event: Event)
 }
 
-// MARK: - Base ViewModel Implementation
+// MARK: - Stateful ViewModel Implementation for Generic State/Event Pattern
 @MainActor
-open class BaseViewModel<State, Event>: ObservableObject {
+open class StatefulViewModel<State, Event>: ObservableObject {
     @Published public private(set) var currentState: State
     private var cancellables = Set<AnyCancellable>()
     

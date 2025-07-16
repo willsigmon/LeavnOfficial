@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - Search Domain Models
-public struct SearchQuery: Codable {
+public struct SearchQuery: Codable, Hashable {
     public let text: String
     public let filters: SearchFilters
     public let sortOptions: SearchSortOptions
@@ -24,7 +24,7 @@ public struct SearchQuery: Codable {
     }
 }
 
-public struct SearchFilters: Codable {
+public struct SearchFilters: Codable, Hashable {
     public let contentTypes: [SearchContentType]
     public let dateRange: DateRange?
     public let categories: [String]
@@ -54,7 +54,7 @@ public struct SearchFilters: Codable {
     }
 }
 
-public struct SearchSortOptions: Codable {
+public struct SearchSortOptions: Codable, Hashable {
     public let sortBy: SearchSortBy
     public let order: SortOrder
     
@@ -92,7 +92,7 @@ public enum SortOrder: String, Codable, CaseIterable {
     }
 }
 
-public struct SearchPagination: Codable {
+public struct SearchPagination: Codable, Hashable {
     public let page: Int
     public let limit: Int
     public let offset: Int
@@ -104,33 +104,7 @@ public struct SearchPagination: Codable {
     }
 }
 
-public struct DateRange: Codable {
-    public let start: Date
-    public let end: Date
-    
-    public init(start: Date, end: Date) {
-        self.start = start
-        self.end = end
-    }
-    
-    public static func lastWeek() -> DateRange {
-        let end = Date()
-        let start = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: end) ?? end
-        return DateRange(start: start, end: end)
-    }
-    
-    public static func lastMonth() -> DateRange {
-        let end = Date()
-        let start = Calendar.current.date(byAdding: .month, value: -1, to: end) ?? end
-        return DateRange(start: start, end: end)
-    }
-    
-    public static func lastYear() -> DateRange {
-        let end = Date()
-        let start = Calendar.current.date(byAdding: .year, value: -1, to: end) ?? end
-        return DateRange(start: start, end: end)
-    }
-}
+// DateRange is now defined in CommonTypes.swift to avoid duplication
 
 // MARK: - Search Results
 public struct SearchResult: Codable, Identifiable {

@@ -25,7 +25,7 @@ public struct ThemeValidator {
     }
     
     // MARK: - Validate All Theme Components
-    @MainActor @MainActor @MainActor @MainActor public static func validateTheme() -> [ValidationResult] {
+    @MainActor public static func validateTheme() -> [ValidationResult] {
         var results: [ValidationResult] = []
         
         // Test both light and dark modes
@@ -49,7 +49,7 @@ public struct ThemeValidator {
     }
     
     // MARK: - Text on Background Validation
-    @MainActor @MainActor @MainActor @MainActor @MainActor private static func validateTextOnBackgrounds(colorScheme: ColorScheme, prefix: String) -> [ValidationResult] {
+    @MainActor private static func validateTextOnBackgrounds(colorScheme: ColorScheme, prefix: String) -> [ValidationResult] {
         var results: [ValidationResult] = []
         
         // Primary text on primary background
@@ -97,7 +97,7 @@ public struct ThemeValidator {
     }
     
     // MARK: - Button Validation
-    @MainActor @MainActor @MainActor private static func validateButtons(colorScheme: ColorScheme, prefix: String) -> [ValidationResult] {
+    @MainActor private static func validateButtons(colorScheme: ColorScheme, prefix: String) -> [ValidationResult] {
         var results: [ValidationResult] = []
         
         // Primary button
@@ -135,7 +135,7 @@ public struct ThemeValidator {
     }
     
     // MARK: - Semantic Colors Validation
-    @MainActor @MainActor @MainActor @MainActor @MainActor private static func validateSemanticColors(colorScheme: ColorScheme, prefix: String) -> [ValidationResult] {
+    @MainActor private static func validateSemanticColors(colorScheme: ColorScheme, prefix: String) -> [ValidationResult] {
         var results: [ValidationResult] = []
         let background = getColor(Color.LeavnBackgroundColors.primary, in: colorScheme)
         
@@ -179,7 +179,7 @@ public struct ThemeValidator {
     }
     
     // MARK: - Interactive Elements Validation
-    @MainActor @MainActor @MainActor @MainActor private static func validateInteractiveElements(colorScheme: ColorScheme, prefix: String) -> [ValidationResult] {
+    @MainActor private static func validateInteractiveElements(colorScheme: ColorScheme, prefix: String) -> [ValidationResult] {
         var results: [ValidationResult] = []
         let background = getColor(Color.LeavnBackgroundColors.primary, in: colorScheme)
         

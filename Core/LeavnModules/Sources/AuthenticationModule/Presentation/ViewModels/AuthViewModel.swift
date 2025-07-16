@@ -3,7 +3,7 @@ import SwiftUI
 import Combine
 
 @MainActor
-public final class AuthViewModel: BaseViewModel<AuthViewState, AuthViewEvent> {
+public final class AuthViewModel: StatefulViewModel<AuthViewState, AuthViewEvent> {
     // Dependencies injected through initializer
     private let authRepository: AuthRepositoryProtocol
     private let analyticsService: AnalyticsServiceProtocol

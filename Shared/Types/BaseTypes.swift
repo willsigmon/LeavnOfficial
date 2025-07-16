@@ -3,49 +3,10 @@ import SwiftUI
 import Combine
 
 // MARK: - Loading State
-public enum LoadingState<T> {
-    case idle
-    case loading
-    case loaded(T)
-    case error(Error)
-}
+// LoadingState is now defined in Core/LeavnCore/Sources/LeavnCore/ViewModelSupport/ViewModelErrorHandling.swift
 
 // MARK: - Base View Model
-@MainActor
-open class BaseViewModel: ObservableObject {
-    @Published public var isLoading = false
-    @Published public var error: Error?
-    
-    public init() {}
-    
-    public func handleError(_ error: Error) {
-        self.error = error
-        print("Error: \(error)")
-    }
-    
-    public func execute<T>(_ operation: @escaping () async throws -> T, onError: ((Error) -> Void)? = nil) {
-        Task {
-            isLoading = true
-            do {
-                let result = try await operation()
-                isLoading = false
-                // Successfully executed
-            } catch {
-                isLoading = false
-                if let onError = onError {
-                    onError(error)
-                } else {
-                    handleError(error)
-                }
-            }
-        }
-    }
-    
-    public func handle(error: Error, retry: @escaping () -> Void) {
-        handleError(error)
-        // Store retry action for potential UI retry buttons
-    }
-}
+// BaseViewModel is now defined in Core/LeavnCore/Sources/LeavnCore/ViewModelSupport/ViewModelErrorHandling.swift
 
 // MARK: - Basic Search Types (Moved to BibleTypes.swift)
 
@@ -53,26 +14,9 @@ open class BaseViewModel: ObservableObject {
 
 // LibraryCollection moved to BibleTypes.swift with LibraryItem
 
-public struct LibraryStatistics: Codable {
-    public let totalItems: Int
-    public let bookmarksCount: Int
-    public let notesCount: Int
-    public let favoritesCount: Int
-    
-    public init(totalItems: Int, bookmarksCount: Int, notesCount: Int, favoritesCount: Int) {
-        self.totalItems = totalItems
-        self.bookmarksCount = bookmarksCount
-        self.notesCount = notesCount
-        self.favoritesCount = favoritesCount
-    }
-}
+// LibraryStatistics moved to Core/LeavnCore/Sources/LeavnCore/LibraryTypes.swift
 
-public enum LibraryFilter: String, CaseIterable {
-    case all = "All"
-    case bookmarks = "Bookmarks"
-    case notes = "Notes"
-    case favorites = "Favorites"
-}
+// LibraryFilter is now defined in Core/LeavnCore/Sources/LeavnCore/LibraryTypes.swift
 
 
 // MARK: - Community Types (Moved to BibleTypes.swift)
@@ -81,7 +25,7 @@ public enum LibraryFilter: String, CaseIterable {
 
 // MARK: - Additional Audio Types (moved to BibleTypes.swift)
 
-// Audio Player UI State (different from AudioPlayerState enum in BibleTypes.swift)
+// Audio Player UI State (different from AudioPlayerState enum)
 public struct AudioPlayerUIState: Codable {
     public let isPlaying: Bool
     public let currentTime: Double
@@ -100,28 +44,4 @@ public struct AudioPlayerUIState: Codable {
     }
 }
 
-public struct AudioData: Codable {
-    public let data: Data
-    public let format: String
-    public let duration: TimeInterval
-    
-    public init(data: Data, format: String, duration: TimeInterval) {
-        self.data = data
-        self.format = format
-        self.duration = duration
-    }
-}
-
-public struct VoiceSettings: Codable {
-    public let stability: Double
-    public let similarityBoost: Double
-    public let style: Double
-    public let useSpeakerBoost: Bool
-    
-    public init(stability: Double = 0.75, similarityBoost: Double = 0.75, style: Double = 0.0, useSpeakerBoost: Bool = true) {
-        self.stability = stability
-        self.similarityBoost = similarityBoost
-        self.style = style
-        self.useSpeakerBoost = useSpeakerBoost
-    }
-}
+// AudioData and VoiceSettings are now defined in BibleTypes.swift to avoid duplication

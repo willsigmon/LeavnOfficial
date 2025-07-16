@@ -30,56 +30,7 @@ public protocol AudioService: ObservableObject {
 }
 
 // MARK: - Audio Chapter Model
-public struct AudioChapter: Identifiable, Codable, Sendable, Sendable, Sendable {
-    public let id: String
-    public let book: String
-    public let chapter: Int
-    public let translation: String
-    public let voiceId: String
-    public let voiceName: String
-    public let verses: [AudioVerse]
-    public let audioURL: URL?
-    public let isDownloaded: Bool
-    public let fileSize: Int64?
-    public let duration: TimeInterval?
-    public let createdAt: Date
-    
-    public var title: String {
-        "\(book) \(chapter)"
-    }
-    
-    public var fullText: String {
-        verses.map { $0.text }.joined(separator: " ")
-    }
-    
-    public init(
-        id: String = UUID().uuidString,
-        book: String,
-        chapter: Int,
-        translation: String,
-        voiceId: String,
-        voiceName: String,
-        verses: [AudioVerse],
-        audioURL: URL? = nil,
-        isDownloaded: Bool = false,
-        fileSize: Int64? = nil,
-        duration: TimeInterval? = nil,
-        createdAt: Date = Date()
-    ) {
-        self.id = id
-        self.book = book
-        self.chapter = chapter
-        self.translation = translation
-        self.voiceId = voiceId
-        self.voiceName = voiceName
-        self.verses = verses
-        self.audioURL = audioURL
-        self.isDownloaded = isDownloaded
-        self.fileSize = fileSize
-        self.duration = duration
-        self.createdAt = createdAt
-    }
-}
+// AudioChapter is now defined in BibleTypes.swift to avoid duplication
 
 public struct AudioVerse: Identifiable, Codable, Sendable, Sendable, Sendable, Sendable {
     public let id: String

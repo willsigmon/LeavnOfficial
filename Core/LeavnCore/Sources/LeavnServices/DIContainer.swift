@@ -6,7 +6,7 @@ import Combine
 /// Main dependency injection container for the app
 /// Provides singleton instances of all services without external dependencies
 public final class DIContainer: ObservableObject {
-    public static let shared = DIContainer()
+    nonisolated(unsafe) public static let shared = DIContainer()
     
     // MARK: - Core Services
     private lazy var _configuration: LeavnConfiguration = {
@@ -16,12 +16,7 @@ public final class DIContainer: ObservableObject {
             esvAPIKey: ProcessInfo.processInfo.environment["ESV_API_KEY"] ?? "",
             bibleComAPIKey: ProcessInfo.processInfo.environment["BIBLE_COM_API_KEY"] ?? "",
             elevenLabsAPIKey: ProcessInfo.processInfo.environment["ELEVENLABS_API_KEY"] ?? "",
-            features: .default,
-            cacheConfiguration: CacheConfiguration(
-                memoryCapacity: 50 * 1024 * 1024, // 50MB
-                diskCapacity: 200 * 1024 * 1024,   // 200MB
-                diskPath: nil
-            )
+            features: FeatureFlags.default
         )
     }()
     
@@ -897,27 +892,7 @@ public struct CommunityPost: Identifiable {
 
 // MARK: - Library Types
 
-public struct LibraryItem: Identifiable, Codable {
-    public let id: String
-    public let type: LibraryContentType
-    public let title: String
-    public let content: String
-    public let reference: String?
-    public let metadata: [String: String]?
-    public let createdAt: Date
-    public let updatedAt: Date
-    
-    public init(id: String = UUID().uuidString, type: LibraryContentType, title: String, content: String, reference: String? = nil, metadata: [String: String]? = nil, createdAt: Date = Date(), updatedAt: Date = Date()) {
-        self.id = id
-        self.type = type
-        self.title = title
-        self.content = content
-        self.reference = reference
-        self.metadata = metadata
-        self.createdAt = createdAt
-        self.updatedAt = updatedAt
-    }
-}
+// LibraryItem is defined in LibraryTypes.swift
 
 public enum LibraryContentType: String, Codable, CaseIterable {
     case verse
@@ -948,15 +923,7 @@ public struct LibraryFilter {
     }
 }
 
-public struct DateRange {
-    public let startDate: Date
-    public let endDate: Date
-    
-    public init(startDate: Date, endDate: Date) {
-        self.startDate = startDate
-        self.endDate = endDate
-    }
-}
+// DateRange is defined in CommonTypes.swift
 
 public struct LibraryStatistics {
     public let totalItems: Int

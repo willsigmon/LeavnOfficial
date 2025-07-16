@@ -2,30 +2,40 @@ import Foundation
 import SwiftUI
 import Combine
 
-import Factory
-
 @MainActor
-public final class BibleViewModel: BaseViewModel<BibleViewState, BibleViewEvent> {
-    @Injected(\.bibleService) private var bibleService
-    @Injected(\.analyticsService) private var analyticsService
-    @Injected(\.userDefaultsStorage) private var localStorage
+public final class BibleViewModel: BaseViewModel {
+    @Published public var state = BibleViewState()
+    
+    private let bibleService: BibleServiceProtocol
+    private let analyticsService: AnalyticsServiceProtocol
+    private let localStorage: UserDataManagerProtocol
     
     private let fetchVerseUseCase: FetchVerseUseCase
     private let searchBibleUseCase: SearchBibleUseCase
     private let bibleRepository: BibleRepository
     
-    public override init(initialState: BibleViewState = .init()) {
+    public override init() {
+        let container = DIContainer.shared
+        self.bibleService = container.bibleService
+        self.analyticsService = container.analyticsService
+        self.localStorage = container.userDataManager
+        
         self.fetchVerseUseCase = FetchVerseUseCase(bibleService: bibleService)
         self.searchBibleUseCase = SearchBibleUseCase(bibleService: bibleService)
         self.bibleRepository = DefaultBibleRepository(
             bibleService: bibleService,
-            localStorage: localStorage
+            localStorage: localStorage,
+            cacheManager: container.bibleCacheManager
         )
         
-        super.init(initialState: initialState)
+        super.init()
     }
     
-    public override func send(_ event: BibleViewEvent) {
+    private func updateState(_ update: (inout BibleViewState) -> Void) {
+        update(&state)
+    }
+    
+    public func send(_ event: BibleViewEvent) {
         Task {
             await handle(event)
         }
@@ -53,10 +63,16 @@ public final class BibleViewModel: BaseViewModel<BibleViewState, BibleViewEvent>
             
         case .selectTab(let tab):
             updateState { $0.selectedTab = tab }
-            analyticsService.track(event: CommonAnalyticsEvent.screenView(
-                screenName: "Bible_\\(tab.rawValue)",
-                screenClass: "BibleView"
-            ))
+            analyticsService.track(
+                event: CommonAnalyticsEvent.screenView(
+                    screenName: "Bible_\(tab.rawValue)",
+                    screenClass: "BibleView"
+                ).name,
+                properties: CommonAnalyticsEvent.screenView(
+                    screenName: "Bible_\(tab.rawValue)",
+                    screenClass: "BibleView"
+                ).parameters
+            )
         }
     }
     
@@ -71,10 +87,16 @@ public final class BibleViewModel: BaseViewModel<BibleViewState, BibleViewEvent>
                 $0.error = nil
             }
             
-            analyticsService.track(event: BibleAnalyticsEvent.verseViewed(
-                reference: reference,
-                translation: verse.translation
-            ))
+            analyticsService.track(
+                event: BibleAnalyticsEvent.verseViewed(
+                    reference: reference,
+                    translation: verse.translation
+                ).name,
+                properties: BibleAnalyticsEvent.verseViewed(
+                    reference: reference,
+                    translation: verse.translation
+                ).parameters
+            )
         } catch {
             updateState {
                 $0.isLoading = false
@@ -102,10 +124,16 @@ public final class BibleViewModel: BaseViewModel<BibleViewState, BibleViewEvent>
                 $0.error = nil
             }
             
-            analyticsService.track(event: CommonAnalyticsEvent.search(
-                query: query,
-                category: "bible"
-            ))
+            analyticsService.track(
+                event: CommonAnalyticsEvent.search(
+                    query: query,
+                    category: "bible"
+                ).name,
+                properties: CommonAnalyticsEvent.search(
+                    query: query,
+                    category: "bible"
+                ).parameters
+            )
         } catch {
             updateState {
                 $0.isSearching = false

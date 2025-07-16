@@ -24,64 +24,12 @@ public enum Testament: String, Codable, CaseIterable {
     case new = "New Testament"
 }
 
-public struct BibleVerse: Codable, Identifiable, Hashable {
-    public let id: String
-    public let bookId: String
-    public let bookName: String
-    public let chapter: Int
-    public let verse: Int
-    public let text: String
-    public let translation: String
-    
-    public init(id: String, bookId: String, bookName: String, chapter: Int, verse: Int, text: String, translation: String = "ESV") {
-        self.id = id
-        self.bookId = bookId
-        self.bookName = bookName
-        self.chapter = chapter
-        self.verse = verse
-        self.text = text
-        self.translation = translation
-    }
-    
-    public var reference: String {
-        return "\(bookName) \(chapter):\(verse)"
-    }
-}
+// BibleVerse is now defined in Core/LeavnCore/Sources/LeavnCore/ServiceProtocols.swift
 
-public struct BibleChapter: Codable, Identifiable, Hashable {
-    public let id: String
-    public let bookId: String
-    public let bookName: String
-    public let chapter: Int
-    public let verses: [BibleVerse]
-    public let translation: String
-    
-    public init(id: String, bookId: String, bookName: String, chapter: Int, verses: [BibleVerse], translation: String = "ESV") {
-        self.id = id
-        self.bookId = bookId
-        self.bookName = bookName
-        self.chapter = chapter
-        self.verses = verses
-        self.translation = translation
-    }
-}
+// BibleChapter is now defined in Core/LeavnCore/Sources/LeavnCore/ServiceProtocols.swift
 
 // MARK: - Other Bible Types
-public struct BibleTranslation: Codable, Identifiable, Hashable {
-    public let id: String
-    public let name: String
-    public let shortName: String
-    public let description: String
-    public let language: String
-    
-    public init(id: String, name: String, shortName: String, description: String, language: String = "en") {
-        self.id = id
-        self.name = name
-        self.shortName = shortName
-        self.description = description
-        self.language = language
-    }
-}
+// BibleTranslation is now defined in Core/LeavnCore/Sources/LeavnServices/Services/BibleService.swift
 
 // MARK: - Search Types
 public struct BibleSearchResult: Codable, Identifiable, Hashable {
@@ -114,19 +62,7 @@ public struct LibrarySearchResult: Codable, Identifiable, Hashable {
     }
 }
 
-public struct SearchQuery: Codable, Identifiable, Hashable {
-    public let id: String
-    public let query: String
-    public let timestamp: Date
-    public let filters: [String]
-    
-    public init(id: String, query: String, timestamp: Date = Date(), filters: [String] = []) {
-        self.id = id
-        self.query = query
-        self.timestamp = timestamp
-        self.filters = filters
-    }
-}
+// SearchQuery is now defined in SearchModels.swift to avoid duplication
 
 public enum SearchScope: String, Codable, CaseIterable {
     case bible = "bible"
@@ -135,34 +71,7 @@ public enum SearchScope: String, Codable, CaseIterable {
 }
 
 // MARK: - Library Types
-public struct LibraryItem: Codable, Identifiable, Hashable {
-    public let id: String
-    public let title: String
-    public let author: String
-    public let type: LibraryItemType
-    public let content: String
-    public let dateAdded: Date
-    public let tags: [String]
-    
-    public init(id: String, title: String, author: String, type: LibraryItemType, content: String, dateAdded: Date = Date(), tags: [String] = []) {
-        self.id = id
-        self.title = title
-        self.author = author
-        self.type = type
-        self.content = content
-        self.dateAdded = dateAdded
-        self.tags = tags
-    }
-}
-
-public enum LibraryItemType: String, Codable, CaseIterable {
-    case sermon = "sermon"
-    case commentary = "commentary"
-    case devotional = "devotional"
-    case study = "study"
-    case article = "article"
-    case book = "book"
-}
+// LibraryItem and related types are now defined in Core/LeavnCore/Sources/LeavnCore/LibraryTypes.swift
 
 // MARK: - Community Types
 public struct CommunityPost: Codable, Identifiable, Hashable {

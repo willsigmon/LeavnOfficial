@@ -9,21 +9,9 @@ public enum AppEnvironment {
 }
 
 // MARK: - Configuration Types
-public struct LeavnConfiguration {
-    let apiKey: String
-    let environment: AppEnvironment
-    let analyticsEnabled: Bool
-    let cacheConfiguration: CacheConfiguration
-    let esvAPIKey: String
-    let bibleComAPIKey: String
-    let elevenLabsAPIKey: String
-    let audioNarrationEnabled: Bool
-    let offlineModeEnabled: Bool
-}
+// LeavnConfiguration is now defined in Core/LeavnCore/Sources/LeavnCore/LeavnCore.swift to avoid duplication
 
-public struct CacheConfiguration: Sendable {
-    static let `default` = CacheConfiguration()
-}
+// CacheConfiguration is now defined in Core/LeavnCore/Sources/LeavnCore/LeavnCore.swift to avoid duplication
 
 // MARK: - App Configuration
 public final class AppConfiguration: @unchecked Sendable {

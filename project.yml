@@ -64,6 +64,7 @@ targets:
           - "**/Package.swift.disabled"
           - "**/Package.swift"
           # Temporarily disable problematic modules
+          - "Bible/**"
           - "Settings/**"
           - "Community/**"
           - "Search/**"
@@ -76,15 +77,18 @@ targets:
         excludes:
           - "**/*.disabled"
           - "Components/MainTabView.swift"
-      # Temporarily disable Core to avoid conflicts
-      # - path: Core/LeavnCore/Sources/LeavnCore
-      #   excludes:
-      #     - "**/*.disabled"
-      #     - "**/Package.swift"
-      # - path: Core/LeavnCore/Sources/DesignSystem
-      #   excludes:
-      #     - "**/*.disabled"
-      #     - "**/Package.swift"
+      - path: Core/LeavnCore/Sources
+        excludes:
+          - "**/*.disabled"
+          - "**/Package.swift"
+          - "**/Package.swift.disabled"
+          - "**/Tests/**"
+      - path: Core/LeavnModules/Sources
+        excludes:
+          - "**/*.disabled"
+          - "**/Package.swift"
+          - "**/Package.swift.disabled"
+          - "**/Tests/**"
     resources:
       # Use only Leavn/Assets.xcassets, not Resources/Assets.xcassets
       - path: Leavn/Assets.xcassets

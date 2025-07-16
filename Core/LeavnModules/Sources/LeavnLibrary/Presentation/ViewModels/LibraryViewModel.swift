@@ -2,10 +2,8 @@ import Foundation
 import SwiftUI
 import Combine
 
-import Factory
-
 @MainActor
-public final class LibraryViewModel: BaseViewModel<LibraryViewState, LibraryViewEvent> {
+public final class LibraryViewModel: StatefulViewModel<LibraryViewState, LibraryViewEvent> {
     // Dependencies injected through initializer
     private let libraryRepository: LibraryRepositoryProtocol
     private let analyticsService: AnalyticsServiceProtocol

@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 // MARK: - App Settings Models
 public struct AppSettings: Codable {
@@ -575,6 +576,22 @@ public enum SessionTimeout: String, Codable, CaseIterable {
     }
 }
 
+public enum SyncStatus: String, Codable, CaseIterable {
+    case synced = "synced"
+    case syncing = "syncing"
+    case failed = "failed"
+    case pending = "pending"
+    
+    public var displayName: String {
+        switch self {
+        case .synced: return "Synced"
+        case .syncing: return "Syncing"
+        case .failed: return "Failed"
+        case .pending: return "Pending"
+        }
+    }
+}
+
 // MARK: - Sync Settings
 public struct SyncSettings: Codable {
     public let cloudSyncEnabled: Bool
@@ -596,7 +613,7 @@ public struct SyncSettings: Codable {
         autoSyncEnabled: Bool = true,
         syncConflictResolution: SyncConflictResolution = .mostRecent,
         lastSyncDate: Date? = nil,
-        syncStatus: SyncStatus = .idle,
+        syncStatus: SyncStatus = .synced,
         syncedDataTypes: [SyncDataType] = SyncDataType.allCases,
         encryptSyncData: Bool = true
     ) {
@@ -882,7 +899,7 @@ public struct QuietHours: Codable {
 // MARK: - Display Settings
 public struct DisplaySettings: Codable {
     public let appearanceMode: AppearanceMode
-    public let colorScheme: ColorScheme
+    public let colorScheme: BibleTheme
     public let accentColor: AccentColor
     public let iconTheme: IconTheme
     public let animationsEnabled: Bool
@@ -895,7 +912,7 @@ public struct DisplaySettings: Codable {
     
     public init(
         appearanceMode: AppearanceMode = .system,
-        colorScheme: ColorScheme = .blue,
+        colorScheme: BibleTheme = .blue,
         accentColor: AccentColor = .blue,
         iconTheme: IconTheme = .classic,
         animationsEnabled: Bool = true,
@@ -934,7 +951,7 @@ public enum AppearanceMode: String, Codable, CaseIterable {
     }
 }
 
-public enum ColorScheme: String, Codable, CaseIterable {
+public enum LeavnColorScheme: String, Codable, CaseIterable {
     case blue = "blue"
     case green = "green"
     case purple = "purple"
@@ -1022,7 +1039,7 @@ public struct StorageSettings: Codable {
         autoClearCache: Bool = true,
         autoClearInterval: ClearInterval = .weekly,
         downloadQuality: DownloadQuality = .standard,
-        downloadLocation: DownloadLocation = .internal,
+        downloadLocation: DownloadLocation = .internalStorage,
         compressDownloads: Bool = true
     ) {
         self.cacheSize = cacheSize

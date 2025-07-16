@@ -3,7 +3,7 @@ import Foundation
 // MARK: - Core Types
 public struct LeavnConfiguration: Sendable {
     public let apiKey: String
-    public let environment: Environment
+    public let environment: LeavnEnvironment
     public let baseURL: URL
     public let analyticsEnabled: Bool
     public let cacheConfiguration: CacheConfiguration
@@ -23,7 +23,7 @@ public struct LeavnConfiguration: Sendable {
     
     public init(
         apiKey: String,
-        environment: Environment = .production,
+        environment: LeavnEnvironment = .production,
         baseURL: URL? = nil,
         analyticsEnabled: Bool = true,
         cacheConfiguration: CacheConfiguration = .default,
@@ -48,9 +48,18 @@ public struct LeavnConfiguration: Sendable {
         self.hapticFeedbackEnabled = hapticFeedbackEnabled
         self.features = features
     }
+    
+    // Default configuration for the app
+    public static let current = LeavnConfiguration(
+        apiKey: "leavn-default-key",
+        environment: .development,
+        esvAPIKey: "",
+        bibleComAPIKey: "",
+        elevenLabsAPIKey: ""
+    )
 }
 
-public enum Environment: Sendable {
+public enum LeavnEnvironment: Sendable {
     case development
     case staging
     case production
@@ -148,30 +157,7 @@ public enum LeavnError: LocalizedError {
 }
 
 // MARK: - Core Models
-public struct User: Codable, Identifiable, Sendable {
-    public let id: String
-    public let email: String
-    public let displayName: String
-    public let photoURL: URL?
-    public let createdAt: Date
-    public let updatedAt: Date
-    
-    public init(
-        id: String,
-        email: String,
-        displayName: String,
-        photoURL: URL? = nil,
-        createdAt: Date = Date(),
-        updatedAt: Date = Date()
-    ) {
-        self.id = id
-        self.email = email
-        self.displayName = displayName
-        self.photoURL = photoURL
-        self.createdAt = createdAt
-        self.updatedAt = updatedAt
-    }
-}
+// User is now defined in Core/LeavnCore/Sources/LeavnCore/Models/User.swift
 
 // MARK: - Core Extensions
 public extension String {

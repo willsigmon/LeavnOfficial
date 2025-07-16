@@ -161,17 +161,8 @@ extension DefaultAudioService: AVAudioPlayerDelegate {
     }
 }
 
-// MARK: - Audio Cache Manager Protocol
-public protocol AudioCacheManagerProtocol {
-    func cacheAudio(for key: String, data: Data) async throws
-    func getCachedAudio(for key: String) async throws -> Data?
-    func getCachedAudioURL(for key: String) async throws -> URL?
-    func removeCachedAudio(for key: String) async throws
-    func clearCache() async throws
-    func getCacheSize() async throws -> Int64
-}
-
 // MARK: - In-Memory Audio Cache Manager
+// AudioCacheManagerProtocol is defined in ServiceProtocols.swift
 public final class InMemoryAudioCacheManager: AudioCacheManagerProtocol {
     private var cache: [String: Data] = [:]
     private let queue = DispatchQueue(label: "audio.cache", attributes: .concurrent)

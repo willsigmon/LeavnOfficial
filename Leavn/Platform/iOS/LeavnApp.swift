@@ -1,7 +1,5 @@
 import SwiftUI
 
-import Factory
-
 @main
 struct LeavnApp: App {
     @StateObject private var appState = AppState()
@@ -31,9 +29,8 @@ struct LeavnApp: App {
 
 // MARK: - App State
 class AppState: ObservableObject {
-    @Injected(\.authenticationService) private var authService: AuthenticationService
-    @Injected(\.settingsViewModel) private var settingsViewModel: SettingsViewModel
-    @Injected(\.analyticsService) private var analyticsService: AnalyticsService
+    private let authService: AuthenticationServiceProtocol
+    private let analyticsService: AnalyticsServiceProtocol
     
     @Published var isAuthenticated = false
     @Published var currentUser: User?
@@ -41,6 +38,10 @@ class AppState: ObservableObject {
     @Published var error: Error?
     
     init() {
+        let container = DIContainer.shared
+        self.authService = container.authenticationService
+        self.analyticsService = container.analyticsService
+        
         checkAuthenticationStatus()
     }
     

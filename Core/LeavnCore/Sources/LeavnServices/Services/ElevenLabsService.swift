@@ -4,13 +4,13 @@ import AVFoundation
 // MARK: - ElevenLabs Service Protocol
 public protocol ElevenLabsService {
     func synthesizeText(_ text: String, voiceId: String, settings: VoiceSettings?) async throws -> AudioData
-    func getAvailableVoices() async throws -> [Voice]
+    func getAvailableVoices() async throws -> [ElevenLabsVoice]
     func getVoiceSettings(voiceId: String) async throws -> VoiceSettings
-    func getUserSubscription() async throws -> SubscriptionInfo
+    func getUserSubscription() async throws -> ElevenLabsSubscriptionInfo
 }
 
 // MARK: - Voice Models
-public struct Voice: Codable, Identifiable {
+public struct ElevenLabsVoice: Codable, Identifiable {
     public let id: String
     public let name: String
     public let category: String
@@ -110,7 +110,7 @@ public struct AudioData {
     }
 }
 
-public struct SubscriptionInfo: Codable {
+public struct ElevenLabsSubscriptionInfo: Codable {
     public let tier: String
     public let character_count: Int
     public let character_limit: Int

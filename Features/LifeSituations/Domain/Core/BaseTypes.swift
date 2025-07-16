@@ -14,23 +14,9 @@ public protocol AnalyticsEvent {
     var parameters: [String: Any]? { get }
 }
 
-// MARK: - Base View Model
-@MainActor
-open class BaseViewModel<State: ViewState, Event>: ObservableObject {
-    @Published private(set) var state: State
-    
-    public init(initialState: State) {
-        self.state = initialState
-    }
-    
-    open func send(_ event: Event) {
-        // To be overridden by subclasses
-    }
-    
-    public func updateState(_ update: (inout State) -> Void) {
-        update(&state)
-    }
-}
+// MARK: - Base View Model for Generic State/Event Pattern
+// Use the BaseViewModel from ViewModelErrorHandling.swift for non-generic inheritance
+// This pattern is for ViewModels that need strongly-typed state and events
 
 // MARK: - Repository Protocol
 public protocol Repository {}

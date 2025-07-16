@@ -9,6 +9,7 @@ public struct AccessibleText: View {
     let lineLimit: Int?
     let minimumScaleFactor: CGFloat
     
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.sizeCategory) private var sizeCategory
     @ObservedObject private var themeManager = AccessibilityThemeManager.shared
     
@@ -50,14 +51,14 @@ public struct AccessibleText: View {
             }
         }
         
-        var defaultColor: Color {
+        func defaultColor(colorScheme: ColorScheme, isHighContrast: Bool) -> Color {
             switch self {
             case .largeTitle, .title, .title2, .title3, .headline, .body:
-                return Color.LeavnTextColors.primary.current
+                return Color.LeavnTextColors.primary.current(for: colorScheme, isHighContrast: isHighContrast)
             case .subheadline, .callout, .footnote:
-                return Color.LeavnTextColors.secondary.current
+                return Color.LeavnTextColors.secondary.current(for: colorScheme, isHighContrast: isHighContrast)
             case .caption, .caption2:
-                return Color.LeavnTextColors.tertiary.current
+                return Color.LeavnTextColors.tertiary.current(for: colorScheme, isHighContrast: isHighContrast)
             }
         }
         
@@ -118,16 +119,17 @@ public struct AccessibleText: View {
         }
         
         // Use high contrast colors if needed
+        let currentColorScheme = colorScheme
         if themeManager.isHighContrastEnabled {
             switch style {
             case .largeTitle, .title, .title2, .title3, .headline, .body:
-                return Color.LeavnTextColors.primary.current
+                return Color.LeavnTextColors.primary.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled)
             case .subheadline, .callout, .footnote, .caption, .caption2:
-                return Color.LeavnTextColors.secondary.current
+                return Color.LeavnTextColors.secondary.current(for: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled)
             }
         }
         
-        return style.defaultColor
+        return style.defaultColor(colorScheme: currentColorScheme, isHighContrast: themeManager.isHighContrastEnabled)
     }
     
     private var adjustedLetterSpacing: CGFloat {
@@ -197,14 +199,14 @@ public struct AccessibleBadge: View {
         case error
         case info
         
-        var backgroundColor: Color {
+        func backgroundColor(colorScheme: ColorScheme, isHighContrast: Bool) -> Color {
             switch self {
-            case .primary: return Color.LeavnColors.primary.current
-            case .secondary: return Color.LeavnColors.secondary.current
-            case .success: return Color.LeavnColors.success.current
-            case .warning: return Color.LeavnColors.warning.current
-            case .error: return Color.LeavnColors.error.current
-            case .info: return Color.LeavnColors.info.current
+            case .primary: return Color.LeavnColors.primary.current(for: colorScheme, isHighContrast: isHighContrast)
+            case .secondary: return Color.LeavnColors.secondary.current(for: colorScheme, isHighContrast: isHighContrast)
+            case .success: return Color.LeavnColors.success.current(for: colorScheme, isHighContrast: isHighContrast)
+            case .warning: return Color.LeavnColors.warning.current(for: colorScheme, isHighContrast: isHighContrast)
+            case .error: return Color.LeavnColors.error.current(for: colorScheme, isHighContrast: isHighContrast)
+            case .info: return Color.LeavnColors.info.current(for: colorScheme, isHighContrast: isHighContrast)
             }
         }
         

@@ -39,13 +39,4 @@ public struct SearchView: View {
     }
 }
 
-public struct SearchResult: Identifiable {
-    public let id = UUID()
-    public let reference: String
-    public let preview: String
-    
-    public init(reference: String, preview: String) {
-        self.reference = reference
-        self.preview = preview
-    }
-} 
+// SearchResult is now defined in SearchModels.swift to avoid duplication 
