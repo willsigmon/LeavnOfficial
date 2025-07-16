@@ -190,6 +190,7 @@ public struct AccessibleBadge: View {
     
     @ObservedObject private var themeManager = AccessibilityThemeManager.shared
     @Environment(\.sizeCategory) private var sizeCategory
+    @Environment(\.colorScheme) private var colorScheme
     
     public enum BadgeStyle {
         case primary
@@ -233,7 +234,7 @@ public struct AccessibleBadge: View {
             .foregroundColor(style.foregroundColor)
             .padding(.horizontal, scaledPadding)
             .padding(.vertical, scaledPadding / 2)
-            .background(style.backgroundColor)
+            .background(style.backgroundColor(colorScheme: colorScheme, isHighContrast: themeManager.isHighContrastEnabled))
             .cornerRadius(scaledCornerRadius)
             .dynamicTypeSize(...DynamicTypeSize.accessibility1)
             .accessibilityLabel(text)
@@ -286,12 +287,13 @@ public struct AccessibleSectionHeader: View {
 // MARK: - High Contrast Text View Modifier
 public struct HighContrastText: ViewModifier {
     @ObservedObject private var themeManager = AccessibilityThemeManager.shared
+    @Environment(\.colorScheme) private var colorScheme
     
     public func body(content: Content) -> some View {
         content
             .foregroundColor(
                 themeManager.isHighContrastEnabled
-                    ? Color.LeavnTextColors.primary.current
+                    ? Color.LeavnTextColors.primary.current(for: colorScheme, isHighContrast: themeManager.isHighContrastEnabled)
                     : nil
             )
     }

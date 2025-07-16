@@ -894,54 +894,15 @@ public struct CommunityPost: Identifiable {
 
 // LibraryItem is defined in LibraryTypes.swift
 
-public enum LibraryContentType: String, Codable, CaseIterable {
-    case verse
-    case note
-    case highlight
-    case bookmark
-    case favorite
-}
+// LibraryContentType is defined in LibraryTypes.swift
 
-public struct LibraryCollection: Identifiable, Codable {
-    public let id: String
-    public let name: String
-    public let description: String?
-    public let itemIds: [String]
-    public let createdAt: Date
-    public let updatedAt: Date
-}
+// LibraryCollection is defined in LibraryTypes.swift
 
-public struct LibraryFilter {
-    public let types: [LibraryContentType]?
-    public let dateRange: DateRange?
-    public let searchTerm: String?
-    
-    public init(types: [LibraryContentType]? = nil, dateRange: DateRange? = nil, searchTerm: String? = nil) {
-        self.types = types
-        self.dateRange = dateRange
-        self.searchTerm = searchTerm
-    }
-}
+// LibraryFilter is defined in LibraryTypes.swift
 
 // DateRange is defined in CommonTypes.swift
 
-public struct LibraryStatistics {
-    public let totalItems: Int
-    public let totalCollections: Int
-    public let totalVerses: Int
-    public let totalNotes: Int
-    public let totalHighlights: Int
-    public let lastUpdated: Date
-    
-    public init(totalItems: Int, totalCollections: Int, totalVerses: Int, totalNotes: Int, totalHighlights: Int, lastUpdated: Date) {
-        self.totalItems = totalItems
-        self.totalCollections = totalCollections
-        self.totalVerses = totalVerses
-        self.totalNotes = totalNotes
-        self.totalHighlights = totalHighlights
-        self.lastUpdated = lastUpdated
-    }
-}
+// LibraryStatistics is defined in LibraryTypes.swift
 
 // MARK: - Mock Implementations
 

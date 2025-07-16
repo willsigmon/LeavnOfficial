@@ -702,7 +702,7 @@ public struct SettingsViewState: ViewState {
     public var filteredSections: [SettingsSection] = SettingsSection.allCases
     
     // Sync Status
-    public var syncStatus: SyncStatus = .idle
+    public var syncStatus: SyncStatus = .pending
     public var lastSyncedAt: Date?
     
     // Export/Import
@@ -811,9 +811,9 @@ public extension SettingsViewState {
     
     var syncStatusDescription: String {
         switch syncStatus {
-        case .idle: return "Ready to sync"
+        case .pending: return "Ready to sync"
         case .syncing: return "Syncing..."
-        case .success: return "Up to date"
+        case .synced: return "Up to date"
         case .failed: return "Sync failed"
         }
     }

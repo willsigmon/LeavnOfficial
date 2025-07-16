@@ -421,12 +421,12 @@ public final class DefaultSettingsRepository: SettingsRepository {
     // MARK: - Settings Synchronization
     public func syncSettings() async throws -> SyncStatus {
         guard let cloudStorage = cloudStorage else {
-            return .idle
+            return .pending
         }
         
         let localSettings = try await getAppSettings()
         guard localSettings.sync.cloudSyncEnabled else {
-            return .idle
+            return .pending
         }
         
         return try await cloudStorage.syncSettings(localSettings)
@@ -434,7 +434,7 @@ public final class DefaultSettingsRepository: SettingsRepository {
     
     public func getSyncStatus() async throws -> SyncStatus {
         guard let cloudStorage = cloudStorage else {
-            return .idle
+            return .pending
         }
         
         return try await cloudStorage.getSyncStatus()
@@ -442,7 +442,7 @@ public final class DefaultSettingsRepository: SettingsRepository {
     
     public func forceSyncSettings() async throws -> SyncStatus {
         guard let cloudStorage = cloudStorage else {
-            return .idle
+            return .pending
         }
         
         let localSettings = try await getAppSettings()

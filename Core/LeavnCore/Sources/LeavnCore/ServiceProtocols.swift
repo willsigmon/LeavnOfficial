@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import LeavnSettings
 
 // MARK: - Network Service Protocol
 /// Handles all network communication for the app
@@ -281,17 +282,7 @@ public struct SettingsChangeEvent: @unchecked Sendable {
     }
 }
 
-public struct SettingsBackup: Codable, Sendable {
-    public let settings: AppSettings
-    public let createdAt: Date
-    public let version: String
-    
-    public init(settings: AppSettings, createdAt: Date = Date(), version: String = "1.0") {
-        self.settings = settings
-        self.createdAt = createdAt
-        self.version = version
-    }
-}
+// SettingsBackup is defined in LeavnSettings module
 
 // MARK: - Life Situation Types
 public struct LifeSituation: Identifiable, Codable, Sendable {
