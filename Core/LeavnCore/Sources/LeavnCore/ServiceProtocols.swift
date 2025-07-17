@@ -222,9 +222,7 @@ public struct BibleVerse: Codable, Identifiable, Sendable {
 }
 
 // BibleTranslation is now defined in BibleService.swift
-
-// VoiceConfiguration is now defined in BibleTypes.swift to avoid duplication
-
+// VoiceConfiguration is now defined in BibleTypes.swift
 // ElevenLabsVoice is defined in ElevenLabsService.swift
 
 public struct ElevenLabsModel: Codable, Identifiable, Sendable {
@@ -238,27 +236,11 @@ public struct ElevenLabsModel: Codable, Identifiable, Sendable {
 }
 
 // LibraryFilter is now defined in LibraryTypes.swift
-// DateRange is now defined in CommonTypes.swift
 // LibraryItemType is replaced by LibraryContentType in LibraryTypes.swift
-
 // LibraryStatistics is now defined in LibraryTypes.swift
-
-// BibleSearchResult is now defined in BibleTypes.swift to avoid duplication
-
-// LibrarySearchResult needs LibraryItem from LibraryTypes.swift
-public struct LibrarySearchResult: Identifiable, Sendable {
-    public let id: String
-    public let item: LibraryItem // This type is now imported from LibraryTypes.swift
-    public let relevance: Double
-    
-    public init(id: String = UUID().uuidString, item: LibraryItem, relevance: Double) {
-        self.id = id
-        self.item = item
-        self.relevance = relevance
-    }
-}
-
-// SearchQuery is now defined in BibleTypes.swift to avoid duplication
+// BibleSearchResult is now defined in BibleTypes.swift
+// LibrarySearchResult is now defined in LibraryTypes.swift
+// SearchQuery is now defined in BibleTypes.swift
 
 public struct RelatedContent: Codable, Identifiable, Sendable {
     public let id: String
@@ -309,43 +291,6 @@ public struct SettingsBackup: Codable, Sendable {
 }
 
 // MARK: - Additional Types
-public struct BibleTranslation: Codable, Identifiable, Sendable {
-    public let id: String
-    public let name: String
-    public let abbreviation: String
-    public let language: String
-    
-    public init(id: String, name: String, abbreviation: String, language: String = "en") {
-        self.id = id
-        self.name = name
-        self.abbreviation = abbreviation
-        self.language = language
-    }
-}
-
-public struct VoiceConfiguration: Codable, Sendable {
-    public let voiceId: String
-    public let speed: Double
-    public let pitch: Double
-    
-    public init(voiceId: String, speed: Double = 1.0, pitch: Double = 1.0) {
-        self.voiceId = voiceId
-        self.speed = speed
-        self.pitch = pitch
-    }
-}
-
-public struct ElevenLabsVoice: Codable, Identifiable, Sendable {
-    public let id: String
-    public let name: String
-    public let category: String?
-    
-    public init(id: String, name: String, category: String? = nil) {
-        self.id = id
-        self.name = name
-        self.category = category
-    }
-}
 
 public protocol AnalyticsProvider {
     func track(event: String, properties: [String: Any]?)
@@ -354,52 +299,5 @@ public protocol AnalyticsProvider {
 }
 
 // MARK: - Search Types
-public struct BibleSearchResult: Identifiable, Sendable {
-    public let id: String
-    public let verse: BibleVerse
-    public let relevance: Double
-    
-    public init(id: String = UUID().uuidString, verse: BibleVerse, relevance: Double) {
-        self.id = id
-        self.verse = verse
-        self.relevance = relevance
-    }
-}
-
-public struct SearchQuery: Codable, Identifiable, Sendable {
-    public let id: String
-    public let query: String
-    public let timestamp: Date
-    
-    public init(id: String = UUID().uuidString, query: String, timestamp: Date = Date()) {
-        self.id = id
-        self.query = query
-        self.timestamp = timestamp
-    }
-}
 
 // MARK: - Life Situation Types
-public struct LifeSituation: Identifiable, Codable, Sendable {
-    public let id: String
-    public let title: String
-    public let description: String
-    public let category: String
-    public let verses: [BibleVerse]
-    public let prayers: [String]
-    
-    public init(
-        id: String,
-        title: String,
-        description: String,
-        category: String,
-        verses: [BibleVerse] = [],
-        prayers: [String] = []
-    ) {
-        self.id = id
-        self.title = title
-        self.description = description
-        self.category = category
-        self.verses = verses
-        self.prayers = prayers
-    }
-}

@@ -2,64 +2,97 @@ import Foundation
 
 // MARK: - Leavn Configuration
 public struct LeavnConfiguration: Sendable {
-    public let apiKey: String?
-    public let environment: Environment
-    public let esvAPIKey: String?
-    public let bibleComAPIKey: String?
-    public let elevenLabsAPIKey: String?
+    public let apiKey: String
+    public let environment: LeavnEnvironment
+    public let baseURL: URL
+    public let analyticsEnabled: Bool
+    public let cacheConfiguration: CacheConfiguration
+
+    // API Keys
+    public let esvAPIKey: String
+    public let bibleComAPIKey: String
+    public let elevenLabsAPIKey: String
+
+    // Feature Flags
     public let audioNarrationEnabled: Bool
     public let offlineModeEnabled: Bool
     public let hapticFeedbackEnabled: Bool
     
-    public enum Environment: String, Sendable {
-        case development
-        case staging
-        case production
-    }
+    // Feature Flags
+    public let features: FeatureFlags
     
     public init(
-        apiKey: String? = nil,
-        environment: Environment = .production,
-        esvAPIKey: String? = nil,
-        bibleComAPIKey: String? = nil,
-        elevenLabsAPIKey: String? = nil,
+        apiKey: String,
+        environment: LeavnEnvironment = .production,
+        baseURL: URL? = nil,
+        analyticsEnabled: Bool = true,
+        cacheConfiguration: CacheConfiguration = .default,
+        esvAPIKey: String = "",
+        bibleComAPIKey: String = "",
+        elevenLabsAPIKey: String = "",
         audioNarrationEnabled: Bool = true,
         offlineModeEnabled: Bool = true,
-        hapticFeedbackEnabled: Bool = true
+        hapticFeedbackEnabled: Bool = true,
+        features: FeatureFlags = .default
     ) {
         self.apiKey = apiKey
         self.environment = environment
+        self.baseURL = baseURL ?? environment.defaultBaseURL
+        self.analyticsEnabled = analyticsEnabled
+        self.cacheConfiguration = cacheConfiguration
         self.esvAPIKey = esvAPIKey
         self.bibleComAPIKey = bibleComAPIKey
         self.elevenLabsAPIKey = elevenLabsAPIKey
         self.audioNarrationEnabled = audioNarrationEnabled
         self.offlineModeEnabled = offlineModeEnabled
         self.hapticFeedbackEnabled = hapticFeedbackEnabled
+        self.features = features
     }
     
-    public static let `default` = LeavnConfiguration()
+    // Default configuration for the app
+    public static let `default` = LeavnConfiguration(
+        apiKey: "leavn-default-key",
+        environment: .development,
+        esvAPIKey: "",
+        bibleComAPIKey: "",
+        elevenLabsAPIKey: ""
+    )
+}
+
+public enum LeavnEnvironment: Sendable {
+    case development
+    case staging
+    case production
+
+    var defaultBaseURL: URL {
+        switch self {
+        case .development:
+            return URL(string: "https://dev-api.leavn.app")!
+        case .staging:
+            return URL(string: "https://staging-api.leavn.app")!
+        case .production:
+            return URL(string: "https://api.leavn.app")!
+        }
+    }
 }
 
 // MARK: - Cache Configuration
 public struct CacheConfiguration: Sendable {
-    public let maxAge: TimeInterval
-    public let maxSize: Int
-    public let diskCacheEnabled: Bool
-    public let memoryCacheEnabled: Bool
+    public let memoryCapacity: Int
+    public let diskCapacity: Int
+    public let diskPath: String?
     
-    public init(
-        maxAge: TimeInterval = 3600, // 1 hour
-        maxSize: Int = 50 * 1024 * 1024, // 50MB
-        diskCacheEnabled: Bool = true,
-        memoryCacheEnabled: Bool = true
-    ) {
-        self.maxAge = maxAge
-        self.maxSize = maxSize
-        self.diskCacheEnabled = diskCacheEnabled
-        self.memoryCacheEnabled = memoryCacheEnabled
+    public static let `default` = CacheConfiguration(
+        memoryCapacity: 10 * 1024 * 1024, // 10MB
+        diskCapacity: 50 * 1024 * 1024, // 50MB
+        diskPath: nil
+    )
+    
+    public init(memoryCapacity: Int, diskCapacity: Int, diskPath: String?) {
+        self.memoryCapacity = memoryCapacity
+        self.diskCapacity = diskCapacity
+        self.diskPath = diskPath
     }
-    
-    public static let `default` = CacheConfiguration()
 }
 
 // MARK: - Feature Flags

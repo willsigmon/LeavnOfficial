@@ -89,12 +89,6 @@ class MockAuthenticationService: AuthenticationServiceProtocol {
 
 // MARK: - Mock Types
 
-struct User: Codable {
-    let id: String
-    let email: String
-    let name: String
-}
-
 enum NetworkError: Error {
     case requestFailed
     case noData
