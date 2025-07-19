@@ -1,174 +1,74 @@
 # Xcode
-.DS_Store
-/.build
-*.xcodeproj/
-!*.xcodeproj/project.pbxproj
-!*.xcodeproj/xcshareddata/
-!*.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+#
+## User settings
 xcuserdata/
-DerivedData/
-.swiftpm/
-*.xcuserdatad
+
+## Xcode 8 and earlier
 *.xcscmblueprint
 *.xccheckout
+
+## Build generated
+build/
+DerivedData/
+*.xcarchive
+
+## Various settings
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+## Other
 *.moved-aside
+*.xcuserstate
+
+## Obj-C/Swift specific
 *.hmap
 *.ipa
 *.dSYM.zip
 *.dSYM
 
-# Build
-build/
-*.o
-*.linkfilelist
-*.tbd
-*.d
-*.swiftmodule
-*.swiftdoc
-*.swiftinterface
-*.rsp
-
-# Swift Package Manager
+## Swift Package Manager
 .build/
 .swiftpm/
 Package.resolved
-.package.resolved
-
-# OS
-.DS_Store
-.Trashes
-Thumbs.db
-Desktop.ini
-
-# IDEs  
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-*.sublime-workspace
-
-# Temporary
-*.tmp
-*.bak
-.cache/
-tmp/
-temp/
-
-# Backup files
-*.backup
-*.old
-
-# Logs
-*.log
-
-# Fastlane
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots/**/*.png
-fastlane/test_output
-fastlane/README.md
-fastlane/api-key.json
-
-# Code coverage
-*.xcoverage
-*.profraw
-*.profdata
-
-# Secrets
-*.encrypted
-*.p12
-*.pem
-*.mobileprovision
-*.cer
-*.der
-
-# Local configuration files
-.env
-.env.*
-!.env.example
-
-# App specific
-Configurations/Secrets.xcconfig
-Configurations/APIKeys.plist
-
-# Documentation
-docs/
-
-# Playgrounds
-*.playground/
-
-# Swift Package Manager
-Package.resolved
-
-# Xcode
-*.xcodeproj/*
-!*.xcodeproj/project.pbxproj
-!*.xcodeproj/xcshareddata/
-!*.xcodeproj/project.xcworkspace/contents.xcworkspacedata
-
-# AppCode
-.idea/
-
-# App specific
-Leavn3/Generated/
-Leavn3/Secrets.swift
-Leavn3/APIKeys.swift
-
-# Local development
-.localized/
-
-# Carthage
-Carthage/Build/
-Carthage/Checkouts
-
-# SwiftLint
-.swiftlint.yml
-
-# Tuist
-tuist/
-Tuist/
-
-# SwiftPM
-.build/
-
-# Xcode
-*.xcodeproj/project.xcworkspace/xcuserdata/
-*.xcodeproj/xcuserdata/
-*.xcodeproj/xcshareddata/IDEWorkspaceChecks.plist
-
-# Previews
-Previews/
-
-# Localization
-*.lproj/
-!*.lproj/InfoPlist.strings
-!*.lproj/Localizable.strings
-
-# Playgrounds
-timeline.xctimeline
 
 # macOS
 .DS_Store
 .AppleDouble
 .LSOverride
 
-# User-specific
-*.xcuserdatad
-*.xcschemes
-*.moved-aside
+# Icon must end with two \r
+Icon
 
-# Generated
-DerivedData
-build/
-Build/
-*.xcodeproj
-*.xcworkspace
+# Thumbnails
+._*
 
-# Secrets
-Leavn/Configuration/Secrets.swift
-Leavn/App/TempAPIConfig.swift
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
 
-# SwiftPM
-.build/
-.swiftpm/
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# Code Injection
+iOSInjectionProject/
