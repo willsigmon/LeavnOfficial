@@ -1,248 +1,214 @@
-# Leavn - Modern Leave Management System
+# Leavn - Modern iOS Bible Study App
 
-A comprehensive, multi-platform leave management application built with SwiftUI for iOS, iPadOS, macOS, watchOS, and visionOS.
+<p align="center">
+  <img src="docs/icon.png" alt="Leavn App Icon" width="150">
+</p>
 
-## Project Overview
+<p align="center">
+  <strong>A modern iOS Bible app built with The Composable Architecture (TCA) and Swift 6.2</strong>
+</p>
 
-Leavn is a modern leave management system designed to streamline the process of requesting, approving, and tracking employee time off. Built with SwiftUI and leveraging the latest Apple technologies, it provides a seamless experience across all Apple platforms.
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#getting-started">Getting Started</a> •
+  <a href="#documentation">Documentation</a> •
+  <a href="#contributing">Contributing</a> •
+  <a href="#license">License</a>
+</p>
 
-### Key Features
-- 📱 Universal app supporting iPhone, iPad, Mac, Apple Watch, and Vision Pro
-- ☁️ CloudKit sync for seamless data synchronization across devices
-- 🔔 Push notifications for leave status updates
-- 📊 Comprehensive leave analytics and reporting
-- 🎨 Beautiful, native UI following Apple's Human Interface Guidelines
-- 🌙 Full dark mode support
-- ♿ Complete accessibility support with VoiceOver
+---
 
-## Setup Instructions
+## Overview
+
+Leavn is a modern iOS Bible study application that brings the Word of God to life through innovative technology. Built with SwiftUI and The Composable Architecture, it offers a seamless reading experience with AI-powered audio narration, life situation guidance, community features, and robust offline support.
+
+## Features
+
+### 📖 Bible Reading
+- **Full ESV Bible**: Complete access to the English Standard Version via official API
+- **Smart Navigation**: Intuitive book, chapter, and verse selection
+- **Verse Highlighting**: Mark and save important passages
+- **Cross-References**: Explore connected verses and themes
+- **Reading Plans**: Follow structured Bible reading schedules
+- **Offline Mode**: Download books for reading without internet
+
+### 🎧 Audio Features
+- **AI Narration**: High-quality text-to-speech powered by ElevenLabs
+- **Multiple Voices**: Choose from various narrator voices
+- **Playback Controls**: Speed adjustment, skip, and bookmarking
+- **Background Audio**: Continue listening while using other apps
+- **Sleep Timer**: Automatic shutdown after specified duration
+
+### 💭 Life Situations
+- **Emotional Support**: Find verses for anxiety, grief, joy, fear, and more
+- **Curated Verses**: Hand-picked scriptures for specific life circumstances
+- **Guided Prayers**: Contextual prayers for each situation
+- **Personal Journey**: Track your spiritual growth through challenges
+
+### 👥 Community
+- **Prayer Wall**: Share and support prayer requests
+- **Study Groups**: Join or create Bible study communities
+- **Activity Feed**: See what others are reading and sharing
+- **Anonymous Mode**: Participate privately when needed
+- **Real-time Updates**: WebSocket-powered live interactions
+
+### 📚 Personal Library
+- **Bookmarks**: Save favorite verses and passages
+- **Notes**: Add personal insights and reflections
+- **Highlights**: Color-code verses by theme or importance
+- **Search**: Find content across your personal library
+- **Export**: Share your notes and highlights
+- **Cloud Sync**: Access your library across devices
+
+### ⚙️ Customization
+- **Themes**: Light, dark, and auto-switching modes
+- **Typography**: Adjustable font sizes and styles
+- **Reading Preferences**: Verse numbers, red letters, paragraph mode
+- **Notifications**: Daily verses and reading reminders
+- **Data Management**: Control storage and privacy settings
+
+## Getting Started
 
 ### Prerequisites
-- Xcode 26 beta or later (iOS 26 SDK)
-- macOS 26 or later
-- Swift 6.2 with Swift 6 language mode
-- Apple Developer account (for device testing and CloudKit)
-- Swift Package Manager (SPM)
+
+- **macOS**: 13.0+ (Ventura or later)
+- **Xcode**: 15.0+ with iOS 18.0 SDK
+- **Swift**: 6.2
+- **Developer Account**: Apple Developer Program membership (for device testing)
 
 ### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/LeavnOfficial.git
+   git clone https://github.com/willsigmon/LeavnOfficial.git
    cd LeavnOfficial
    ```
 
 2. **Open in Xcode**
    ```bash
-   open Leavn.xcodeproj
+   open Package.swift
    ```
 
-3. **Configure Signing & Capabilities**
-   - Select the project in Xcode
-   - Go to "Signing & Capabilities" tab
-   - Select your development team
-   - Ensure automatic signing is enabled
+3. **Wait for Swift Package Manager** to resolve dependencies
 
-4. **Configure CloudKit**
-   - Enable CloudKit capability
-   - Create a new CloudKit container or select existing
-   - Configure record types in CloudKit Dashboard
+4. **Configure API Keys** (see [API Setup Guide](docs/API_KEYS_SETUP.md))
 
-5. **Install Dependencies** (if using CocoaPods)
-   ```bash
-   pod install
-   open Leavn.xcworkspace
-   ```
+5. **Build and Run**
+   - Select your target device or simulator
+   - Press `Cmd+R` to build and run
 
-6. **Build and Run**
-   - Select your target device/simulator
-   - Press ⌘R to build and run
+### Quick Start
 
-### Environment Configuration
+For a complete setup guide, see [Development Setup](docs/DEVELOPMENT_SETUP.md).
 
-Create a `Config.xcconfig` file in the project root:
-```
-// Development
-API_BASE_URL = https://api-dev.leavn.com
-CLOUDKIT_CONTAINER = iCloud.com.yourcompany.leavn.dev
+## Documentation
 
-// Production
-// API_BASE_URL = https://api.leavn.com
-// CLOUDKIT_CONTAINER = iCloud.com.yourcompany.leavn
-```
+### Developer Guides
+- [Architecture Overview](docs/ARCHITECTURE.md) - Understanding TCA and app structure
+- [API Integration Guide](docs/API_GUIDE.md) - Working with external services
+- [Testing Strategy](docs/TESTING.md) - Unit and integration testing
+- [Deployment Process](docs/DEPLOYMENT.md) - Release and distribution
 
-## Architecture Overview
+### Setup Guides
+- [Development Environment](docs/DEVELOPMENT_SETUP.md) - Complete dev setup
+- [API Keys Setup](docs/API_KEYS_SETUP.md) - Obtaining and configuring APIs
+- [Xcode Configuration](docs/XCODE_SETUP.md) - Project settings
+- [TestFlight Guide](docs/TESTFLIGHT_GUIDE.md) - Beta testing setup
 
-### Project Structure
-```
-Leavn/
-├── Sources/
-│   ├── Models/
-│   │   ├── Leave.swift
-│   │   ├── Employee.swift
-│   │   └── Department.swift
-│   ├── Services/
-│   │   ├── CloudKitService.swift
-│   │   ├── NotificationService.swift
-│   │   └── AuthenticationService.swift
-│   ├── Utilities/
-│   │   ├── DateFormatter+Extensions.swift
-│   │   └── Color+Theme.swift
-│   └── Views/
-│       ├── Shared/
-│       │   ├── Components/
-│       │   └── Modifiers/
-│       ├── iOS/
-│       │   ├── Dashboard/
-│       │   ├── LeaveRequest/
-│       │   └── Settings/
-│       ├── macOS/
-│       │   ├── Sidebar/
-│       │   └── DetailView/
-│       ├── watchOS/
-│       │   ├── ComplicationController.swift
-│       │   └── NotificationView.swift
-│       └── visionOS/
-│           ├── ImmersiveView.swift
-│           └── VolumeView.swift
-├── Resources/
-│   ├── Assets.xcassets
-│   ├── Localizable.strings
-│   └── Info.plist
-└── Tests/
-    ├── Unit/
-    ├── UI/
-    └── Integration/
-```
+### References
+- [Features Documentation](docs/FEATURES.md) - Detailed feature descriptions
+- [FAQ](docs/FAQ.md) - Common questions and answers
+- [Troubleshooting](docs/TROUBLESHOOTING.md) - Solutions to common issues
+- [Privacy Policy](docs/PRIVACY.md) - Data handling and user privacy
+- [Terms of Service](docs/TERMS.md) - Usage terms and conditions
 
-### Architecture Pattern
-- **MVVM** (Model-View-ViewModel) with SwiftUI
-- **Repository Pattern** for data access
-- **Dependency Injection** for testability
-- **Combine** for reactive programming
-- **Swift Concurrency** (async/await) for asynchronous operations
+## Architecture
 
-### Data Flow
-1. **Views** observe ViewModels via `@StateObject` or `@ObservedObject`
-2. **ViewModels** interact with Services/Repositories
-3. **Services** handle business logic and external communications
-4. **CloudKit** provides data persistence and sync
-5. **Combine** publishers notify of data changes
+The app is built using modern iOS development practices:
 
-## Platform Support Details
+- **The Composable Architecture (TCA)**: Unidirectional data flow and state management
+- **SwiftUI**: Declarative UI with iOS 18's latest features
+- **Swift Concurrency**: Async/await for all asynchronous operations
+- **Dependency Injection**: Testable and modular service layer
+- **Core Data**: Efficient local data persistence
+- **Keychain Services**: Secure credential storage
 
-### iOS/iPadOS (15.0+)
-- Adaptive layouts with size classes
-- Split view support on iPad
-- Widgets for quick leave balance view
-- Siri Shortcuts for common actions
-- Apple Watch companion app
+For detailed architecture information, see [Architecture Guide](docs/ARCHITECTURE.md).
 
-### macOS (11.0+)
-- Native Mac app with AppKit integration where needed
-- Menu bar app for quick access
-- Keyboard shortcuts for power users
-- Touch Bar support (where available)
+## API Services
 
-### watchOS (8.0+)
-- Complications showing leave balance
-- Quick leave request from watch
-- Notification handling
-- Health integration for sick leave tracking
+### Required
+- **ESV API**: Bible text and search functionality
+  - Sign up at [api.esv.org](https://api.esv.org)
+  - Free tier: 5,000 requests/day
 
-### visionOS (1.0+)
-- Immersive leave calendar view
-- Spatial team availability visualization
-- Hand gesture controls
-- Shared space collaboration features
+### Optional
+- **ElevenLabs API**: AI voice synthesis
+  - Sign up at [elevenlabs.io](https://elevenlabs.io)
+  - Various pricing tiers available
 
-## Development Guidelines
-
-### Code Style
-- Follow Swift API Design Guidelines
-- Use SwiftLint for code consistency
-- Meaningful variable and function names
-- Comprehensive documentation for public APIs
-
-### Git Workflow
-- Feature branches: `feature/description`
-- Bug fixes: `bugfix/description`
-- Hotfixes: `hotfix/description`
-- Commit messages: Present tense, descriptive
-
-### Testing Requirements
-- Minimum 80% code coverage
-- Unit tests for all ViewModels and Services
-- UI tests for critical user flows
-- Performance tests for data operations
-
-### SwiftUI Best Practices
-- Prefer `@StateObject` for owned objects
-- Use `@EnvironmentObject` sparingly
-- Extract reusable views into components
-- Leverage ViewModifiers for common styling
-
-### Performance Considerations
-- Lazy load data where appropriate
-- Use `List` with identifiable items
-- Implement proper image caching
-- Profile with Instruments regularly
-
-## Key Technologies
-
-- **SwiftUI** - Declarative UI framework
-- **CloudKit** - Data persistence and sync
-- **Combine** - Reactive programming
-- **Core Data** - Local data caching
-- **Push Notifications** - Real-time updates
-- **WidgetKit** - Home screen widgets
-- **WatchKit** - Apple Watch support
-- **RealityKit** - visionOS 3D content
+See [API Setup Guide](docs/API_KEYS_SETUP.md) for detailed instructions.
 
 ## Contributing
 
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on:
 
-### Pull Request Guidelines
-- Clear description of changes
-- Screenshots for UI changes
-- Test coverage for new features
-- No merge conflicts
-- Passes all CI checks
+- Code style and standards
+- Submitting pull requests
+- Reporting issues
+- Feature requests
+- Testing requirements
 
-## Troubleshooting
+## Testing
 
-### Common Issues
+Run the test suite:
 
-**Build Errors**
-- Clean build folder: ⌥⌘K
-- Delete derived data
-- Reset package caches: File → Packages → Reset Package Caches
+```bash
+# All tests
+swift test
 
-**CloudKit Sync Issues**
-- Verify CloudKit entitlements
-- Check network connectivity
-- Review CloudKit Dashboard for errors
+# Specific test target
+swift test --filter LeavnAppTests
 
-**Preview Crashes**
-- Simplify preview code
-- Check for missing mock data
-- Use `.constant()` bindings in previews
+# With coverage
+swift test --enable-code-coverage
+```
+
+See [Testing Guide](docs/TESTING.md) for comprehensive testing strategies.
+
+## Deployment
+
+### TestFlight
+
+1. Update version and build numbers
+2. Archive in Xcode
+3. Upload to App Store Connect
+4. Submit for TestFlight review
+
+### App Store
+
+1. Complete TestFlight beta testing
+2. Prepare App Store metadata
+3. Submit for App Review
+4. Monitor and respond to feedback
+
+See [Deployment Guide](docs/DEPLOYMENT.md) for detailed instructions.
+
+## Support
+
+- **Documentation**: See our [comprehensive docs](docs/)
+- **Issues**: Report bugs via [GitHub Issues](https://github.com/willsigmon/LeavnOfficial/issues)
+- **Email**: support@leavn.app
+- **Website**: [leavn.app](https://leavn.app)
 
 ## License
 
-This project is proprietary software. All rights reserved.
+Copyright © 2024 Leavn. All rights reserved.
 
-## Contact
-
-- Project Lead: [your-email@example.com]
-- Technical Support: [support@leavn.com]
-- Documentation: [docs.leavn.com]
+This project is proprietary software. See [LICENSE](LICENSE) for details.
 
 ---
 
-Built with ❤️ using SwiftUI
+<p align="center">
+  Made with ❤️ for the glory of God
+</p>

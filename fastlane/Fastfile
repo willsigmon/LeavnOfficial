@@ -1,0 +1,381 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+default_platform(:ios)
+
+# Constants
+APP_IDENTIFIER = "com.leavn.superofficial"
+SCHEME = "LeavnSuperOfficial"
+WORKSPACE = "LeavnSuperOfficial.xcworkspace"
+PROJECT = "LeavnSuperOfficial.xcodeproj"
+
+# Before all lanes
+before_all do
+  # Ensure we're using the latest version of fastlane
+  update_fastlane
+  
+  # Set up environment
+  setup_ci if ENV['CI']
+  
+  # Clear derived data
+  clear_derived_data
+  
+  # Ensure dependencies are installed
+  cocoapods if File.exist?("Podfile")
+end
+
+platform :ios do
+  desc "Setup development environment"
+  lane :setup do
+    # Install dependencies
+    sh "bundle install"
+    cocoapods if File.exist?("Podfile")
+    
+    # Setup code signing
+    match(type: "development", readonly: true)
+    
+    # Create .env file if it doesn't exist
+    sh "cp .env.example .env" unless File.exist?(".env")
+    
+    notification(subtitle: "Setup Complete", message: "Development environment is ready")
+  end
+  
+  desc "Build the app for testing"
+  lane :build do
+    scan(
+      scheme: SCHEME,
+      configuration: "Debug",
+      build_for_testing: true,
+      derived_data_path: "./DerivedData",
+      clean: true
+    )
+  end
+
+  desc "Run all tests with coverage"
+  lane :test do
+    scan(
+      scheme: SCHEME,
+      devices: ["iPhone 15", "iPhone 15 Pro Max", "iPad Pro (12.9-inch) (6th generation)"],
+      code_coverage: true,
+      output_types: "html,junit",
+      output_directory: "./test_output",
+      result_bundle: true,
+      clean: true
+    )
+    
+    # Generate coverage report
+    xcov(
+      scheme: SCHEME,
+      output_directory: "./coverage_report",
+      minimum_coverage_percentage: 70.0
+    )
+    
+    # Upload to codecov if in CI
+    if ENV['CI']
+      sh "curl -Os https://uploader.codecov.io/latest/macos/codecov"
+      sh "chmod +x codecov"
+      sh "./codecov"
+    end
+  end
+  
+  desc "Run UI tests"
+  lane :ui_test do
+    scan(
+      scheme: SCHEME,
+      only_testing: ["LeavnSuperOfficialUITests"],
+      devices: ["iPhone 15 Pro Max"],
+      clean: true
+    )
+  end
+  
+  desc "Run performance tests"
+  lane :performance_test do
+    scan(
+      scheme: SCHEME,
+      only_testing: ["LeavnAppTests/Performance"],
+      clean: true
+    )
+  end
+
+  desc "Build and upload to TestFlight"
+  lane :beta do
+    # Ensure we're on the main branch
+    ensure_git_branch(branch: "main")
+    
+    # Ensure working directory is clean
+    ensure_git_status_clean
+    
+    # Run tests first
+    test
+    
+    # Sync code signing certificates
+    match(type: "appstore", readonly: is_ci)
+
+    # Increment build number
+    build_number = increment_build_number(
+      xcodeproj: PROJECT,
+      build_number: number_of_commits
+    )
+    
+    # Update app icon with beta badge
+    add_badge(
+      shield: "#{get_version_number}-#{build_number}-orange",
+      alpha: true,
+      shield_scale: 0.75
+    ) unless is_ci
+
+    # Build the app
+    build_app(
+      scheme: SCHEME,
+      configuration: "Release",
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          APP_IDENTIFIER => "match AppStore #{APP_IDENTIFIER}"
+        }
+      },
+      include_bitcode: true,
+      include_symbols: true,
+      output_directory: "./build",
+      output_name: "LeavnSuperOfficial.ipa"
+    )
+    
+    # Generate changelog
+    changelog = generate_changelog
+
+    # Upload to TestFlight
+    upload_to_testflight(
+      app_identifier: APP_IDENTIFIER,
+      skip_waiting_for_build_processing: true,
+      distribute_external: true,
+      groups: ["Beta Testers"],
+      changelog: changelog,
+      notify_external_testers: true
+    )
+    
+    # Upload dSYMs to crash reporting service
+    upload_symbols_to_crashlytics(
+      dsym_path: "./build/LeavnSuperOfficial.app.dSYM.zip"
+    )
+
+    # Commit version bump
+    commit_version_bump(
+      message: "[ci skip] Version bump to #{get_version_number} (#{build_number})",
+      xcodeproj: PROJECT,
+      include_files: ["./fastlane/changelog.txt"]
+    )
+
+    # Add git tag
+    add_git_tag(
+      tag: "v#{get_version_number}-#{build_number}",
+      message: changelog
+    )
+
+    # Push to git
+    push_to_git_remote(
+      remote_branch: "main",
+      tags: true
+    )
+    
+    # Send notifications
+    slack(
+      message: "New beta build uploaded to TestFlight! 🚀",
+      channel: "#ios-releases",
+      success: true,
+      payload: {
+        "Version" => get_version_number,
+        "Build" => build_number,
+        "Changelog" => changelog
+      }
+    ) if ENV['SLACK_WEBHOOK_URL']
+    
+    # Clean up
+    clean_build_artifacts
+  end
+
+  desc "Build and upload to App Store"
+  lane :release do
+    # Ensure we're on the main branch
+    ensure_git_branch(branch: "main")
+    
+    # Ensure working directory is clean
+    ensure_git_status_clean
+
+    # Increment version number
+    increment_version_number(xcodeproj: "LeavnSuperOfficial.xcodeproj")
+    
+    # Increment build number
+    increment_build_number(xcodeproj: "LeavnSuperOfficial.xcodeproj")
+
+    # Build the app
+    build_app(
+      scheme: "LeavnSuperOfficial",
+      configuration: "Release"
+    )
+
+    # Upload to App Store
+    upload_to_app_store(
+      submit_for_review: false,
+      automatic_release: false
+    )
+
+    # Commit version bump
+    commit_version_bump(
+      message: "Release version #{get_version_number} (#{get_build_number})",
+      xcodeproj: "LeavnSuperOfficial.xcodeproj"
+    )
+
+    # Add git tag
+    add_git_tag(
+      tag: "v#{get_version_number}"
+    )
+
+    # Push to git
+    push_to_git_remote
+  end
+
+  desc "Take screenshots for the App Store"
+  lane :screenshots do
+    # Clear previous screenshots
+    clear_derived_data
+    
+    capture_screenshots(
+      scheme: "LeavnSuperOfficialUITests",
+      devices: [
+        "iPhone 15 Pro Max",
+        "iPhone 15",
+        "iPhone 8 Plus",
+        "iPad Pro (12.9-inch) (6th generation)",
+        "iPad Pro (11-inch) (4th generation)"
+      ],
+      languages: ["en-US", "es-ES", "fr-FR", "de-DE", "it-IT", "pt-BR"],
+      output_directory: "./screenshots",
+      clear_previous_screenshots: true,
+      override_status_bar: true,
+      stop_after_first_error: false
+    )
+    
+    # Frame screenshots
+    frame_screenshots(
+      path: "./screenshots",
+      use_platform: "IOS"
+    )
+  end
+  
+  desc "Submit metadata and screenshots to App Store"
+  lane :deliver_metadata do
+    deliver(
+      submit_for_review: false,
+      automatic_release: false,
+      force: true,
+      skip_binary_upload: true,
+      metadata_path: "./fastlane/metadata",
+      screenshots_path: "./screenshots"
+    )
+  end
+  
+  desc "Validate the app before submission"
+  lane :validate do
+    # Run all tests
+    test
+    ui_test
+    
+    # Lint code
+    swiftlint(
+      mode: :lint,
+      config_file: ".swiftlint.yml",
+      strict: true
+    )
+    
+    # Check for unused resources
+    sh "periphery scan --project #{PROJECT} --schemes #{SCHEME} --targets LeavnSuperOfficial --format markdown"
+    
+    # Security scan
+    sh "bundle exec bundle-audit check --update"
+    
+    # Validate app
+    precheck
+    
+    notification(subtitle: "Validation Complete", message: "App is ready for submission")
+  end
+  
+  desc "Create a new release"
+  lane :create_release do
+    # Get the latest tag
+    last_tag = sh("git describe --tags --abbrev=0").strip
+    
+    # Generate release notes
+    release_notes = sh("git log #{last_tag}..HEAD --pretty=format:'- %s' --no-merges").strip
+    
+    # Create GitHub release
+    github_release = set_github_release(
+      repository_name: "LeavnOfficial/LeavnSuperOfficial",
+      api_token: ENV["GITHUB_TOKEN"],
+      name: "v#{get_version_number}",
+      tag_name: "v#{get_version_number}",
+      description: release_notes,
+      commitish: "main",
+      upload_assets: ["./build/LeavnSuperOfficial.ipa", "./build/LeavnSuperOfficial.app.dSYM.zip"]
+    )
+  end
+  
+  desc "Emergency rollback"
+  lane :rollback do |options|
+    # Ensure we have a version to rollback to
+    UI.user_error!("Please provide a version to rollback to") unless options[:version]
+    
+    # Checkout the tag
+    sh "git checkout v#{options[:version]}"
+    
+    # Build and submit
+    beta
+    
+    # Notify team
+    slack(
+      message: "Emergency rollback to v#{options[:version]} initiated",
+      channel: "#ios-emergency",
+      success: false
+    ) if ENV['SLACK_WEBHOOK_URL']
+  end
+  
+  # Private lanes
+  private_lane :generate_changelog do
+    # Get commits since last tag
+    changelog_from_git_commits(
+      between: [last_git_tag, "HEAD"],
+      pretty: "- %s",
+      merge_commit_filtering: "exclude_merges"
+    )
+  end
+  
+  # Error handling
+  error do |lane, exception|
+    # Clean up
+    clean_build_artifacts
+    
+    # Send notification
+    slack(
+      message: "Error in lane #{lane}: #{exception.message}",
+      channel: "#ios-errors",
+      success: false
+    ) if ENV['SLACK_WEBHOOK_URL']
+  end
+  
+  # After all lanes
+  after_all do |lane|
+    # Clean up
+    clean_build_artifacts
+    
+    # Success notification
+    notification(subtitle: "Fastlane", message: "Lane #{lane} completed successfully")
+  end
+end

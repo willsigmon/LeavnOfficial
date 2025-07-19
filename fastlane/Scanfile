@@ -1,0 +1,96 @@
+# Scanfile for LeavnSuperOfficial
+
+# Scheme to use for testing
+scheme("LeavnSuperOfficial")
+
+# Enable code coverage
+code_coverage(true)
+
+# Output types
+output_types("html,junit")
+
+# Clean before building
+clean(true)
+
+# Skip building again if already built
+skip_build(false)
+
+# Number of simulators to run in parallel
+concurrent_simulators(4)
+
+# Disable concurrent testing on physical devices
+disable_concurrent_testing(false)
+
+# Maximum number of test retries
+max_concurrent_simulators(4)
+
+# Test without building (useful for CI when build is done separately)
+test_without_building(false)
+
+# Configuration to use
+configuration("Debug")
+
+# Enable address sanitizer
+enable_address_sanitizer(false)
+
+# Enable thread sanitizer
+enable_thread_sanitizer(false)
+
+# Enable undefined behavior sanitizer
+enable_undefined_behavior_sanitizer(false)
+
+# Only run failed tests
+only_test_configurations([])
+
+# Skip testing on real devices
+skip_detect_devices(true)
+
+# Ensure all tests pass
+ensure_devices_found(true)
+
+# Force quit simulator after tests
+force_quit_simulator(true)
+
+# Reset simulator before running tests
+reset_simulator(true)
+
+# Disable slide to type
+disable_slide_to_type(true)
+
+# Prelaunch simulator
+prelaunch_simulator(true)
+
+# Reinstall app before running tests
+reinstall_app(true)
+
+# App identifier
+app_identifier("com.leavn.superofficial")
+
+# Only testing specific test bundles
+# only_testing([
+#   "LeavnSuperOfficialTests",
+#   "LeavnSuperOfficialUITests"
+# ])
+
+# Skipping specific tests
+# skip_testing([
+#   "LeavnSuperOfficialTests/PerformanceTests"
+# ])
+
+# Custom build settings
+xcargs("-parallelizeTargets")
+
+# Derived data path
+derived_data_path("./DerivedData")
+
+# Result bundle path
+result_bundle(true)
+
+# Output directory
+output_directory("./test_output")
+
+# Slack URL for notifications
+slack_url(ENV["SLACK_WEBHOOK_URL"]) if ENV["SLACK_WEBHOOK_URL"]
+
+# Custom report file name
+custom_report_file_name("test_results.xml")

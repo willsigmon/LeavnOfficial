@@ -1,0 +1,84 @@
+# Deliverfile for LeavnSuperOfficial
+
+# App metadata location
+metadata_path("./fastlane/metadata")
+
+# Screenshot location
+screenshots_path("./fastlane/screenshots")
+
+# Don't submit for review automatically
+submit_for_review(false)
+
+# Don't automatically release
+automatic_release(false)
+
+# Skip HTML report generation
+force(true)
+
+# Skip screenshots upload (can be enabled when needed)
+skip_screenshots(false)
+
+# Skip metadata upload (can be enabled when needed)
+skip_metadata(false)
+
+# App rating configuration
+app_rating_config_path("./fastlane/rating_config.json")
+
+# Price tier
+price_tier(0) # Free
+
+# App icon
+app_icon("./LeavnSuperOfficial/Assets.xcassets/AppIcon.appiconset/App-Icon-1024x1024@1x.png")
+
+# Copyright
+copyright("© 2025 Leavn Official")
+
+# Primary category
+primary_category("REFERENCE")
+
+# Secondary category
+secondary_category("LIFESTYLE")
+
+# Age rating
+app_review_information(
+  first_name: "App",
+  last_name: "Review",
+  phone_number: "+1 (555) 123-4567",
+  email_address: "review@leavn.app",
+  demo_user: "demo@leavn.app",
+  demo_password: "DemoPassword123",
+  notes: "This is a Bible reading app with community features."
+)
+
+# Phased release
+phased_release(true)
+
+# Run precheck before submitting
+run_precheck_before_submit(true)
+
+# Trade representative contact info (required for certain countries)
+trade_representative_contact_information(
+  first_name: "Legal",
+  last_name: "Team",
+  address_line1: "123 Main Street",
+  city_name: "San Francisco",
+  state: "CA",
+  country: "United States",
+  postal_code: "94105",
+  phone_number: "+1 (555) 123-4567",
+  email_address: "legal@leavn.app",
+  is_displayed_on_app_store: false
+)
+
+# Platform-specific options
+platform(:ios) do
+  # iOS-specific configuration
+end
+
+# Submission information
+submission_information({
+  export_compliance_uses_encryption: false,
+  export_compliance_is_exempt: true,
+  content_rights_contains_third_party_content: false,
+  add_id_info_uses_idfa: false
+})
