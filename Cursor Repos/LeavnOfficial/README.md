@@ -1,7 +1,7 @@
-# Leavn Super Official - Production-Ready iOS Bible App
+# Leavn - Modern iOS Bible Study App
 
 <p align="center">
-  <img src="LeavnSuperOfficial/Assets.xcassets/AppIcon.appiconset/App-Icon-1024x1024@1x.png" alt="Leavn App Icon" width="150">
+  <img src="docs/icon.png" alt="Leavn App Icon" width="150">
 </p>
 
 <p align="center">
@@ -20,7 +20,7 @@
 
 ## Overview
 
-Leavn Super Official is a production-ready iOS Bible application that brings the Word of God to life through modern technology. Built with SwiftUI and The Composable Architecture, it offers a seamless reading experience with AI-powered audio narration, community features, and robust offline support.
+Leavn is a modern iOS Bible study application that brings the Word of God to life through innovative technology. Built with SwiftUI and The Composable Architecture, it offers a seamless reading experience with AI-powered audio narration, life situation guidance, community features, and robust offline support.
 
 ## Features
 
@@ -38,6 +38,12 @@ Leavn Super Official is a production-ready iOS Bible application that brings the
 - **Playback Controls**: Speed adjustment, skip, and bookmarking
 - **Background Audio**: Continue listening while using other apps
 - **Sleep Timer**: Automatic shutdown after specified duration
+
+### 💭 Life Situations
+- **Emotional Support**: Find verses for anxiety, grief, joy, fear, and more
+- **Curated Verses**: Hand-picked scriptures for specific life circumstances
+- **Guided Prayers**: Contextual prayers for each situation
+- **Personal Journey**: Track your spiritual growth through challenges
 
 ### 👥 Community
 - **Prayer Wall**: Share and support prayer requests
@@ -74,8 +80,8 @@ Leavn Super Official is a production-ready iOS Bible application that brings the
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/LeavnSuperOfficial.git
-   cd LeavnSuperOfficial
+   git clone https://github.com/willsigmon/LeavnOfficial.git
+   cd LeavnOfficial
    ```
 
 2. **Open in Xcode**
@@ -191,7 +197,7 @@ See [Deployment Guide](docs/DEPLOYMENT.md) for detailed instructions.
 ## Support
 
 - **Documentation**: See our [comprehensive docs](docs/)
-- **Issues**: Report bugs via [GitHub Issues](https://github.com/yourusername/LeavnSuperOfficial/issues)
+- **Issues**: Report bugs via [GitHub Issues](https://github.com/willsigmon/LeavnOfficial/issues)
 - **Email**: support@leavn.app
 - **Website**: [leavn.app](https://leavn.app)
 
