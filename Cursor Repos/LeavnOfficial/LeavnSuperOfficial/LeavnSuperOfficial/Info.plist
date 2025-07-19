@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- App Information -->
+    <key>CFBundleDevelopmentRegion</key>
+    <string>$(DEVELOPMENT_LANGUAGE)</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundlePackageType</key>
+    <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    
+    <!-- Launch Screen -->
+    <key>UILaunchScreen</key>
+    <dict>
+        <key>UIImageName</key>
+        <string>LaunchScreen</string>
+        <key>UIColorName</key>
+        <string>AccentColor</string>
+    </dict>
+    
+    <!-- Required capabilities -->
+    <key>UIRequiredDeviceCapabilities</key>
+    <array>
+        <string>armv7</string>
+    </array>
+    
+    <!-- Supported orientations -->
+    <key>UISupportedInterfaceOrientations~iphone</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    <key>UISupportedInterfaceOrientations~ipad</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationPortraitUpsideDown</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    
+    <!-- Background Modes -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>audio</string>
+        <string>fetch</string>
+        <string>processing</string>
+        <string>remote-notification</string>
+    </array>
+    
+    <!-- Background Task Identifiers -->
+    <key>BGTaskSchedulerPermittedIdentifiers</key>
+    <array>
+        <string>com.leavn.app.refresh</string>
+        <string>com.leavn.app.process</string>
+    </array>
+    
+    <!-- URL Schemes for Deep Linking -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>leavn</string>
+            </array>
+            <key>CFBundleURLName</key>
+            <string>com.leavn.app</string>
+        </dict>
+    </array>
+    
+    <!-- Privacy Usage Descriptions -->
+    <key>NSUserNotificationUsageDescription</key>
+    <string>Leavn sends notifications for daily reading reminders, prayer requests, and community updates.</string>
+    
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Leavn uses your microphone to record voice notes and prayers that you can share with the community.</string>
+    
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Leavn needs access to your photo library to let you share images in community posts and prayer requests.</string>
+    
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Leavn saves verse images and shareable content to your photo library.</string>
+    
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Leavn uses your location to connect you with local faith communities and events near you.</string>
+    
+    <key>NSCalendarsUsageDescription</key>
+    <string>Leavn can add reading plan reminders and community events to your calendar.</string>
+    
+    <key>NSRemindersUsageDescription</key>
+    <string>Leavn can create reminders for your daily Bible reading and prayer times.</string>
+    
+    <key>NSContactsUsageDescription</key>
+    <string>Leavn can access your contacts to help you invite friends to join Bible studies and prayer groups.</string>
+    
+    <!-- App Transport Security -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <false/>
+        <key>NSExceptionDomains</key>
+        <dict>
+            <key>localhost</key>
+            <dict>
+                <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                <true/>
+            </dict>
+        </dict>
+    </dict>
+    
+    <!-- Queries Schemes (for sharing) -->
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>mailto</string>
+        <string>sms</string>
+        <string>whatsapp</string>
+        <string>fb</string>
+        <string>twitter</string>
+        <string>instagram</string>
+    </array>
+    
+    <!-- Document Types -->
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeName</key>
+            <string>Bible Study Note</string>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>LSHandlerRank</key>
+            <string>Owner</string>
+            <key>LSItemContentTypes</key>
+            <array>
+                <string>com.leavn.study-note</string>
+            </array>
+        </dict>
+    </array>
+    
+    <!-- Exported Type Identifiers -->
+    <key>UTExportedTypeDeclarations</key>
+    <array>
+        <dict>
+            <key>UTTypeIdentifier</key>
+            <string>com.leavn.study-note</string>
+            <key>UTTypeDescription</key>
+            <string>Leavn Bible Study Note</string>
+            <key>UTTypeConformsTo</key>
+            <array>
+                <string>public.data</string>
+            </array>
+            <key>UTTypeTagSpecification</key>
+            <dict>
+                <key>public.filename-extension</key>
+                <array>
+                    <string>leavnnote</string>
+                </array>
+            </dict>
+        </dict>
+    </array>
+    
+    <!-- iTunes File Sharing -->
+    <key>UIFileSharingEnabled</key>
+    <true/>
+    <key>LSSupportsOpeningDocumentsInPlace</key>
+    <true/>
+    
+    <!-- Status Bar Style -->
+    <key>UIStatusBarStyle</key>
+    <string>UIStatusBarStyleDefault</string>
+    <key>UIViewControllerBasedStatusBarAppearance</key>
+    <true/>
+</dict>
+</plist>

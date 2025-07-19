@@ -1,0 +1,1 @@
+error: No SwiftGen configurations found for target LeavnApp. If you would like to generate sources for this target include a `swiftgen.yml` in the target's source directory, or include a shared `swiftgen.yml` at the package's root.

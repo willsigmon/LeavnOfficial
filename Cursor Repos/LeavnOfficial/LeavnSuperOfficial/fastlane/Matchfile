@@ -1,0 +1,49 @@
+# Matchfile for LeavnSuperOfficial
+
+# Git URL for certificates repository
+git_url(ENV["MATCH_GIT_URL"] || "git@github.com:LeavnOfficial/certificates.git")
+
+# Storage mode (git, google_cloud, s3)
+storage_mode("git")
+
+# Type of match (appstore, adhoc, development, enterprise)
+type("development") # Default type, can be overridden
+
+# App identifier
+app_identifier(["com.leavn.superofficial"])
+
+# Your Apple Developer username
+username(ENV["APPLE_ID"] || "your-email@example.com")
+
+# Team ID
+team_id(ENV["TEAM_ID"] || "YOUR_TEAM_ID")
+
+# Git branch
+git_branch("main")
+
+# Clone certificates repo to a custom location
+clone_branch_directly(true)
+
+# Generate new certificates if needed
+readonly(false)
+
+# Skip confirmation prompts during nuke
+force_for_new_devices(true)
+
+# Platform
+platform("ios")
+
+# Additional options
+verbose(true)
+
+# Use App Store Connect API if available
+if ENV["APP_STORE_CONNECT_API_KEY_ID"]
+  api_key_path = ENV["APP_STORE_CONNECT_API_KEY_PATH"] || "~/.private_keys/AuthKey_#{ENV['APP_STORE_CONNECT_API_KEY_ID']}.p8"
+  
+  api_key(
+    key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+    issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+    key_filepath: api_key_path,
+    in_house: false
+  )
+end

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Export Compliance -->
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <true/>
+    
+    <!-- We use HTTPS/TLS for API communication only -->
+    <key>ITSEncryptionExportComplianceCode</key>
+    <string>YOUR_COMPLIANCE_CODE</string>
+    
+    <!-- App Information -->
+    <key>ITSAppNameToDisplay</key>
+    <string>Leavn</string>
+    
+    <!-- Export Compliance Details -->
+    <key>ITSAppUsesNonExemptEncryptionType</key>
+    <string>HTTPSOnly</string>
+    
+    <!-- Encryption Usage Description -->
+    <key>ITSAppEncryptionUsageDescription</key>
+    <string>This app uses standard HTTPS encryption for secure communication with our servers to protect user data during transmission.</string>
+</dict>
+</plist>
