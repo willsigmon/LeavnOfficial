@@ -52,9 +52,7 @@ let package = Package(
                 .product(name: "CryptoSwift", package: "CryptoSwift")
             ],
             path: "Sources/LeavnApp",
-            resources: [
-                .process("Resources")
-            ],
+            exclude: ["swiftgen.yml", "Resources/.gitkeep"],
             swiftSettings: [
                 .swiftLanguageMode(.v6),
                 .enableExperimentalFeature("StrictConcurrency")
