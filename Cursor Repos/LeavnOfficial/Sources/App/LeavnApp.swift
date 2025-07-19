@@ -2,7 +2,7 @@ import SwiftUI
 import LeavnApp
 
 @main
-struct LeavnSuperOfficialApp: App {
+struct Leavn: App {
     var body: some Scene {
         WindowGroup {
             AppView()

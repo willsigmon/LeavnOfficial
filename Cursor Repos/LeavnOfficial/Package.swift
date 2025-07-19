@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "LeavnSuperOfficial",
+    name: "Leavn",
     platforms: [
         .iOS(.v18),
         .macOS(.v15)
@@ -13,8 +13,8 @@ let package = Package(
             targets: ["LeavnApp"]
         ),
         .executable(
-            name: "LeavnSuperOfficial",
-            targets: ["LeavnSuperOfficial"]
+            name: "Leavn",
+            targets: ["Leavn"]
         )
     ],
     dependencies: [
@@ -32,7 +32,7 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
-            name: "LeavnSuperOfficial",
+            name: "Leavn",
             dependencies: [
                 "LeavnApp"
             ],
